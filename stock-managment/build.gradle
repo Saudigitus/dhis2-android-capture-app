@@ -1,0 +1,156 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'dagger.hilt.android.plugin'
+}
+
+apply from: "$rootDir/stock-managment/dependencies.gradle"
+apply plugin: "kotlinx-serialization"
+
+def libraries = rootProject.ext.libraries
+def versions = rootProject.ext.versions
+
+android {
+    compileSdk versions.sdk
+
+    defaultConfig {
+        minSdk versions.minSdk
+        targetSdk versions.sdk
+        versionCode versions.vCode
+        versionName versions.vName
+        applicationId versions.applicationId
+        multiDexEnabled true
+
+        setProperty("archivesBaseName", "psm-v" + versions.versionName)
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation": "$projectDir/schemas".toString(),
+                        "room.incremental": "true",
+                        "room.expandProjection": "true",
+                        "dagger.hilt.disableCrossCompilationRootValidation": "true"
+                ]
+            }
+        }
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+            buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
+            buildConfigField("String","APPLICATION_ID","\"${defaultConfig.applicationId}\"")
+        }
+
+        debug{
+            buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+            buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
+            buildConfigField("String","APPLICATION_ID","\"${defaultConfig.applicationId}\"")
+        }
+
+
+    }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+        dataBinding true
+    }
+
+}
+
+dependencies {
+
+    // DHIS2 Android SDK
+    // remove the no-op version of Flipper added by DHIS2 Android SDK  to avoid duplicates
+    implementation ("org.hisp.dhis:android-core:$libraries.dhis2sdk") {
+        exclude group: 'com.facebook.flipper'
+    }
+
+    implementation "org.hisp.dhis.rules:rule-engine:$libraries.ruleEngine"
+
+    implementation "androidx.annotation:annotation:$libraries.annotation"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$libraries.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$libraries.lifecycle"
+
+    // Room
+    implementation "androidx.room:room-runtime:$libraries.room"
+    kapt("androidx.room:room-compiler:$libraries.room")
+    kapt("androidx.room:room-ktx:$libraries.room")
+    implementation "androidx.room:room-rxjava2:$libraries.room"
+
+    implementation "androidx.legacy:legacy-support-v4:$libraries.legacysupport"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$libraries.desugar_jdk_libs"
+
+    implementation "androidx.appcompat:appcompat:$libraries.appcompat"
+    implementation "com.google.android.material:material:$libraries.material"
+    implementation "androidx.constraintlayout:constraintlayout:$libraries.constraintlayout"
+
+    implementation "io.reactivex.rxjava2:rxjava:$libraries.rxjava"
+    implementation "com.jakewharton.rxrelay2:rxrelay:$libraries.rxrelay"
+
+    // Security
+    implementation "net.openid:appauth:$libraries.openid"
+
+    // Preferences
+    implementation "androidx.preference:preference-ktx:$libraries.preference_ktx"
+
+    // WorkManager
+    implementation "androidx.work:work-runtime:$libraries.work"
+    implementation "androidx.work:work-runtime-ktx:$libraries.work"
+    implementation "androidx.work:work-rxjava2:$libraries.work"
+    implementation "androidx.work:work-gcm:$libraries.work"
+
+    // DI
+    implementation "com.google.dagger:hilt-android:$libraries.hilt"
+    kapt "com.google.dagger:hilt-compiler:$libraries.hilt"
+
+    implementation "androidx.hilt:hilt-compiler:$libraries.hilt_work"
+    implementation "androidx.hilt:hilt-work:$libraries.hilt_work"
+    kapt "androidx.hilt:hilt-compiler:$libraries.hilt_work"
+
+    // Barcode scanner
+    implementation "com.journeyapps:zxing-android-embedded:$libraries.zxingandroid"
+
+    // Logging
+    implementation "com.jakewharton.timber:timber:$libraries.timber"
+    implementation "cat.ereza:customactivityoncrash:$libraries.crashactivity"
+
+    debugImplementation "com.facebook.flipper:flipper:$libraries.flipper"
+    debugImplementation "com.facebook.soloader:soloader:$libraries.soloader"
+    debugImplementation ("com.facebook.flipper:flipper-network-plugin:$libraries.flipper") {
+        exclude group: 'com.squareup.okhttp3'
+    }
+
+    releaseImplementation "com.facebook.flipper:flipper-noop:$libraries.flipper"
+
+    testImplementation "junit:junit:$libraries.junit"
+    testImplementation "org.mockito.kotlin:mockito-kotlin:$libraries.mockito_kotlin"
+    testImplementation "org.mockito:mockito-inline:$libraries.mockito_inline"
+    testImplementation "androidx.arch.core:core-testing:$libraries.android_core_testing"
+    testImplementation "com.github.javafaker:javafaker:$libraries.javafaker"
+
+    androidTestImplementation "androidx.test.ext:junit:$libraries.junit_ext"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$libraries.espresso_core"
+
+    // For App Authentication API testing
+    androidTestImplementation "androidx.room:room-testing:$libraries.room"
+
+    //Serialization library
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${libraries.kotlinxserialization}"
+}
