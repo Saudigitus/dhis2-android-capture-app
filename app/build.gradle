@@ -57,6 +57,17 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
 
+        
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "dagger.hilt.disableModulesHaveInstallInCheck": "true",
+                        "room.schemaLocation"                         : "$projectDir/schemas".toString(),
+                ]
+
+            }
+        }
+
 
         setProperty("archivesBaseName", "dhis2-v" + versions.vName)
 
