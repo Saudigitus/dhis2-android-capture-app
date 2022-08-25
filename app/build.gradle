@@ -264,6 +264,10 @@ dependencies {
     implementation "com.airbnb.android:lottie:${libraries.lottie}"
     //endregion
 
+    //Hilt dependency INJECTION
+    implementation "com.google.dagger:hilt-android:${libraries.hilt_version}"
+    kapt "com.google.dagger:hilt-android-compiler:${libraries.hilt_version}"
+
     //region DEPENDENCY INJECTION
     kapt "com.google.dagger:dagger-compiler:${libraries.dagger}"
 
