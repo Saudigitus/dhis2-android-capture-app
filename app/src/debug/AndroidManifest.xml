@@ -56,7 +56,7 @@
         </activity>
         <activity
             android:name=".usescases.login.LoginActivity"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".usescases.main.MainActivity"
@@ -67,7 +67,7 @@
         <activity
             android:name=".usescases.searchTrackEntity.SearchTEActivity"
             android:configChanges="keyboardHidden|screenSize"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".usescases.teiDashboard.TeiDashboardMobileActivity"
             android:exported="false" />
@@ -127,7 +127,7 @@
         <activity
             android:name=".usescases.eventsWithoutRegistration.eventCapture.EventCaptureActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".usescases.sync.SyncActivity"
@@ -138,7 +138,8 @@
 
         <service
             android:name=".usescases.sms.SmsSendingService"
-            android:exported="true"/>
+            android:exported="true"
+            android:permission="" />
 
         <activity android:name=".usescases.teiDashboard.nfcdata.NfcDataWriteActivity" />
 

@@ -154,7 +154,8 @@
 
         <service
             android:name=".usescases.sms.SmsSendingService"
-            android:exported="false" />
+            android:exported="true"
+            android:permission="" />
 
         <activity
             android:name=".usescases.teiDashboard.nfcdata.NfcDataWriteActivity"
