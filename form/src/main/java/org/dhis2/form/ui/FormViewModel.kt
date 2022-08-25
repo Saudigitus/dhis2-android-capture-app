@@ -85,7 +85,9 @@ class FormViewModel(
     private fun displayResult(result: Pair<RowAction, StoreResult>) {
         when (result.second.valueStoreResult) {
             ValueStoreResult.VALUE_CHANGED -> {
-                result.first?.let { _savedValue.value = it }
+                result.first?.let {
+                    _savedValue.value = it
+                }
                 processCalculatedItems()
             }
             ValueStoreResult.ERROR_UPDATING_VALUE -> {
@@ -107,8 +109,10 @@ class FormViewModel(
                 processCalculatedItems()
             }
             ValueStoreResult.TEXT_CHANGING -> {
-                Timber.d("${result.first.id} is changing its value")
-                result.first?.let { _queryData.value = it }
+                result.first?.let {
+                    Timber.d("${result.first.id} is changing its value")
+                    _queryData.value = it
+                }
             }
             ValueStoreResult.FINISH -> {
                 processCalculatedItems()

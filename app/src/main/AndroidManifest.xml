@@ -4,6 +4,7 @@
     package="org.dhis2">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -67,7 +68,7 @@
         </activity>
         <activity
             android:name=".usescases.login.LoginActivity"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".usescases.main.MainActivity"
@@ -78,35 +79,35 @@
         <activity
             android:name=".usescases.searchTrackEntity.SearchTEActivity"
             android:configChanges="keyboardHidden|screenSize"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".usescases.teiDashboard.TeiDashboardMobileActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.qrScanner.ScanActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.teiDashboard.teiProgramList.TeiProgramListActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name="org.dhis2.maps.views.MapSelectorActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.programStageSelection.ProgramStageSelectionActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".utils.WebViewActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.eventsWithoutRegistration.eventInitial.EventInitialActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:exported="false"/>
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".usescases.qrCodes.QrActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.qrCodes.eventsworegistration.QrEventsWORegistrationActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -114,15 +115,15 @@
 
         <activity
             android:name=".usescases.datasets.datasetDetail.DataSetDetailActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.datasets.datasetInitial.DataSetInitialActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.datasets.dataSetTable.DataSetTableActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true"/>
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
 
         <receiver
             android:name=".widgets.DhisCustomLauncher"
@@ -138,48 +139,46 @@
 
         <activity
             android:name=".usescases.reservedValue.ReservedValueActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.eventsWithoutRegistration.eventCapture.EventCaptureActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:exported="false"/>
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".usescases.sync.SyncActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.development.DevelopmentActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
         <service
             android:name=".usescases.sms.SmsSendingService"
-            android:exported="true"
-            android:permission="" />
+            android:exported="false" />
 
         <activity
             android:name=".usescases.teiDashboard.nfcdata.NfcDataWriteActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.about.PolicyView"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".usescases.enrollment.EnrollmentActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:exported="false"
-            />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".usescases.events.ScheduledEventActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".usescases.notes.noteDetail.NoteDetailActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false"/>
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".usescases.settingsprogram.SettingsProgramActivity"
-            android:exported="false"/>
+            android:exported="true" />
 
         <activity
             android:name="net.openid.appauth.RedirectUriReceiverActivity"
@@ -196,7 +195,7 @@
         </activity>
         <activity
             android:name=".usescases.login.accounts.AccountsActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".usescases.crash.CrashActivity"
             android:exported="true"

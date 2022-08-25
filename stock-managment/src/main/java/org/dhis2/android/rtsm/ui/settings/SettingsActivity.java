@@ -188,13 +188,13 @@ public class SettingsActivity extends BaseActivity
                     }
 
                     sViewModel.syncData();
-                    /*sViewModel.getSyncDataStatus().observe(getViewLifecycleOwner(), workInfoList ->
+                    sViewModel.getSyncDataStatus().observe(getViewLifecycleOwner(), workInfoList ->
                             workInfoList.forEach(workInfo -> {
                                 if (workInfo.getTags().contains(INSTANT_DATA_SYNC)) {
                                     handleDataSyncResponse(workInfo);
                                 }
                             })
-                    );*/
+                    );
                     return true;
                 });
             }

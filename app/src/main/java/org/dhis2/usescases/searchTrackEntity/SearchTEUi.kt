@@ -1,5 +1,6 @@
 package org.dhis2.usescases.searchTrackEntity
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
@@ -402,6 +403,7 @@ fun MinAttributesMessage(minAttributes: Int) {
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun MinAttributesSnackbar(minAttributes: Int) {
     val message = stringResource(R.string.search_min_attributes_message)
