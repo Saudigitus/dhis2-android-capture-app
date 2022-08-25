@@ -5,6 +5,7 @@ apply plugin: 'hu.supercluster.paperwork'
 apply plugin: 'jacoco'
 apply from: "$project.rootDir/jacoco/jacoco.gradle"
 apply plugin: "kotlinx-serialization"
+apply plugin: "dagger.hilt.android.plugin"
 
 def libraries = rootProject.ext.libraries
 def versions = rootProject.ext.versions
