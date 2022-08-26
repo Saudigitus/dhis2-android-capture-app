@@ -57,6 +57,16 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "dagger.hilt.disableModulesHaveInstallInCheck": "true",
+                        "room.schemaLocation"                         : "$projectDir/schemas".toString(),
+                ]
+
+            }
+        }
+
         setProperty("archivesBaseName", "dhis2-v" + versions.vName)
 
         def mapboxAccessToken = System.getenv("MAPBOX_ACCESS_TOKEN") != null ? System.getenv("MAPBOX_ACCESS_TOKEN") : "pk.eyJ1IjoiZGhpczJhbmRyb2lkIiwiYSI6ImNrcWt1a2hzYzE5Ymsyb254MWtlbGt4Y28ifQ.JrP61q9BFTVEKO4SwRUwDw"
@@ -257,6 +267,10 @@ dependencies {
 
     //region DEPENDENCY INJECTION
     kapt "com.google.dagger:dagger-compiler:${libraries.dagger}"
+
+    //Hilt dependency INJECTION
+    implementation "com.google.dagger:hilt-android:${libraries.hilt_version}"
+    kapt "com.google.dagger:hilt-android-compiler:${libraries.hilt_version}"
 
     //region RXJAVA
     implementation "com.github.akarnokd:rxjava2-interop:${libraries.rxjavainteroperop}"
