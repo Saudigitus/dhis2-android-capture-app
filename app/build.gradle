@@ -272,7 +272,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:${libraries.hilt}"
     kapt "com.google.dagger:hilt-android-compiler:${libraries.hilt}"
 
-    
+
     //region RXJAVA
     implementation "com.github.akarnokd:rxjava2-interop:${libraries.rxjavainteroperop}"
     implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
