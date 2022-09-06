@@ -171,7 +171,7 @@
                 tools:text="No items found"
                 app:drawableTopCompat="@drawable/ic_empty_list" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-        
+
 
         <!-- Floating Button -->
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
