@@ -25,7 +25,6 @@ open class BaseViewModel @Inject constructor(
     val showGuide: LiveData<Boolean>
         get() = _showGuide
 
-
     /**
      * Evaluates the quantity assigned to the StockItem
      *
