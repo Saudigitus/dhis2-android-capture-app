@@ -7,8 +7,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.Disposable
 import java.util.Date
 import javax.inject.Inject
-import org.dhis2.android.rtsm.BuildConfig
-import org.dhis2.android.rtsm.commons.Constants
 import org.dhis2.android.rtsm.data.AppConfig
 import org.dhis2.android.rtsm.data.RowAction
 import org.dhis2.android.rtsm.data.models.Transaction
