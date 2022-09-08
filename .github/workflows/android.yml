@@ -28,4 +28,4 @@ jobs:
     - name: Kotlin checkstyle
       run: ./gradlew :app:ktlintCheck :form:ktlintCheck :dhis_android_analytics:ktlintCheck :commons:ktlintCheck :compose-table:ktlintCheck :dhis2_android_maps:ktlintCheck :stock-managment:ktlintCheck
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew testDhisDebugUnitTest
