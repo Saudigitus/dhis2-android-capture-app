@@ -359,5 +359,13 @@ dependencies {
     //Serialization library
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${libraries.kotlinxserialization}"
 
+    implementation "androidx.hilt:hilt-work:$libraries.hilt_work"
+
+    // WorkManager
+//    implementation "androidx.work:work-runtime:$libraries.workmanager"
+//    implementation "androidx.work:work-runtime-ktx:$libraries.workmanager"
+//    implementation "androidx.work:work-rxjava2:$libraries.workmanager"
+//    implementation "androidx.work:work-gcm:$libraries.workmanager"
+
 
 }
