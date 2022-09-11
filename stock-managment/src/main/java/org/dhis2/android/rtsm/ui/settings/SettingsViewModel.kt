@@ -23,6 +23,7 @@ class SettingsViewModel @Inject constructor(
     private val userManager: UserManager,
     private val syncManager: SyncManager
 ) : BaseViewModel(preferenceProvider, schedulerProvider) {
+
     private val _logoutStatus: MutableLiveData<OperationState<Boolean>> = MutableLiveData()
     val logoutStatus: LiveData<OperationState<Boolean>>
         get() = _logoutStatus
