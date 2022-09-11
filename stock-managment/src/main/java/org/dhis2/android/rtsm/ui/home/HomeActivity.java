@@ -1,6 +1,7 @@
 package org.dhis2.android.rtsm.ui.home;
 
 
+import static org.dhis2.android.rtsm.commons.Constants.INSTANT_DATA_SYNC;
 import static org.dhis2.android.rtsm.commons.Constants.INTENT_EXTRA_APP_CONFIG;
 
 import android.app.Dialog;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -23,7 +25,10 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.WorkInfo;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -37,7 +42,9 @@ import org.dhis2.android.rtsm.ui.base.BaseActivity;
 import org.dhis2.android.rtsm.ui.base.GenericListAdapter;
 import org.dhis2.android.rtsm.ui.managestock.ManageStockActivity;
 import org.dhis2.android.rtsm.ui.settings.SettingsActivity;
+import org.dhis2.android.rtsm.utils.ActivityManager;
 import org.dhis2.android.rtsm.utils.DateUtils;
+import org.dhis2.android.rtsm.utils.NetworkUtils;
 import org.hisp.dhis.android.core.option.Option;
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
 
@@ -49,7 +56,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import io.reactivex.disposables.CompositeDisposable;
 
 @AndroidEntryPoint
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity{
     private ActivityHomeBinding binding;
 
     private AutoCompleteTextView facilityTextView;
@@ -93,10 +100,50 @@ public class HomeActivity extends BaseActivity {
         binding.syncActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
                 startActivity(intent);
+
+//                boolean isNetworkAvailable = NetworkUtils.isOnline(HomeActivity.this);
+//                if (!isNetworkAvailable) {
+//                    ActivityManager.showErrorMessage(requireView(),
+//                            R.string.unable_to_sync_data_no_network_available);
+//                    return false;
+//                }
+
+//                viewModel.syncData();
+//                viewModel.getSyncDataStatus().observe(HomeActivity.this, workInfoList ->
+//                        workInfoList.forEach(workInfo -> {
+//                            if (workInfo.getTags().contains(INSTANT_DATA_SYNC)) {
+//                                handleDataSyncResponse(workInfo);
+//                            }
+//                        })
+//                );
+//                return true;
+
             }
         });
+    }
+
+    private void handleDataSyncResponse(WorkInfo workInfo) {
+
+        if (workInfo.getState() == WorkInfo.State.RUNNING) {
+//            if (getView() != null) {
+//                ActivityManager.showInfoMessage(getView(), getString(R.string.data_sync_in_progress));
+//            }
+
+            Toast.makeText(this, getString(R.string.data_sync_in_progress), Toast.LENGTH_SHORT).show();
+        } else if (workInfo.getState() == WorkInfo.State.SUCCEEDED) {
+//            if (getView() != null) {
+//                ActivityManager.showInfoMessage(getView(), getString(R.string.sync_completed));
+//            }
+            Toast.makeText(this, getString(R.string.sync_completed), Toast.LENGTH_SHORT).show();
+        } else if (workInfo.getState() == WorkInfo.State.FAILED) {
+//            if (getView() != null) {
+//                ActivityManager.showErrorMessage(getView(), getString(R.string.data_sync_error));
+//            }
+            Toast.makeText(this, getString(R.string.data_sync_error), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
