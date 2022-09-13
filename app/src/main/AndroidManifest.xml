@@ -216,6 +216,16 @@
                 <action android:name="cat.ereza.customactivityoncrash.ERROR" />
             </intent-filter>
         </activity>
+
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="org.dhis2.android.rtsm.androidx-startup"
+            tools:node="remove">
+        </provider>
+
+
+
     </application>
 
 </manifest>
