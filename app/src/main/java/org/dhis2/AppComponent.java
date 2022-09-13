@@ -29,8 +29,10 @@ import org.hisp.dhis.android.core.common.ValueType;
 
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.Binds;
 import dagger.Component;
 import dispatch.core.DispatcherProvider;
 
@@ -54,6 +56,8 @@ import dispatch.core.DispatcherProvider;
         NetworkUtilsModule.class,
         CustomDispatcherModule.class
 })
+
+
 public interface AppComponent {
 
     @Component.Builder
@@ -100,7 +104,7 @@ public interface AppComponent {
     DispatcherProvider customDispatcherProvider();
 
     //injection targets
-    void inject(App app);
+//    void inject(App app);
 
     //sub-components
     ServerComponent plus(ServerModule serverModule);
