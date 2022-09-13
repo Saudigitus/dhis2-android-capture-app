@@ -77,7 +77,7 @@ import timber.log.Timber;
 @HiltAndroidApp
 public class App extends MultiDexApplication implements Components, LifecycleObserver, Configuration.Provider {
 
-//    @Inject
+    @Inject
     HiltWorkerFactory workerFactory;
 
     static {
@@ -143,7 +143,7 @@ public class App extends MultiDexApplication implements Components, LifecycleObs
 
     private void setUpAppComponent() {
         appComponent = prepareAppComponent().build();
-        appComponent.inject(this);
+//        appComponent.inject(this);
     }
 
     protected void setUpServerComponent() {
@@ -377,4 +377,5 @@ public class App extends MultiDexApplication implements Components, LifecycleObs
                 .setWorkerFactory(workerFactory)
                 .build();
     }
+
 }
