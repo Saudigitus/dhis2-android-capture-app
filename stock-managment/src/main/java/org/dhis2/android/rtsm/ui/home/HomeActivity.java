@@ -13,14 +13,10 @@ import android.graphics.BlendMode;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -28,12 +24,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.WorkInfo;
 
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
@@ -45,7 +38,6 @@ import org.dhis2.android.rtsm.databinding.ActivityHomeBinding;
 import org.dhis2.android.rtsm.ui.base.BaseActivity;
 import org.dhis2.android.rtsm.ui.base.GenericListAdapter;
 import org.dhis2.android.rtsm.ui.managestock.ManageStockActivity;
-import org.dhis2.android.rtsm.ui.settings.SettingsActivity;
 import org.dhis2.android.rtsm.utils.ActivityManager;
 import org.dhis2.android.rtsm.utils.DateUtils;
 import org.dhis2.android.rtsm.utils.NetworkUtils;
