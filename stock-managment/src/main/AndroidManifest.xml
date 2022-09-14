@@ -15,11 +15,7 @@
             android:authorities="org.dhis2.android.rtsm.androidx-startup"
             tools:node="remove">
         </provider>
-
-        <activity
-            android:name=".ui.settings.SettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.App" />
+        
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false" />
