@@ -158,6 +158,7 @@ public class DataSetTableActivity extends ActivityGlobalAbstract implements Data
                     if(hasChanged) presenter.updateData();
                 })
                 .build();
+
         syncDialog.show(getSupportFragmentManager(), DATAVALUE_SYNC);
     }
 
