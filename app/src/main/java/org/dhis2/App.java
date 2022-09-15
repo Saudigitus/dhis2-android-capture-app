@@ -64,6 +64,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
+import dagger.Provides;
 import dagger.hilt.android.HiltAndroidApp;
 import dhis2.org.analytics.charts.ui.di.AnalyticsFragmentComponent;
 import dhis2.org.analytics.charts.ui.di.AnalyticsFragmentModule;
@@ -143,7 +144,7 @@ public class App extends MultiDexApplication implements Components, LifecycleObs
 
     private void setUpAppComponent() {
         appComponent = prepareAppComponent().build();
-//        appComponent.inject(this);
+        appComponent.inject(this);
     }
 
     protected void setUpServerComponent() {
