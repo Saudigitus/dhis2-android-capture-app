@@ -10,12 +10,6 @@
     <application
         android:supportsRtl="true">
 
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="org.dhis2.android.rtsm.androidx-startup"
-            tools:node="remove">
-        </provider>
-
         <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false" />
