@@ -1,5 +1,8 @@
 package org.dhis2;
 
+
+import androidx.hilt.work.HiltWorkerFactory;
+
 import org.dhis2.commons.featureconfig.di.FeatureConfigModule;
 import org.dhis2.commons.network.NetworkUtils;
 import org.dhis2.commons.network.NetworkUtilsModule;
@@ -29,11 +32,10 @@ import org.hisp.dhis.android.core.common.ValueType;
 
 import java.util.Map;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import dagger.Binds;
 import dagger.Component;
+
 import dispatch.core.DispatcherProvider;
 
 /**
@@ -104,7 +106,7 @@ public interface AppComponent {
     DispatcherProvider customDispatcherProvider();
 
     //injection targets
-//    void inject(App app);
+    void inject(App app);
 
     //sub-components
     ServerComponent plus(ServerModule serverModule);
