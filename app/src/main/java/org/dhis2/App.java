@@ -64,7 +64,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
-import dagger.Provides;
 import dagger.hilt.android.HiltAndroidApp;
 import dhis2.org.analytics.charts.ui.di.AnalyticsFragmentComponent;
 import dhis2.org.analytics.charts.ui.di.AnalyticsFragmentModule;
