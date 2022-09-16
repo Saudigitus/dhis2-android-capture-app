@@ -3,6 +3,8 @@
 package org.dhis2.android.rtsm.ui.home.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -66,6 +68,11 @@ fun DropdownComponent(
         Icons.Filled.KeyboardArrowDown
     }
 
+    val interactionSource = remember { MutableInteractionSource() }
+    if (interactionSource.collectIsPressedAsState().value) {
+        isExpanded = !isExpanded
+    }
+
     Column(Modifier.padding(16.dp)) {
         OutlinedTextField(
             value = selectedText,
@@ -104,7 +111,8 @@ fun DropdownComponent(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = themeColor,
                 unfocusedBorderColor = themeColor
-            )
+            ),
+            interactionSource = interactionSource
         )
 
         DropdownMenu(
@@ -163,6 +171,11 @@ fun DropdownComponentFacilities(
         Icons.Filled.KeyboardArrowDown
     }
 
+    val interactionSource = remember { MutableInteractionSource() }
+    if (interactionSource.collectIsPressedAsState().value) {
+        isExpanded = !isExpanded
+    }
+
     Column(Modifier.padding(16.dp)) {
         OutlinedTextField(
             value = selectedText,
@@ -201,7 +214,8 @@ fun DropdownComponentFacilities(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = themeColor,
                 unfocusedBorderColor = themeColor
-            )
+            ),
+            interactionSource = interactionSource
         )
 
         DropdownMenu(
@@ -253,6 +267,11 @@ fun DropdownComponentDistributedTo(
         Icons.Filled.KeyboardArrowDown
     }
 
+    val interactionSource = remember { MutableInteractionSource() }
+    if (interactionSource.collectIsPressedAsState().value) {
+        isExpanded = !isExpanded
+    }
+
     Column(Modifier.padding(16.dp)) {
         OutlinedTextField(
             value = selectedText,
@@ -291,7 +310,8 @@ fun DropdownComponentDistributedTo(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = themeColor,
                 unfocusedBorderColor = themeColor
-            )
+            ),
+            interactionSource = interactionSource
         )
 
         DropdownMenu(
