@@ -359,7 +359,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.2.1")
     //endregion
 
-
     //Serialization library
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${libraries.kotlinxserialization}"
+
+    //Conscrypt
+    implementation "org.conscrypt:conscrypt-android:${libraries.conscrypt}"
 }
