@@ -187,8 +187,10 @@ public class ReviewStockActivity extends BaseActivity {
     }
 
     private void navigateToHome() {
-        Intent intent = new Intent(this, HomeActivity.class);
-        getIntent().getParcelableExtra(INTENT_EXTRA_APP_CONFIG);
+        Intent intent = HomeActivity.getHomeActivityIntent(
+                this,
+                getIntent().getParcelableExtra(INTENT_EXTRA_APP_CONFIG)
+        );
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(INTENT_EXTRA_MESSAGE, getString(R.string.transaction_completed));
