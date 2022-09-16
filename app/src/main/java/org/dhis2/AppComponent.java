@@ -1,7 +1,6 @@
 package org.dhis2;
 
 
-import androidx.hilt.work.HiltWorkerFactory;
 
 import org.dhis2.commons.featureconfig.di.FeatureConfigModule;
 import org.dhis2.commons.network.NetworkUtils;
