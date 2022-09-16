@@ -93,7 +93,6 @@ class HomeViewModelUnitTest {
     private lateinit var facilitiesArgumentCaptor:
         ArgumentCaptor<OperationState<List<OrganisationUnit>>>
 
-
     @Captor
     private lateinit var destinationsArgumentCaptor: ArgumentCaptor<OperationState<List<Option>>>
 
