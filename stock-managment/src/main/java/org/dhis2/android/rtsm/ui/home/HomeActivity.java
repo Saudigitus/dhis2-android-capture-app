@@ -100,9 +100,6 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-//                Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
-//                startActivity(intent);
-
                 boolean isNetworkAvailable = NetworkUtils.isOnline(HomeActivity.this);
                 if (!isNetworkAvailable) {
                     ActivityManager.showErrorMessage(view, R.string.unable_to_sync_data_no_network_available);
