@@ -38,10 +38,10 @@ class HomeViewModel @Inject constructor(
     val config: AppConfig = savedState.get<AppConfig>(INTENT_EXTRA_APP_CONFIG)
         ?: throw InitializationException("Some configuration parameters are missing")
 
-    private val _transactionType = MutableStateFlow<TransactionType?>(null)
-    val transactionType: StateFlow<TransactionType?> get() = _transactionType
+    private val _transactionType = MutableStateFlow(TransactionType.DISTRIBUTION)
+    val transactionType: StateFlow<TransactionType> get() = _transactionType
 
-    private val _isDistribution = MutableStateFlow(false)
+    private val _isDistribution = MutableStateFlow(true)
     val isDistribution: StateFlow<Boolean>
         get() = _isDistribution
 
@@ -176,7 +176,7 @@ class HomeViewModel @Inject constructor(
         }
 
         return Transaction(
-            transactionType.value!!,
+            transactionType.value,
             ParcelUtils.facilityToIdentifiableModelParcel(facility.value!!),
             transactionDate.value.humanReadableDate(),
             destination.value?.let { ParcelUtils.distributedTo_ToIdentifiableModelParcel(it) }
@@ -200,16 +200,15 @@ class HomeViewModel @Inject constructor(
 
     fun fromFacilitiesLabel(from: String) {
         when (transactionType.value) {
-            TransactionType.DISTRIBUTION -> _toolbarSubtitle.value = from
-            TransactionType.DISCARD -> _toolbarSubtitle.value = from
-            TransactionType.CORRECTION -> _toolbarSubtitle.value = from
-            else -> {}
+            TransactionType.DISTRIBUTION -> _toolbarSubtitle.value = "From $from"
+            TransactionType.DISCARD -> _toolbarSubtitle.value = "From $from"
+            TransactionType.CORRECTION -> _toolbarSubtitle.value = "From $from"
         }
     }
 
     fun deliveryToLabel(to: String) {
         if (transactionType.value == TransactionType.DISTRIBUTION) {
-            _toolbarSubtitle.value = "${toolbarSubtitle.value} -> $to"
+            _toolbarSubtitle.value = "${toolbarSubtitle.value} ->  To $to"
         }
     }
 }
