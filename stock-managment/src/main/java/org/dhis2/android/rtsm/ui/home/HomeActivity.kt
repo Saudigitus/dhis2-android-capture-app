@@ -1,5 +1,8 @@
 package org.dhis2.android.rtsm.ui.home
 
+import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.WindowManager
@@ -7,16 +10,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
+import androidx.core.content.ContextCompat.startActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
+import org.dhis2.android.rtsm.commons.Constants.INTENT_EXTRA_APP_CONFIG
+import org.dhis2.android.rtsm.data.AppConfig
 import org.dhis2.android.rtsm.data.TransactionType
-import org.dhis2.android.rtsm.ui.home.screens.Backdrop
+import org.dhis2.android.rtsm.ui.home.screens.HomeScreen
+import org.dhis2.android.rtsm.ui.managestock.ManageStockActivity
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
@@ -31,9 +41,11 @@ class HomeActivity : ComponentActivity() {
             Surface(
                 modifier = Modifier.fillMaxSize()
             ) {
-                viewModel.transactionType.collectAsState().value?.let { updateTheme(it) }
+                updateTheme(viewModel.transactionType.collectAsState().value)
                 val color = Color(colorResource(themeColor).toArgb())
-                Backdrop(this, viewModel, color)
+                HomeScreen(this, viewModel, color) { scope, scaffold ->
+                    navigateToManageStock(scope, scaffold)
+                }
             }
         }
     }
@@ -67,6 +79,41 @@ class HomeActivity : ComponentActivity() {
             a.recycle()
             window.statusBarColor = colorToReturn
             themeColor = color
+        }
+    }
+
+    private fun navigateToManageStock(
+        scope: CoroutineScope,
+        scaffoldState: ScaffoldState
+    ) {
+        val fieldError = viewModel.checkForFieldErrors()
+        if (fieldError != null) {
+            scope.launch {
+                scaffoldState.snackbarHostState
+                    .showSnackbar(getString(fieldError))
+            }
+            return
+        }
+        startActivity(
+            this.baseContext,
+            ManageStockActivity
+                .getManageStockActivityIntent(
+                    this.baseContext,
+                    viewModel.getData(),
+                    intent.getParcelableExtra(INTENT_EXTRA_APP_CONFIG)
+                ).apply {
+                    this.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                },
+            null
+        )
+    }
+
+    companion object {
+        @JvmStatic
+        fun getHomeActivityIntent(context: Context, config: AppConfig): Intent? {
+            val intent = Intent(context, HomeActivity::class.java)
+            intent.putExtra(INTENT_EXTRA_APP_CONFIG, config)
+            return intent
         }
     }
 }
