@@ -3,10 +3,6 @@ package org.dhis2.android.rtsm.ui.home
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.dhis2.android.rtsm.R
@@ -25,6 +21,10 @@ import org.dhis2.android.rtsm.utils.ParcelUtils
 import org.dhis2.android.rtsm.utils.humanReadableDate
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -71,8 +71,11 @@ class HomeViewModel @Inject constructor(
     private val _toolbarTitle = MutableStateFlow(TransactionType.DISTRIBUTION)
     val toolbarTitle: StateFlow<TransactionType> get() = _toolbarTitle
 
-    private val _toolbarSubtitle = MutableStateFlow("")
-    val toolbarSubtitle: StateFlow<String> get() = _toolbarSubtitle
+    private val _fromFacility = MutableStateFlow("From...")
+    val fromFacility: StateFlow<String> get() = _fromFacility
+
+    private val _deliveryTo = MutableStateFlow<String?>(null)
+    val deliveryTo: StateFlow<String?> get() = _deliveryTo
 
     init {
         loadFacilities()
@@ -123,6 +126,7 @@ class HomeViewModel @Inject constructor(
         // so ensure you clear it for others if it has been set
         if (type != TransactionType.DISTRIBUTION) {
             _destination.value = null
+            _deliveryTo.value = null
         }
     }
 
@@ -200,15 +204,15 @@ class HomeViewModel @Inject constructor(
 
     fun fromFacilitiesLabel(from: String) {
         when (transactionType.value) {
-            TransactionType.DISTRIBUTION -> _toolbarSubtitle.value = "From $from"
-            TransactionType.DISCARD -> _toolbarSubtitle.value = "From $from"
-            TransactionType.CORRECTION -> _toolbarSubtitle.value = "From $from"
+            TransactionType.DISTRIBUTION -> _fromFacility.value = "From $from"
+            TransactionType.DISCARD -> _fromFacility.value = "From $from"
+            TransactionType.CORRECTION -> _fromFacility.value = "From $from"
         }
     }
 
     fun deliveryToLabel(to: String) {
         if (transactionType.value == TransactionType.DISTRIBUTION) {
-            _toolbarSubtitle.value = "${toolbarSubtitle.value} ->  To $to"
+            _deliveryTo.value = "To $to"
         }
     }
 }
