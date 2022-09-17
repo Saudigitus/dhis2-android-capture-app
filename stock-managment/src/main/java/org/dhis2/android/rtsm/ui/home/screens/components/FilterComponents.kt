@@ -1,4 +1,4 @@
-package org.dhis2.android.rtsm.ui.home.screens
+package org.dhis2.android.rtsm.ui.home.screens.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
