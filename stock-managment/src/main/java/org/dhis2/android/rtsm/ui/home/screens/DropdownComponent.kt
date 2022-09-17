@@ -73,7 +73,7 @@ fun DropdownComponent(
         isExpanded = !isExpanded
     }
 
-    Column(Modifier.padding(16.dp)) {
+    Column(Modifier.padding(16.dp, 4.dp, 16.dp, 4.dp)) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
@@ -176,7 +176,7 @@ fun DropdownComponentFacilities(
         isExpanded = !isExpanded
     }
 
-    Column(Modifier.padding(16.dp)) {
+    Column(Modifier.padding(16.dp, 4.dp, 16.dp, 4.dp)) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
@@ -272,7 +272,7 @@ fun DropdownComponentDistributedTo(
         isExpanded = !isExpanded
     }
 
-    Column(Modifier.padding(16.dp)) {
+    Column(Modifier.padding(16.dp, 4.dp, 16.dp, 4.dp)) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
@@ -305,7 +305,7 @@ fun DropdownComponentDistributedTo(
             },
             shape = RoundedCornerShape(30.dp),
             placeholder = {
-                Text(text = capitalizeText(data.first().displayName().toString()))
+                Text(text = capitalizeText("${stringResource(R.string.to)}..."))
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = themeColor,
