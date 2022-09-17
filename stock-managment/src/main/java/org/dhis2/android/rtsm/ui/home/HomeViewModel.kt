@@ -145,9 +145,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun checkForFieldErrors(): Int? {
-        return if (_transactionType.value == null) {
-            R.string.mandatory_transaction_selection
-        } else if (_facility.value == null) {
+        return if (_facility.value == null) {
             R.string.mandatory_facility_selection
         } else if (_transactionDate.value == null) {
             R.string.mandatory_transaction_date_selection
@@ -161,21 +159,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getData(): Transaction {
-        if (transactionType.value == null) {
-            throw UserIntentParcelCreationException(
-                "Unable to create parcel with empty transaction type"
-            )
-        }
 
         if (facility.value == null) {
             throw UserIntentParcelCreationException(
                 "Unable to create parcel with empty facility"
-            )
-        }
-
-        if (transactionDate.value == null) {
-            throw UserIntentParcelCreationException(
-                "Unable to create parcel with empty transaction date"
             )
         }
 
@@ -191,11 +178,6 @@ class HomeViewModel @Inject constructor(
         _transactionDate.value = Instant.ofEpochMilli(epoch)
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime()
-    }
-
-    @JvmName("getToolbarTitle1")
-    fun getToolbarTitle(): StateFlow<TransactionType> {
-        return toolbarTitle
     }
 
     fun setToolbarTitle(transactionType: TransactionType) {
