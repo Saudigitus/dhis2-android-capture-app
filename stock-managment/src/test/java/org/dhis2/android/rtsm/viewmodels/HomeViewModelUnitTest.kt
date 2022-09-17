@@ -178,8 +178,8 @@ class HomeViewModelUnitTest {
     }
 
     @Test
-    fun init_shouldNotSetDefaultTransaction() {
-        assertNull(viewModel.transactionType.value)
+    fun init_shouldSetDefaultTransaction() {
+        assertNotNull(viewModel.transactionType.value)
     }
 
     @Test
@@ -223,10 +223,6 @@ class HomeViewModelUnitTest {
         assertEquals(viewModel.isDistribution.value, false)
     }
 
-    @Test
-    fun cannotManageStock_ifNoTransactionIsSelected() {
-        assertEquals(viewModel.checkForFieldErrors(), R.string.mandatory_transaction_selection)
-    }
 
     @Test
     fun distributionTransaction_cannotManageStock_ifNoParametersAreSet() {
@@ -363,14 +359,6 @@ class HomeViewModelUnitTest {
     }
 
     @Test(expected = UserIntentParcelCreationException::class)
-    fun missingTransactionType_cannotCreateUserIntent() {
-        viewModel.setFacility(facilities[1])
-        viewModel.setTransactionDate(getTime())
-
-        viewModel.getData()
-    }
-
-    @Test(expected = UserIntentParcelCreationException::class)
     fun distributionWithMissingFacility_cannotCreateUserIntent() {
         viewModel.selectTransaction(TransactionType.DISTRIBUTION)
         viewModel.setTransactionDate(getTime())
@@ -470,7 +458,7 @@ class HomeViewModelUnitTest {
     fun shouldChangeToolbarTitle_forCorrection() {
         viewModel.setToolbarTitle(TransactionType.CORRECTION)
 
-        val title = viewModel.toolbarTitle.value?.name
+        val title = viewModel.toolbarTitle.value.name
         assertEquals(TransactionType.CORRECTION.name, title)
     }
 
@@ -493,7 +481,8 @@ class HomeViewModelUnitTest {
             viewModel.deliveryToLabel(distributedTo)
         }
 
-        assertNotNull(viewModel.toolbarSubtitle.value)
+        assertNotNull(viewModel.fromFacility.value)
+        assertNotNull(viewModel.deliveryTo.value)
     }
 
     @Test
@@ -509,7 +498,7 @@ class HomeViewModelUnitTest {
 
         viewModel.fromFacilitiesLabel(facilityName)
 
-        assertNotNull(viewModel.toolbarSubtitle.value)
+        assertNotNull(viewModel.fromFacility.value)
     }
 
     @Test
@@ -525,6 +514,6 @@ class HomeViewModelUnitTest {
 
         viewModel.fromFacilitiesLabel(facilityName)
 
-        assertNotNull(viewModel.toolbarSubtitle.value)
+        assertNotNull(viewModel.fromFacility.value)
     }
 }
