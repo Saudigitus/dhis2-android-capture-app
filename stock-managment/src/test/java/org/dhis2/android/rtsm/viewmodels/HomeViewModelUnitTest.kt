@@ -41,7 +41,6 @@ import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -222,7 +221,6 @@ class HomeViewModelUnitTest {
         viewModel.selectTransaction(TransactionType.CORRECTION)
         assertEquals(viewModel.isDistribution.value, false)
     }
-
 
     @Test
     fun distributionTransaction_cannotManageStock_ifNoParametersAreSet() {
