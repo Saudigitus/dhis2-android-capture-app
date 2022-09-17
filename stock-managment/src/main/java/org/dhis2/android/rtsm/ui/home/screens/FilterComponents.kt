@@ -2,12 +2,14 @@ package org.dhis2.android.rtsm.ui.home.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.OperationState
 import org.dhis2.android.rtsm.data.TransactionType
@@ -26,7 +28,8 @@ fun FilterList(
     val showDestination = viewModel.isDistribution.collectAsState().value
 
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth()
+            .padding(bottom = 16.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         LazyColumn() {
