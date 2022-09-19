@@ -139,8 +139,8 @@ class HomeViewModelUnitTest {
             schedulerProvider,
             preferenceProvider,
             metadataManager,
-            getStateHandle(),
-            syncManager
+            syncManager,
+            getStateHandle()
         )
 
         viewModel.facilities.asLiveData().observeForever(facilitiesObserver)
