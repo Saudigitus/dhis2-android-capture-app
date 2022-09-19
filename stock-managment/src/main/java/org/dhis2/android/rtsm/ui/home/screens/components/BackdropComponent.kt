@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.runtime.Composable
@@ -13,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CoroutineScope
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -20,7 +22,9 @@ import org.dhis2.android.rtsm.ui.home.HomeViewModel
 fun Backdrop(
     activity: Activity,
     viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    themeColor: Color
+    themeColor: Color,
+    scaffoldState: ScaffoldState,
+    syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ ->}
 ) {
     val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
 
@@ -34,7 +38,9 @@ fun Backdrop(
                 navigationAction = {
                     activity.finish()
                 },
-                backdropState
+                backdropState,
+                scaffoldState,
+                syncAction
             )
         },
         backLayerBackgroundColor = themeColor,

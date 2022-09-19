@@ -9,6 +9,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.utils.Utils.Companion.capitalizeText
@@ -36,7 +38,9 @@ fun Toolbar(
     to: String?,
     themeColor: Color,
     navigationAction: () -> Unit,
-    backdropState: BackdropScaffoldState
+    backdropState: BackdropScaffoldState,
+    scaffoldState: ScaffoldState,
+    syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = {_, _ ->}
 ) {
     val scope = rememberCoroutineScope()
 
@@ -101,7 +105,9 @@ fun Toolbar(
                 horizontalArrangement = Arrangement.End
             ) {
                 IconButton(
-                    onClick = {}
+                    onClick = {
+                        syncAction(scope, scaffoldState)
+                    }
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_sync),

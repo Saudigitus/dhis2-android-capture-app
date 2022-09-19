@@ -27,7 +27,8 @@ fun HomeScreen(
     activity: Activity,
     viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     themeColor: Color,
-    proceedAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> }
+    proceedAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> },
+    syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> }
 ) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -59,6 +60,8 @@ fun HomeScreen(
         }
     ) {
         it.calculateBottomPadding()
-        Backdrop(activity, viewModel, themeColor)
+        Backdrop(activity, viewModel, themeColor, scaffoldState) { coroutineScope, scaffold ->
+            syncAction(coroutineScope, scaffold)
+        }
     }
 }
