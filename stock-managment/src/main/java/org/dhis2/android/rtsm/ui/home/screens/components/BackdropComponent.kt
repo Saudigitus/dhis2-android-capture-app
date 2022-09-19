@@ -24,7 +24,7 @@ fun Backdrop(
     viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     themeColor: Color,
     scaffoldState: ScaffoldState,
-    syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ ->}
+    syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> }
 ) {
     val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
 

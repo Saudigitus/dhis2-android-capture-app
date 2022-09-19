@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.View
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -30,9 +29,7 @@ import org.dhis2.android.rtsm.data.AppConfig
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.screens.HomeScreen
 import org.dhis2.android.rtsm.ui.managestock.ManageStockActivity
-import org.dhis2.android.rtsm.utils.ActivityManager
 import org.dhis2.android.rtsm.utils.NetworkUtils
-
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
@@ -48,7 +45,8 @@ class HomeActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 updateTheme(viewModel.transactionType.collectAsState().value)
-                HomeScreen(this, viewModel, Color(colorResource(themeColor).toArgb()),
+                HomeScreen(
+                    this, viewModel, Color(colorResource(themeColor).toArgb()),
                     { scope, scaffold -> navigateToManageStock(scope, scaffold) },
                     { scope, scaffold -> synchronizeData(scope, scaffold) }
                 )
@@ -94,8 +92,10 @@ class HomeActivity : ComponentActivity() {
     ) {
         val isNetworkAvailable: Boolean = NetworkUtils.isOnline(this@HomeActivity)
         if (!isNetworkAvailable) {
-            showSnackBar(scope, scaffoldState,
-                getString(R.string.unable_to_sync_data_no_network_available))
+            showSnackBar(
+                scope, scaffoldState,
+                getString(R.string.unable_to_sync_data_no_network_available)
+            )
         } else {
             viewModel.syncData()
             viewModel.getSyncDataStatus().observe(
@@ -138,7 +138,6 @@ class HomeActivity : ComponentActivity() {
             scaffoldState.snackbarHostState.showSnackbar(message)
         }
     }
-
 
     private fun navigateToManageStock(
         scope: CoroutineScope,

@@ -40,7 +40,7 @@ fun Toolbar(
     navigationAction: () -> Unit,
     backdropState: BackdropScaffoldState,
     scaffoldState: ScaffoldState,
-    syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = {_, _ ->}
+    syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> }
 ) {
     val scope = rememberCoroutineScope()
 
