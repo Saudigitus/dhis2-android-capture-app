@@ -208,7 +208,7 @@ fun DropdownComponentFacilities(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        isExpanded = !isExpanded
+                        openOrgUnitTreeSelector(supportFragmentManager, homeContext)
                     }
                 ) {
                     Icon(icon, contentDescription = null, tint = themeColor)
