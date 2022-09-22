@@ -65,8 +65,15 @@ fun HomeScreen(
         }
     ) {
         it.calculateBottomPadding()
-        Backdrop(activity, viewModel, themeColor, supportFragmentManager, homeContext, scaffoldState) {
-                coroutineScope, scaffold -> syncAction(coroutineScope, scaffold)
+        Backdrop(
+            activity,
+            viewModel,
+            themeColor,
+            supportFragmentManager,
+            homeContext,
+            scaffoldState
+        ) { coroutineScope, scaffold ->
+            syncAction(coroutineScope, scaffold)
         }
     }
 }
