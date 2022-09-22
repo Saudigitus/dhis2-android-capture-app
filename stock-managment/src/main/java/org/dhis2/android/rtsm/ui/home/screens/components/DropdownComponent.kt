@@ -58,7 +58,8 @@ fun DropdownComponent(
     var isExpanded by remember { mutableStateOf(false) }
 
     var itemIcon by remember { mutableStateOf(data.first().icon) }
-    var selectedText by remember { mutableStateOf("") }
+    var selectedText by remember { mutableStateOf(
+        capitalizeText(data.first().transactionType.name)) }
 
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
@@ -305,7 +306,7 @@ fun DropdownComponentDistributedTo(
             },
             shape = RoundedCornerShape(30.dp),
             placeholder = {
-                Text(text = capitalizeText("${stringResource(R.string.to)}..."))
+                Text(text = capitalizeText(stringResource(R.string.to)))
             },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = themeColor,
