@@ -58,8 +58,11 @@ fun DropdownComponent(
     var isExpanded by remember { mutableStateOf(false) }
 
     var itemIcon by remember { mutableStateOf(data.first().icon) }
-    var selectedText by remember { mutableStateOf(
-        capitalizeText(data.first().transactionType.name)) }
+    var selectedText by remember {
+        mutableStateOf(
+            capitalizeText(data.first().transactionType.name)
+        )
+    }
 
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
