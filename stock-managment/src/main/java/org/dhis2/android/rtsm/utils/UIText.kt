@@ -8,11 +8,11 @@ sealed class UIText {
     class StringRes(
         @androidx.annotation.StringRes val resId: Int,
         vararg val args: Any
-    ): UIText()
+    ) : UIText()
 
     @Composable
     fun asString(): String {
-        return when(this) {
+        return when (this) {
             is DynamicString -> value
             is StringRes -> stringResource(resId, *args)
         }
