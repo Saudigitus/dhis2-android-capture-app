@@ -6,9 +6,9 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.WindowManager
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Surface
@@ -30,12 +30,14 @@ import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.screens.HomeScreen
 import org.dhis2.android.rtsm.ui.managestock.ManageStockActivity
 import org.dhis2.android.rtsm.utils.NetworkUtils
+import org.dhis2.commons.orgunitselector.OnOrgUnitSelectionFinished
+import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
 @AndroidEntryPoint
-class HomeActivity : ComponentActivity() {
-
+class HomeActivity : AppCompatActivity() , OnOrgUnitSelectionFinished {
     private val viewModel: HomeViewModel by viewModels()
     private var themeColor = R.color.colorPrimary
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +48,12 @@ class HomeActivity : ComponentActivity() {
             ) {
                 updateTheme(viewModel.transactionType.collectAsState().value)
                 HomeScreen(
-                    this, viewModel, Color(colorResource(themeColor).toArgb()),
-                    { scope, scaffold -> navigateToManageStock(scope, scaffold) },
-                    { scope, scaffold -> synchronizeData(scope, scaffold) }
-                )
+                    this, viewModel, Color(colorResource(themeColor).toArgb()), supportFragmentManager, this@HomeActivity,
+                    { scope, scaffold -> navigateToManageStock(scope, scaffold) }
+                ) { scope, scaffold -> synchronizeData(scope, scaffold) }
             }
         }
+
     }
 
     private fun updateTheme(type: TransactionType) {
@@ -173,4 +175,14 @@ class HomeActivity : ComponentActivity() {
             return intent
         }
     }
+
+    override fun onSelectionFinished(selectedOrgUnits: List<OrganisationUnit>) {
+        viewModel.setFacility(selectedOrgUnits[0])
+        viewModel.fromFacilitiesLabel(selectedOrgUnits[0].displayName().toString())
+        viewModel.setSelectedText(selectedOrgUnits[0].displayName().toString());
+    }
+
+
+
+
 }
