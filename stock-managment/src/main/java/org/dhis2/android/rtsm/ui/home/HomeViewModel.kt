@@ -3,10 +3,6 @@ package org.dhis2.android.rtsm.ui.home
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.dhis2.android.rtsm.R
@@ -24,9 +20,14 @@ import org.dhis2.android.rtsm.services.preferences.PreferenceProvider
 import org.dhis2.android.rtsm.services.scheduler.BaseSchedulerProvider
 import org.dhis2.android.rtsm.ui.base.BaseViewModel
 import org.dhis2.android.rtsm.utils.ParcelUtils
+import org.dhis2.android.rtsm.utils.UIText
 import org.dhis2.android.rtsm.utils.humanReadableDate
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -74,11 +75,11 @@ class HomeViewModel @Inject constructor(
     private val _toolbarTitle = MutableStateFlow(TransactionType.DISTRIBUTION)
     val toolbarTitle: StateFlow<TransactionType> get() = _toolbarTitle
 
-    private val _fromFacility = MutableStateFlow("From facility")
-    val fromFacility: StateFlow<String> get() = _fromFacility
+    private val _fromFacility = MutableStateFlow(UIText.StringRes(R.string.from_facility))
+    val fromFacility: StateFlow<UIText> get() = _fromFacility
 
-    private val _deliveryTo = MutableStateFlow<String?>("To facility")
-    val deliveryTo: StateFlow<String?> get() = _deliveryTo
+    private val _deliveryTo = MutableStateFlow<UIText?>(UIText.StringRes(R.string.to_facility))
+    val deliveryTo: StateFlow<UIText?> get() = _deliveryTo
 
     init {
         loadFacilities()
@@ -131,7 +132,7 @@ class HomeViewModel @Inject constructor(
             _destination.value = null
             _deliveryTo.value = null
         } else {
-            _deliveryTo.value = "To facility"
+            _deliveryTo.value = UIText.StringRes(R.string.to_facility)
         }
     }
 
@@ -190,15 +191,21 @@ class HomeViewModel @Inject constructor(
 
     fun fromFacilitiesLabel(from: String) {
         when (transactionType.value) {
-            TransactionType.DISTRIBUTION -> _fromFacility.value = "From $from"
-            TransactionType.DISCARD -> _fromFacility.value = "From $from"
-            TransactionType.CORRECTION -> _fromFacility.value = "From $from"
+            TransactionType.DISTRIBUTION -> {
+                _fromFacility.value = UIText.StringRes(R.string.from_arg, from)
+            }
+            TransactionType.DISCARD -> {
+                _fromFacility.value = UIText.StringRes(R.string.from_arg, from)
+            }
+            TransactionType.CORRECTION -> {
+                _fromFacility.value = UIText.StringRes(R.string.from_arg, from)
+            }
         }
     }
 
     fun deliveryToLabel(to: String) {
         if (transactionType.value == TransactionType.DISTRIBUTION) {
-            _deliveryTo.value = "To $to"
+            _deliveryTo.value = UIText.StringRes(R.string.to_arg, to)
         }
     }
 

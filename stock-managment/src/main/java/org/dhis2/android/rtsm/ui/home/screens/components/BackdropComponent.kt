@@ -32,8 +32,8 @@ fun Backdrop(
         appBar = {
             Toolbar(
                 viewModel.toolbarTitle.collectAsState().value.name,
-                viewModel.fromFacility.collectAsState().value,
-                viewModel.deliveryTo.collectAsState().value,
+                viewModel.fromFacility.collectAsState().value.asString(),
+                viewModel.deliveryTo.collectAsState().value?.asString(),
                 themeColor,
                 navigationAction = {
                     activity.finish()
