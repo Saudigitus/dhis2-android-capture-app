@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,10 +42,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.fragment.app.FragmentManager
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.models.TransactionItem
+import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.utils.Utils.Companion.capitalizeText
+import org.dhis2.commons.filters.FilterManager
+import org.dhis2.commons.orgunitselector.OUTreeFragment
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
@@ -157,6 +162,8 @@ fun DropdownComponent(
 fun DropdownComponentFacilities(
     viewModel: HomeViewModel,
     themeColor: Color = colorResource(R.color.colorPrimary),
+    supportFragmentManager: FragmentManager,
+    homeContext: HomeActivity,
     data: List<OrganisationUnit>
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -173,12 +180,12 @@ fun DropdownComponentFacilities(
 
     val interactionSource = remember { MutableInteractionSource() }
     if (interactionSource.collectIsPressedAsState().value) {
-        isExpanded = !isExpanded
+        openOrgUnitTreeSelector(supportFragmentManager, homeContext)
     }
 
     Column(Modifier.padding(16.dp, 4.dp, 16.dp, 4.dp)) {
         OutlinedTextField(
-            value = selectedText,
+            value = viewModel.test.collectAsState().value,
             onValueChange = { selectedText = it },
             modifier = Modifier
                 .fillMaxWidth()
@@ -247,6 +254,7 @@ fun DropdownComponentFacilities(
             }
         }
     }
+
 }
 
 @Composable
@@ -344,3 +352,16 @@ fun DropdownComponentDistributedTo(
         }
     }
 }
+
+fun openOrgUnitTreeSelector(supportFragmentManager: FragmentManager, homeContext: HomeActivity) {
+    OUTreeFragment.newInstance(
+        true,
+        FilterManager.getInstance().orgUnitFilters.map { it.uid() }.toMutableList()
+    ).apply {
+            selectionCallback = homeContext
+    }.show(supportFragmentManager, "OUTreeFragment")
+}
+
+
+
+
