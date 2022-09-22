@@ -47,7 +47,8 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
             ) {
                 updateTheme(viewModel.transactionType.collectAsState().value)
                 HomeScreen(
-                    this, viewModel, Color(colorResource(themeColor).toArgb()), supportFragmentManager, this@HomeActivity,
+                    this, viewModel, Color(colorResource(themeColor).toArgb()),
+                    supportFragmentManager, this@HomeActivity,
                     { scope, scaffold -> navigateToManageStock(scope, scaffold) }
                 ) { scope, scaffold -> synchronizeData(scope, scaffold) }
             }
