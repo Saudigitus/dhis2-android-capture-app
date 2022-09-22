@@ -10,10 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentManager
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.OperationState
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.data.models.TransactionItem
+import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
@@ -21,14 +23,17 @@ import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 @Composable
 fun FilterList(
     viewModel: HomeViewModel,
-    themeColor: Color
-) {
+    themeColor: Color,
+    supportFragmentManager: FragmentManager,
+    homeContext: HomeActivity
+    ) {
     val facilities = viewModel.facilities.collectAsState().value
     val destinations = viewModel.destinationsList.collectAsState().value
     val showDestination = viewModel.isDistribution.collectAsState().value
 
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(bottom = 16.dp),
         contentAlignment = Alignment.TopCenter
     ) {
@@ -45,6 +50,8 @@ fun FilterList(
                 DropdownComponentFacilities(
                     viewModel,
                     themeColor,
+                    supportFragmentManager,
+                    homeContext,
                     getFacilities(facilities)
                 )
             }
