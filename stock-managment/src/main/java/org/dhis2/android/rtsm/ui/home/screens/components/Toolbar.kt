@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BackdropScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -56,7 +57,8 @@ fun Toolbar(
                     },
                     style = MaterialTheme.typography.subtitle1,
                     maxLines = 1,
-                    fontSize = 20.sp
+                    fontSize = 17.sp,
+                    lineHeight = 24.sp
                 )
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -75,7 +77,7 @@ fun Toolbar(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_from_to),
                             contentDescription = null,
-                            Modifier.padding(5.dp),
+                            Modifier.padding(start = 5.dp, end = 5.dp).size(18.dp),
                             tint = colorResource(R.color.toolbar_subtitle)
                         )
                         Text(
@@ -88,6 +90,12 @@ fun Toolbar(
                             color = colorResource(R.color.toolbar_subtitle)
                         )
                     }
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_alert),
+                        contentDescription = null,
+                        Modifier.size(18.dp).padding(start = 5.dp),
+                        tint = Color.White
+                    )
                 }
             }
         },
