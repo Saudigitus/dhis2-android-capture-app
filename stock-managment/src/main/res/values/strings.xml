@@ -50,7 +50,7 @@
     <string name="confirmation">Confirmation</string>
     
     <string name="from">From</string>
-    <string name="to">To</string>
+    <string name="to">Delivery to…</string>
 
     <!-- Languages -->
     <string name="language_english">English</string>
