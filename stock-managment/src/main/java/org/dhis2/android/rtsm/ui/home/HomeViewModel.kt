@@ -3,10 +3,6 @@ package org.dhis2.android.rtsm.ui.home
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.dhis2.android.rtsm.R
@@ -27,6 +23,10 @@ import org.dhis2.android.rtsm.utils.ParcelUtils
 import org.dhis2.android.rtsm.utils.humanReadableDate
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -74,10 +74,10 @@ class HomeViewModel @Inject constructor(
     private val _toolbarTitle = MutableStateFlow(TransactionType.DISTRIBUTION)
     val toolbarTitle: StateFlow<TransactionType> get() = _toolbarTitle
 
-    private val _fromFacility = MutableStateFlow("From...")
+    private val _fromFacility = MutableStateFlow("From facility")
     val fromFacility: StateFlow<String> get() = _fromFacility
 
-    private val _deliveryTo = MutableStateFlow<String?>(null)
+    private val _deliveryTo = MutableStateFlow<String?>("To facility")
     val deliveryTo: StateFlow<String?> get() = _deliveryTo
 
     init {
@@ -130,6 +130,8 @@ class HomeViewModel @Inject constructor(
         if (type != TransactionType.DISTRIBUTION) {
             _destination.value = null
             _deliveryTo.value = null
+        } else {
+            _deliveryTo.value = "To facility"
         }
     }
 
