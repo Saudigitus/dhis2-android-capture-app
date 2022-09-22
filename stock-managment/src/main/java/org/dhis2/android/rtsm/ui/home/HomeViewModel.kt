@@ -80,6 +80,9 @@ class HomeViewModel @Inject constructor(
     private val _deliveryTo = MutableStateFlow<String?>(null)
     val deliveryTo: StateFlow<String?> get() = _deliveryTo
 
+    private val _test = MutableStateFlow("")
+    val test: StateFlow<String> get() = _test
+
     init {
         loadFacilities()
         loadDestinations()
@@ -204,4 +207,8 @@ class HomeViewModel @Inject constructor(
         syncManager.dataSync()
     }
     fun getSyncDataStatus() = syncManager.getSyncStatus(INSTANT_DATA_SYNC)
+
+    fun setSelectedText(text: String) {
+        _test.value = text
+    }
 }
