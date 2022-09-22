@@ -26,7 +26,7 @@ fun FilterList(
     themeColor: Color,
     supportFragmentManager: FragmentManager,
     homeContext: HomeActivity
-    ) {
+) {
     val facilities = viewModel.facilities.collectAsState().value
     val destinations = viewModel.destinationsList.collectAsState().value
     val showDestination = viewModel.isDistribution.collectAsState().value
