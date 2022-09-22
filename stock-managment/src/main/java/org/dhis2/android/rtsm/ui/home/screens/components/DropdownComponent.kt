@@ -254,7 +254,6 @@ fun DropdownComponentFacilities(
             }
         }
     }
-
 }
 
 @Composable
@@ -358,10 +357,6 @@ fun openOrgUnitTreeSelector(supportFragmentManager: FragmentManager, homeContext
         true,
         FilterManager.getInstance().orgUnitFilters.map { it.uid() }.toMutableList()
     ).apply {
-            selectionCallback = homeContext
+        selectionCallback = homeContext
     }.show(supportFragmentManager, "OUTreeFragment")
 }
-
-
-
-
