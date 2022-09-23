@@ -30,6 +30,7 @@ import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.screens.HomeScreen
 import org.dhis2.android.rtsm.ui.managestock.ManageStockActivity
 import org.dhis2.android.rtsm.utils.NetworkUtils
+import org.dhis2.commons.filters.FilterManager
 import org.dhis2.commons.orgunitselector.OnOrgUnitSelectionFinished
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
@@ -37,9 +38,12 @@ import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
     private val viewModel: HomeViewModel by viewModels()
     private var themeColor = R.color.colorPrimary
+    private lateinit var filterManager: FilterManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        filterManager = FilterManager.getInstance()
 
         setContent {
             Surface(
@@ -179,5 +183,11 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
         viewModel.setFacility(selectedOrgUnits[0])
         viewModel.fromFacilitiesLabel(selectedOrgUnits[0].displayName().toString())
         viewModel.setSelectedText(selectedOrgUnits[0].displayName().toString())
+
+        setOrgUnitFilters(selectedOrgUnits)
+    }
+
+    fun setOrgUnitFilters(selectedOrgUnits: List<OrganisationUnit>) {
+        filterManager.addOrgUnits(selectedOrgUnits)
     }
 }
