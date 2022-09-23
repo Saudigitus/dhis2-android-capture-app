@@ -185,7 +185,7 @@ fun DropdownComponentFacilities(
 
     Column(Modifier.padding(16.dp, 4.dp, 16.dp, 4.dp)) {
         OutlinedTextField(
-            value = viewModel.test.collectAsState().value,
+            value = viewModel.orgUnitName.collectAsState().value,
             onValueChange = { selectedText = it },
             modifier = Modifier
                 .fillMaxWidth()
