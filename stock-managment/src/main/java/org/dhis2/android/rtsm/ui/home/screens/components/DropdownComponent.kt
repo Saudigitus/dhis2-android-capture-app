@@ -67,7 +67,7 @@ fun DropdownComponent(
     }
 
     var selectedIndex by remember { mutableStateOf(0) }
-    val paddingValue = if (selectedIndex >= 0){
+    val paddingValue = if (selectedIndex >= 0) {
         4.dp
     } else {
         0.dp
@@ -197,7 +197,7 @@ fun DropdownComponentFacilities(
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
     var selectedIndex by remember { mutableStateOf(-1) }
-    val paddingValue = if (selectedIndex >= 0){
+    val paddingValue = if (selectedIndex >= 0) {
         4.dp
     } else {
         0.dp
@@ -289,8 +289,10 @@ fun DropdownComponentFacilities(
                                     else Color.White,
                                     shape = RoundedCornerShape(16.dp)
                                 )
-                                .padding(start = 16.dp, top = paddingValue,
-                                    end = 16.dp, bottom = paddingValue),
+                                .padding(
+                                    start = 16.dp, top = paddingValue,
+                                    end = 16.dp, bottom = paddingValue
+                                ),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Start
                         ) {
@@ -316,7 +318,7 @@ fun DropdownComponentDistributedTo(
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
     var selectedIndex by remember { mutableStateOf(-1) }
-    val paddingValue = if (selectedIndex >= 0){
+    val paddingValue = if (selectedIndex >= 0) {
         4.dp
     } else {
         0.dp
@@ -409,12 +411,14 @@ fun DropdownComponentDistributedTo(
                                 .fillMaxSize()
                                 .background(
                                     color = if (selectedIndex == index)
-                                                colorResource(R.color.bg_gray_f1f)
-                                            else Color.White,
+                                        colorResource(R.color.bg_gray_f1f)
+                                    else Color.White,
                                     shape = RoundedCornerShape(16.dp)
                                 )
-                                .padding(start = 16.dp, top = paddingValue,
-                                    end = 16.dp, bottom = paddingValue),
+                                .padding(
+                                    start = 16.dp, top = paddingValue,
+                                    end = 16.dp, bottom = paddingValue
+                                ),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Start
                         ) {
