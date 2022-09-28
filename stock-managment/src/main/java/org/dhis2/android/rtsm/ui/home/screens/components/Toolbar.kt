@@ -3,6 +3,7 @@ package org.dhis2.android.rtsm.ui.home.screens.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.BackdropScaffoldState
@@ -48,6 +49,7 @@ fun Toolbar(
     TopAppBar(
         title = {
             Column(
+                modifier = Modifier.offset(x = (-16).dp) ,
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.Start
             ) {
