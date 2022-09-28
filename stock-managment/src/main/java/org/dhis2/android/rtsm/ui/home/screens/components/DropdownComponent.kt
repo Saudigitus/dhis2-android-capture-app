@@ -160,9 +160,9 @@ fun DropdownComponent(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(
-                                    color = if (selectedIndex == index)
+                                    color = if (selectedIndex == index) {
                                         colorResource(R.color.bg_gray_f1f)
-                                    else Color.White,
+                                    } else { Color.White },
                                     shape = RoundedCornerShape(16.dp)
                                 )
                                 .padding(paddingValue),
@@ -284,9 +284,9 @@ fun DropdownComponentFacilities(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(
-                                    color = if (selectedIndex == index)
+                                    color = if (selectedIndex == index) {
                                         colorResource(R.color.bg_gray_f1f)
-                                    else Color.White,
+                                    } else { Color.White },
                                     shape = RoundedCornerShape(16.dp)
                                 )
                                 .padding(
@@ -349,7 +349,7 @@ fun DropdownComponentDistributedTo(
                     elevation = 8.dp,
                     ambientColor = Color(0x0000001A),
                     shape = RoundedCornerShape(30.dp),
-                    clip = true,
+                    clip = true
                 )
                 .offset(0.dp, 1.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(30.dp)),
@@ -410,9 +410,9 @@ fun DropdownComponentDistributedTo(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(
-                                    color = if (selectedIndex == index)
+                                    color = if (selectedIndex == index) {
                                         colorResource(R.color.bg_gray_f1f)
-                                    else Color.White,
+                                    } else { Color.White },
                                     shape = RoundedCornerShape(16.dp)
                                 )
                                 .padding(
