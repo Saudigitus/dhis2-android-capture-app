@@ -49,7 +49,7 @@ fun Toolbar(
     TopAppBar(
         title = {
             Column(
-                modifier = Modifier.offset(x = (-16).dp) ,
+                modifier = Modifier.offset(x = (-16).dp),
                 verticalArrangement = Arrangement.Bottom,
                 horizontalAlignment = Alignment.Start
             ) {
@@ -79,7 +79,9 @@ fun Toolbar(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_from_to),
                             contentDescription = null,
-                            Modifier.padding(start = 5.dp, end = 5.dp).size(18.dp),
+                            Modifier
+                                .padding(start = 5.dp, end = 5.dp)
+                                .size(18.dp),
                             tint = colorResource(R.color.toolbar_subtitle)
                         )
                         Text(
@@ -95,7 +97,9 @@ fun Toolbar(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_alert),
                         contentDescription = null,
-                        Modifier.size(18.dp).padding(start = 5.dp),
+                        Modifier
+                            .size(18.dp)
+                            .padding(start = 5.dp),
                         tint = Color.White
                     )
                 }
