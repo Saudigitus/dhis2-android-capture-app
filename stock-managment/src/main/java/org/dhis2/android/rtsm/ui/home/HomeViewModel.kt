@@ -3,10 +3,6 @@ package org.dhis2.android.rtsm.ui.home
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import org.dhis2.android.rtsm.R
@@ -28,6 +24,10 @@ import org.dhis2.android.rtsm.utils.UIText
 import org.dhis2.android.rtsm.utils.humanReadableDate
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -192,20 +192,20 @@ class HomeViewModel @Inject constructor(
     fun fromFacilitiesLabel(from: String) {
         when (transactionType.value) {
             TransactionType.DISTRIBUTION -> {
-                _fromFacility.value = UIText.StringRes(R.string.from_arg, from)
+                _fromFacility.value = UIText.StringRes(R.string.subtitle, from)
             }
             TransactionType.DISCARD -> {
-                _fromFacility.value = UIText.StringRes(R.string.from_arg, from)
+                _fromFacility.value = UIText.StringRes(R.string.subtitle, from)
             }
             TransactionType.CORRECTION -> {
-                _fromFacility.value = UIText.StringRes(R.string.from_arg, from)
+                _fromFacility.value = UIText.StringRes(R.string.subtitle, from)
             }
         }
     }
 
     fun deliveryToLabel(to: String) {
         if (transactionType.value == TransactionType.DISTRIBUTION) {
-            _deliveryTo.value = UIText.StringRes(R.string.to_arg, to)
+            _deliveryTo.value = UIText.StringRes(R.string.subtitle, to)
         }
     }
 
