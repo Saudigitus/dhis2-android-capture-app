@@ -51,7 +51,7 @@
     
     <string name="from">From</string>
     <string name="to">Delivery to…</string>
-    <string name="from_arg">From %s</string>
+    <string name="subtitle">%s</string>
     <string name="to_arg">To %s</string>
 
     <!-- Languages -->
