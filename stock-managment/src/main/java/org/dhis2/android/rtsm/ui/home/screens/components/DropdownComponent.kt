@@ -18,6 +18,7 @@ import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
@@ -43,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.zIndex
 import org.dhis2.android.rtsm.R
@@ -86,7 +88,7 @@ fun DropdownComponent(
         isExpanded = !isExpanded
     }
 
-    Column(Modifier.padding(16.dp, 4.dp, 16.dp, 4.dp)) {
+    Column(Modifier.padding(horizontal = 16.dp)) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
@@ -97,9 +99,9 @@ fun DropdownComponent(
                 }
                 .shadow(
                     elevation = 8.dp,
-                    ambientColor = Color(0x0000001A),
+                    ambientColor = Color.Black.copy(alpha = 0.1f),
                     shape = RoundedCornerShape(30.dp),
-                    clip = true
+                    clip = false
                 )
                 .offset(0.dp, 0.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(30.dp)),
@@ -132,7 +134,8 @@ fun DropdownComponent(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.White
             ),
-            interactionSource = interactionSource
+            interactionSource = interactionSource,
+            textStyle = LocalTextStyle.current.copy(fontSize = 14.sp)
         )
 
         MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp))) {
@@ -142,7 +145,7 @@ fun DropdownComponent(
                 modifier = Modifier
                     .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
                     .background(shape = RoundedCornerShape(16.dp), color = Color.White),
-                offset = DpOffset(x = 0.dp, y = 5.dp)
+                offset = DpOffset(x = 0.dp, y = 2.dp)
             ) {
                 data.forEachIndexed { index, item ->
                     DropdownMenuItem(
@@ -162,7 +165,9 @@ fun DropdownComponent(
                                 .background(
                                     color = if (selectedIndex == index) {
                                         colorResource(R.color.bg_gray_f1f)
-                                    } else { Color.White },
+                                    } else {
+                                        Color.White
+                                    },
                                     shape = RoundedCornerShape(16.dp)
                                 )
                                 .padding(paddingValue),
@@ -214,7 +219,7 @@ fun DropdownComponentFacilities(
         isExpanded = !isExpanded
     }
 
-    Column(Modifier.padding(16.dp, 4.dp, 16.dp, 4.dp)) {
+    Column(Modifier.padding(horizontal = 16.dp)) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
@@ -225,9 +230,9 @@ fun DropdownComponentFacilities(
                 }
                 .shadow(
                     elevation = 8.dp,
-                    ambientColor = Color(0x0000001A),
+                    ambientColor = Color.Black.copy(alpha = 0.1f),
                     shape = RoundedCornerShape(30.dp),
-                    clip = true
+                    clip = false
                 )
                 .offset(0.dp, 0.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(30.dp)),
@@ -258,7 +263,8 @@ fun DropdownComponentFacilities(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.White
             ),
-            interactionSource = interactionSource
+            interactionSource = interactionSource,
+            textStyle = LocalTextStyle.current.copy(fontSize = 14.sp)
         )
 
         MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp))) {
@@ -267,7 +273,7 @@ fun DropdownComponentFacilities(
                 onDismissRequest = { isExpanded = false },
                 modifier = Modifier
                     .width(with(LocalDensity.current) { textFieldSize.width.toDp() }),
-                offset = DpOffset(x = 0.dp, y = 5.dp)
+                offset = DpOffset(x = 0.dp, y = 2.dp)
             ) {
                 data.forEachIndexed { index, item ->
                     DropdownMenuItem(
@@ -286,7 +292,9 @@ fun DropdownComponentFacilities(
                                 .background(
                                     color = if (selectedIndex == index) {
                                         colorResource(R.color.bg_gray_f1f)
-                                    } else { Color.White },
+                                    } else {
+                                        Color.White
+                                    },
                                     shape = RoundedCornerShape(16.dp)
                                 )
                                 .padding(
@@ -335,7 +343,7 @@ fun DropdownComponentDistributedTo(
         isExpanded = !isExpanded
     }
 
-    Column(Modifier.padding(16.dp, 4.dp, 16.dp, 4.dp)) {
+    Column(Modifier.padding(horizontal = 16.dp)) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
@@ -347,9 +355,9 @@ fun DropdownComponentDistributedTo(
                 .zIndex(1f)
                 .shadow(
                     elevation = 8.dp,
-                    ambientColor = Color(0x0000001A),
+                    ambientColor = Color.Black.copy(alpha = 0.1f),
                     shape = RoundedCornerShape(30.dp),
-                    clip = true
+                    clip = false
                 )
                 .offset(0.dp, 1.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(30.dp)),
@@ -382,7 +390,8 @@ fun DropdownComponentDistributedTo(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.White
             ),
-            interactionSource = interactionSource
+            interactionSource = interactionSource,
+            textStyle = LocalTextStyle.current.copy(fontSize = 14.sp)
         )
 
         MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp))) {
@@ -392,7 +401,7 @@ fun DropdownComponentDistributedTo(
                 modifier = Modifier
                     .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
                     .background(Color.White, RoundedCornerShape(30.dp)),
-                offset = DpOffset(x = 0.dp, y = 5.dp)
+                offset = DpOffset(x = 0.dp, y = 2.dp)
             ) {
                 data.forEachIndexed { index, item ->
                     DropdownMenuItem(
@@ -412,7 +421,9 @@ fun DropdownComponentDistributedTo(
                                 .background(
                                     color = if (selectedIndex == index) {
                                         colorResource(R.color.bg_gray_f1f)
-                                    } else { Color.White },
+                                    } else {
+                                        Color.White
+                                    },
                                     shape = RoundedCornerShape(16.dp)
                                 )
                                 .padding(
