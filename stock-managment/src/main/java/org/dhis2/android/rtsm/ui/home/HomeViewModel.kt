@@ -212,5 +212,6 @@ class HomeViewModel @Inject constructor(
     fun syncData() {
         syncManager.dataSync()
     }
+
     fun getSyncDataStatus() = syncManager.getSyncStatus(INSTANT_DATA_SYNC)
 }
