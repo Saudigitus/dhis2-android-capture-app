@@ -48,10 +48,11 @@ import org.dhis2.android.rtsm.data.models.TransactionItem
 import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.utils.Utils.Companion.capitalizeText
-import org.dhis2.commons.filters.FilterManager
-import org.dhis2.commons.orgunitselector.OUTreeFragment
+import org.dhis2.commons.orgunitdialog.CommonOrgUnitDialog
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
+
+var orgUnitData: OrganisationUnit? = null
 
 @Preview
 @Composable
@@ -180,7 +181,7 @@ fun DropdownComponentFacilities(
 
     val interactionSource = remember { MutableInteractionSource() }
     if (interactionSource.collectIsPressedAsState().value) {
-        openOrgUnitTreeSelector(supportFragmentManager, homeContext)
+        openOrgUnitTreeSelector(supportFragmentManager, homeContext, data, viewModel)
     }
 
     Column(Modifier.padding(16.dp, 4.dp, 16.dp, 4.dp)) {
@@ -208,7 +209,12 @@ fun DropdownComponentFacilities(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        openOrgUnitTreeSelector(supportFragmentManager, homeContext)
+                        openOrgUnitTreeSelector(
+                            supportFragmentManager,
+                            homeContext,
+                            data,
+                            viewModel
+                        )
                     }
                 ) {
                     Icon(icon, contentDescription = null, tint = themeColor)
@@ -352,11 +358,40 @@ fun DropdownComponentDistributedTo(
     }
 }
 
-fun openOrgUnitTreeSelector(supportFragmentManager: FragmentManager, homeContext: HomeActivity) {
-    OUTreeFragment.newInstance(
-        true,
-        FilterManager.getInstance().orgUnitFilters.map { it.uid() }.toMutableList()
-    ).apply {
-        selectionCallback = homeContext
-    }.show(supportFragmentManager, "OUTreeFragment")
+fun openOrgUnitTreeSelector(
+    supportFragmentManager: FragmentManager,
+    homeContext: HomeActivity,
+    data: List<OrganisationUnit>,
+    viewModel: HomeViewModel
+) {
+    val programUid = "F5ijs28K4s8"
+    val orgUnitDialog = CommonOrgUnitDialog()
+
+    orgUnitDialog
+        .setTitle("Facilities")
+        .setMultiSelection(false)
+        .setOrgUnits(data)
+        .setProgram(programUid)
+        .setPossitiveListener {
+            if (orgUnitDialog.selectedOrgUnitModel != null) {
+                viewModel.setFacility(orgUnitDialog.selectedOrgUnitModel)
+                viewModel.fromFacilitiesLabel(orgUnitDialog.selectedOrgUnitName)
+                viewModel.setSelectedText(orgUnitDialog.selectedOrgUnitName)
+
+                orgUnitData = orgUnitDialog.selectedOrgUnitModel
+
+            }
+            orgUnitDialog.dismiss()
+        }
+        .setNegativeListener {
+            orgUnitDialog.dismiss()
+        }
+
+    orgUnitData?.let {
+        orgUnitDialog.setOrgUnit(orgUnitData)
+    }
+
+    if (!orgUnitDialog.isAdded) {
+        orgUnitDialog.show(supportFragmentManager, "")
+    }
 }
