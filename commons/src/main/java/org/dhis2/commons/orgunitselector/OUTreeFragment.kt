@@ -24,7 +24,7 @@ class OUTreeFragment private constructor() :
     OrgUnitSelectorAdapter.OnOrgUnitClick {
 
     private var mData: MutableList<String> = mutableListOf()
-    
+
     companion object {
         fun newInstance(
             showAsDialog: Boolean = false,
