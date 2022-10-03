@@ -54,7 +54,8 @@ fun Backdrop(
         },
         backLayerBackgroundColor = themeColor,
         backLayerContent = {
-            FilterList(viewModel, themeColor,
+            FilterList(
+                viewModel, themeColor,
                 { hasFacilitySelected = it },
                 { hasDestinationSelected = it }
             )
