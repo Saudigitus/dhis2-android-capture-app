@@ -88,7 +88,7 @@ fun DropdownComponent(
         isExpanded = !isExpanded
     }
 
-    Column(Modifier.padding(horizontal = 16.dp)) {
+    Column(Modifier.padding(horizontal = 8.dp)) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
@@ -193,7 +193,8 @@ fun DropdownComponent(
 fun DropdownComponentFacilities(
     viewModel: HomeViewModel,
     themeColor: Color = colorResource(R.color.colorPrimary),
-    data: List<OrganisationUnit>
+    data: List<OrganisationUnit>,
+    isFacilitySelected: (value: String) -> Unit = { }
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -219,7 +220,9 @@ fun DropdownComponentFacilities(
         isExpanded = !isExpanded
     }
 
-    Column(Modifier.padding(horizontal = 16.dp)) {
+    isFacilitySelected(selectedText)
+
+    Column(Modifier.padding(horizontal = 8.dp)) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },
@@ -317,7 +320,8 @@ fun DropdownComponentFacilities(
 fun DropdownComponentDistributedTo(
     viewModel: HomeViewModel,
     themeColor: Color = colorResource(R.color.colorPrimary),
-    data: List<Option>
+    data: List<Option>,
+    isDestinationSelected: (value: String) -> Unit = { }
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -343,7 +347,9 @@ fun DropdownComponentDistributedTo(
         isExpanded = !isExpanded
     }
 
-    Column(Modifier.padding(horizontal = 16.dp)) {
+    isDestinationSelected(selectedText)
+
+    Column(Modifier.padding(horizontal = 8.dp)) {
         OutlinedTextField(
             value = selectedText,
             onValueChange = { selectedText = it },

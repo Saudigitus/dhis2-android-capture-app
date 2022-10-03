@@ -18,7 +18,9 @@ import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 @Composable
 fun FilterList(
     viewModel: HomeViewModel,
-    themeColor: Color
+    themeColor: Color,
+    isFacilitySelected: (value: Boolean) -> Unit = {},
+    isDestinationSelected: (value: Boolean) -> Unit = {}
 ) {
     val facilities = viewModel.facilities.collectAsState().value
     val destinations = viewModel.destinationsList.collectAsState().value
@@ -41,7 +43,9 @@ fun FilterList(
                 viewModel,
                 themeColor,
                 getFacilities(facilities)
-            )
+            ) { facility ->
+                isFacilitySelected(facility.isNotEmpty())
+            }
         }
 
         if (showDestination) {
@@ -52,7 +56,9 @@ fun FilterList(
                         viewModel,
                         themeColor,
                         result
-                    )
+                    ) { destination ->
+                        isDestinationSelected(destination.isNotEmpty())
+                    }
                 }
             }
         }
