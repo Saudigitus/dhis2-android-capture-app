@@ -155,4 +155,6 @@ dependencies {
     api "androidx.test.espresso:espresso-idling-resource:$libraries.espresso_core"
     api "androidx.test.espresso.idling:idling-concurrent:$libraries.espresso_core"
 
+    implementation 'com.github.bmelnychuk:atv:1.2.9'
+
 }
