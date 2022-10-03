@@ -45,7 +45,7 @@ fun Toolbar(
     scaffoldState: ScaffoldState,
     syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> },
     hasFacilitySelected: Boolean,
-    hasDestinationSelected: Boolean?,
+    hasDestinationSelected: Boolean?
 ) {
     val scope = rememberCoroutineScope()
 
