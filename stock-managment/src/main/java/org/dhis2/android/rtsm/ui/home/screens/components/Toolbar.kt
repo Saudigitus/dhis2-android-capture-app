@@ -101,12 +101,14 @@ fun Toolbar(
                             color = colorResource(R.color.toolbar_subtitle)
                         )
                     }
-                    if (TransactionType.DISTRIBUTION.name.equals(title, true)
-                        && !hasFacilitySelected && hasDestinationSelected != null) {
-                       if (!hasDestinationSelected) AlertIcon()
-                    }else if (TransactionType.DISCARD.name.equals(title, true) ||
-                        TransactionType.CORRECTION.name.equals(title, true)
-                        && !hasFacilitySelected) {
+                    if (TransactionType.DISTRIBUTION.name.equals(title, true) &&
+                        !hasFacilitySelected && hasDestinationSelected != null
+                    ) {
+                        if (!hasDestinationSelected) AlertIcon()
+                    } else if (TransactionType.DISCARD.name.equals(title, true) ||
+                        TransactionType.CORRECTION.name.equals(title, true) &&
+                        !hasFacilitySelected
+                    ) {
                         AlertIcon()
                     }
                 }
