@@ -49,8 +49,6 @@ fun Toolbar(
 ) {
     val scope = rememberCoroutineScope()
 
-    val fromMaxLength = 15
-
     TopAppBar(
         title = {
             Column(
@@ -72,15 +70,13 @@ fun Toolbar(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = if (from.length >= fromMaxLength && !to.isNullOrEmpty()) {
-                            "${from.substring(0, fromMaxLength - 2)}..."
-                        } else from,
+                        text = from,
                         style = MaterialTheme.typography.subtitle2,
-                        softWrap = true,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         fontSize = 12.sp,
-                        color = colorResource(R.color.toolbar_subtitle)
+                        color = colorResource(R.color.toolbar_subtitle),
+                        modifier = Modifier.weight(1f, fill = false)
                     )
                     if (to != null) {
                         Icon(
@@ -94,22 +90,22 @@ fun Toolbar(
                         Text(
                             text = to,
                             style = MaterialTheme.typography.subtitle2,
-                            softWrap = true,
                             overflow = TextOverflow.Ellipsis,
                             maxLines = 1,
                             fontSize = 12.sp,
-                            color = colorResource(R.color.toolbar_subtitle)
+                            color = colorResource(R.color.toolbar_subtitle),
+                            modifier = Modifier.weight(1f, fill = false)
                         )
                     }
-                    if (TransactionType.DISTRIBUTION.name.equals(title, true) &&
-                        !hasFacilitySelected && hasDestinationSelected != null
-                    ) {
-                        if (!hasDestinationSelected) AlertIcon()
-                    } else if (TransactionType.DISCARD.name.equals(title, true) ||
-                        TransactionType.CORRECTION.name.equals(title, true) &&
-                        !hasFacilitySelected
-                    ) {
+
+                    if (!hasFacilitySelected) {
                         AlertIcon()
+                    } else if (TransactionType.DISTRIBUTION.name.equals(title, true)) {
+                        hasDestinationSelected?.let {
+                            if (!it) {
+                                AlertIcon()
+                            }
+                        }
                     }
                 }
             }
