@@ -23,8 +23,6 @@ class OUTreeFragment private constructor() :
     OUTreeView,
     OrgUnitSelectorAdapter.OnOrgUnitClick {
 
-    private var mData: MutableList<String> = mutableListOf()
-
     companion object {
         fun newInstance(
             showAsDialog: Boolean = false,
@@ -35,7 +33,6 @@ class OUTreeFragment private constructor() :
                     putBoolean(ARG_SHOW_AS_DIALOG, showAsDialog)
                     putStringArrayList(ARG_PRE_SELECTED_OU, ArrayList(preselectedOrgUnits))
                 }
-                mData = preselectedOrgUnits
             }
         }
     }
