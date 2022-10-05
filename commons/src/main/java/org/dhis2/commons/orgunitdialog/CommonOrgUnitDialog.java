@@ -6,12 +6,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -202,7 +200,6 @@ public class CommonOrgUnitDialog extends DialogFragment {
         list.add(orgUnit);
         this.mySelectedOrg = list;
         this.selectedOrg = orgUnit;
-        Timber.tag("ORGUNIT").w(orgUnit.displayName());
         return this;
     }
 
