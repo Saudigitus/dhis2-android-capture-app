@@ -75,11 +75,11 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished{
             }
             TransactionType.DISCARD -> {
                 color = R.color.discard_color
-                theme = R.style.RedTheme
+                theme = R.style.discard
             }
             TransactionType.CORRECTION -> {
-                color = R.color.colorPrimary_fbc
-                theme = R.style.colorPrimary_fbc
+                color = R.color.correction_color
+                theme = R.style.correction
             }
         }
         if (color != -1) {

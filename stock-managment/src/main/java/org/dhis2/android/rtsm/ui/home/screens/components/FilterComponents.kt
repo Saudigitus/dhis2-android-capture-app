@@ -1,13 +1,10 @@
 package org.dhis2.android.rtsm.ui.home.screens.components
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
@@ -27,45 +24,47 @@ fun FilterList(
     themeColor: Color,
     supportFragmentManager: FragmentManager,
     homeContext: HomeActivity,
+    isFacilitySelected: (value: Boolean) -> Unit = {},
+    isDestinationSelected: (value: Boolean) -> Unit = {}
 ) {
     val facilities = viewModel.facilities.collectAsState().value
     val destinations = viewModel.destinationsList.collectAsState().value
     val showDestination = viewModel.isDistribution.collectAsState().value
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp),
-        contentAlignment = Alignment.TopCenter
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(vertical = 16.dp)
     ) {
-        LazyColumn() {
-            item {
-                DropdownComponent(
-                    viewModel,
-                    themeColor,
-                    mapTransaction()
-                )
-            }
+        item {
+            DropdownComponent(
+                viewModel,
+                themeColor,
+                mapTransaction()
+            )
+        }
 
-            item {
-                DropdownComponentFacilities(
-                    viewModel,
-                    themeColor,
-                    supportFragmentManager,
-                    homeContext,
-                    getFacilities(facilities)
-                )
+        item {
+            DropdownComponentFacilities(
+                viewModel,
+                themeColor,
+                supportFragmentManager,
+                homeContext,
+                getFacilities(facilities)
+            ) { facility ->
+                isFacilitySelected(facility.isNotEmpty())
             }
+        }
 
-            if (showDestination) {
-                if (destinations is OperationState.Success<*>) {
-                    val result = destinations.result as List<Option>
-                    item {
-                        DropdownComponentDistributedTo(
-                            viewModel,
-                            themeColor,
-                            result
-                        )
+        if (showDestination) {
+            if (destinations is OperationState.Success<*>) {
+                val result = destinations.result as List<Option>
+                item {
+                    DropdownComponentDistributedTo(
+                        viewModel,
+                        themeColor,
+                        result
+                    ) { destination ->
+                        isDestinationSelected(destination.isNotEmpty())
                     }
                 }
             }
