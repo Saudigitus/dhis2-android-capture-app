@@ -124,7 +124,7 @@ public class OrgUnitDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.dialog_orgunit_common, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.dialog_orgunit, container, false);
 
         binding.title.setText(title);
         binding.acceptButton.setOnClickListener(possitiveListener);
