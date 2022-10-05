@@ -65,8 +65,6 @@ public class CommonOrgUnitDialog extends DialogFragment {
         myOrgs = null;
         mySelectedOrg = null;
         selectedOrg = null;
-
-
     }
 
     public CommonOrgUnitDialog setPossitiveListener(View.OnClickListener listener) {
