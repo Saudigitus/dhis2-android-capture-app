@@ -24,7 +24,6 @@ import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
-import org.dhis2.commons.orgunitcascade.OrgUnitCascadeDialog
 
 @Composable
 fun HomeScreen(

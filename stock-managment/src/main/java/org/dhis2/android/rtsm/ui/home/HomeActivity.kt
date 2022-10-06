@@ -36,7 +36,7 @@ import org.dhis2.commons.orgunitselector.OnOrgUnitSelectionFinished
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished{
+class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
     private val viewModel: HomeViewModel by viewModels()
     private var themeColor = R.color.colorPrimary
     private lateinit var filterManager: FilterManager
@@ -45,9 +45,12 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.orgUnitList.observe(this, Observer {
-            orgUnitList = it
-        })
+        viewModel.orgUnitList.observe(
+            this,
+            Observer {
+                orgUnitList = it
+            }
+        )
         filterManager = FilterManager.getInstance()
 
         setContent {

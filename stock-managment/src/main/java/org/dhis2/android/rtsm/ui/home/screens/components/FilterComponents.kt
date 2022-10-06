@@ -14,7 +14,6 @@ import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.data.models.TransactionItem
 import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
-import org.dhis2.commons.orgunitcascade.OrgUnitCascadeDialog
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
