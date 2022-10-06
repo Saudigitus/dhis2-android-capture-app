@@ -27,10 +27,9 @@ import org.hisp.dhis.android.core.organisationunit.OrganisationUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
-
 /**
  * QUADRAM. Created by ppajuelo on 21/05/2018.
+ * SAUDIGITUS. Updated by miguelmacamo on 06/10/2022.
  */
 
 public class CommonOrgUnitDialog extends DialogFragment {
