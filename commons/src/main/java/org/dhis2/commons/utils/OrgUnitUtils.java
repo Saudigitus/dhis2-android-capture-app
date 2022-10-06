@@ -27,7 +27,7 @@ import timber.log.Timber;
 
 public class OrgUnitUtils {
 
-    public static TreeNode renderTree_2(Context context, @NonNull List<OrganisationUnit> myOrgs, Boolean isMultiSelection, String programId, OrganisationUnit selectedOrgUnit) {
+    public static TreeNode renderTree_2(Context context, @NonNull List<OrganisationUnit> myOrgs, Boolean isMultiSelection, String programId, OrganisationUnit selectedOrgUnit, String orgUnitName) {
 
         HashMap<Integer, ArrayList<TreeNode>> subLists = new HashMap<>();
         Map<String, OrganisationUnit> myOrgUnitMap = new HashMap<>();
@@ -68,7 +68,7 @@ public class OrgUnitUtils {
         //Separamos las orunits en listas por nivel
         for (OrganisationUnit orgs : allOrgs) {
             ArrayList<TreeNode> sublist = subLists.get(orgs.level());
-            TreeNode treeNode = new TreeNode(orgs).setViewHolder(new OrgUnitHolder_2(context, isMultiSelection, selectedOrgUnit));
+            TreeNode treeNode = new TreeNode(orgs).setViewHolder(new OrgUnitHolder_2(context, isMultiSelection, selectedOrgUnit, orgUnitName));
             treeNode.setSelectable(myOrgUnitUids.contains(orgs.uid()));
             sublist.add(treeNode);
             Collections.sort(sublist, (org1, org2) -> ((OrganisationUnit) org1.getValue()).displayName().compareTo(((OrganisationUnit) org2.getValue()).displayName()));
@@ -102,10 +102,10 @@ public class OrgUnitUtils {
         return root;
     }
 
-    public static List<TreeNode> createNode_2(Context context, List<OrganisationUnit> orgUnits, boolean isMultiSelection, OrganisationUnit selectedOrgUnit) {
+    public static List<TreeNode> createNode_2(Context context, List<OrganisationUnit> orgUnits, boolean isMultiSelection, OrganisationUnit selectedOrgUnit, String orgUnitName) {
         List<TreeNode> levelNode = new ArrayList<>();
         for (OrganisationUnit org : orgUnits) {
-            TreeNode treeNode = new TreeNode(org).setViewHolder(new OrgUnitHolder_2(context, isMultiSelection, selectedOrgUnit));
+            TreeNode treeNode = new TreeNode(org).setViewHolder(new OrgUnitHolder_2(context, isMultiSelection, selectedOrgUnit, orgUnitName));
             treeNode.setSelectable(true);
             levelNode.add(treeNode);
         }
