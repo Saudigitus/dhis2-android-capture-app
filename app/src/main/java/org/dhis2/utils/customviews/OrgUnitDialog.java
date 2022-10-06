@@ -170,7 +170,7 @@ public class OrgUnitDialog extends DialogFragment {
     private void renderTree(@NonNull List<OrganisationUnit> myOrgs) {
 
         binding.treeContainer.removeAllViews();
-        treeView = new AndroidTreeView(getContext(), OrgUnitUtils.renderTree_2(context, myOrgs, isMultiSelection, programUid, this.selectedOrg));
+        treeView = new AndroidTreeView(getContext(), OrgUnitUtils.renderTree_2(context, myOrgs, isMultiSelection, programUid, this.selectedOrg, ""));
         treeView.deselectAll();
         treeView.setDefaultContainerStyle(R.style.TreeNodeStyle, false);
         treeView.setSelectionModeEnabled(true);

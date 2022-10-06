@@ -48,6 +48,7 @@ public class CommonOrgUnitDialog extends DialogFragment {
     private Context context;
     private TreeNode treeNode;
     private String programUid;
+    private String orgUnitName;
 
     public static CommonOrgUnitDialog getInstace() {
         if (instance == null) {
@@ -65,6 +66,7 @@ public class CommonOrgUnitDialog extends DialogFragment {
         myOrgs = null;
         mySelectedOrg = null;
         selectedOrg = null;
+        orgUnitName = null;
     }
 
     public CommonOrgUnitDialog setPossitiveListener(View.OnClickListener listener) {
@@ -104,6 +106,10 @@ public class CommonOrgUnitDialog extends DialogFragment {
 
     public CommonOrgUnitDialog setProgram(String programUid) {
         this.programUid = programUid;
+        return this;
+    }
+    public CommonOrgUnitDialog setOrgUnitName(String orgUnitName) {
+        this.orgUnitName = orgUnitName;
         return this;
     }
 
@@ -168,7 +174,7 @@ public class CommonOrgUnitDialog extends DialogFragment {
     private void renderTree(@NonNull List<OrganisationUnit> myOrgs) {
 
         binding.treeContainer.removeAllViews();
-        treeView = new AndroidTreeView(getContext(), OrgUnitUtils.renderTree_2(context, myOrgs, isMultiSelection, programUid, this.selectedOrg));
+        treeView = new AndroidTreeView(getContext(), OrgUnitUtils.renderTree_2(context, myOrgs, isMultiSelection, programUid, this.selectedOrg, orgUnitName));
         treeView.deselectAll();
         treeView.setDefaultContainerStyle(R.style.TreeNodeStyle, false);
         treeView.setSelectionModeEnabled(true);
