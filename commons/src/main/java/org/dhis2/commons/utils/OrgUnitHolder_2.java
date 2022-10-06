@@ -33,12 +33,14 @@ public class OrgUnitHolder_2 extends TreeNode.BaseNodeViewHolder<OrganisationUni
     private OrganisationUnit value;
     private OrganisationUnit selectedValue;
     private OrganisationUnit selectedOrgUnit;
+    private String orgUnitName;
     private int numberOfSelections;
 
-    public OrgUnitHolder_2(Context context, Boolean isMultiSelection, OrganisationUnit selectedOrgUnit) {
+    public OrgUnitHolder_2(Context context, Boolean isMultiSelection, OrganisationUnit selectedOrgUnit, String orgUnitName) {
         super(context);
         this.isMultiSelection = isMultiSelection;
         this.selectedOrgUnit = selectedOrgUnit;
+        this.orgUnitName = orgUnitName;
     }
 
     @Override
@@ -53,7 +55,10 @@ public class OrgUnitHolder_2 extends TreeNode.BaseNodeViewHolder<OrganisationUni
         checkBox = view.findViewById(R.id.checkbox);
         checkBox.setChecked(isMultiSelection & node.isSelectable());
 
-        setSelectedNode();
+        if (!orgUnitName.equals("")) {
+            setSelectedNode();
+        }
+
 
         imageView.setOnClickListener(v -> {
             if (node.isExpanded())
