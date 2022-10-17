@@ -9,22 +9,24 @@ import androidx.compose.material.BackdropScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun MainContent(dpHeight: Dp, backdropState: BackdropScaffoldState, toolbartitle: String) {
+fun MainContent(
+    backdropState: BackdropScaffoldState,
+    isFrontLayerDisabled: Boolean?
+) {
     val scope = rememberCoroutineScope()
     val resource = painterResource(R.drawable.ic_arrow_up)
     val commentsAlpha = if (backdropState.isRevealed) 1f else 0f
@@ -41,14 +43,11 @@ fun MainContent(dpHeight: Dp, backdropState: BackdropScaffoldState, toolbartitle
                 .alpha(commentsAlpha)
                 .padding(8.dp)
         ) {
-            Icon(resource, contentDescription = null, tint = MaterialTheme.colors.primary)
+            if (isFrontLayerDisabled == true) {
+                Icon(resource, contentDescription = null, tint = colorResource(id = R.color.primary_stock))
+            } else {
+                Icon(resource, contentDescription = null, tint = colorResource(id = R.color.primary_stock))
+            }
         }
-    }
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "$dpHeight \n Title $toolbartitle")
     }
 }

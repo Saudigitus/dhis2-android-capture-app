@@ -14,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import org.dhis2.android.rtsm.data.TransactionType
@@ -31,12 +30,12 @@ fun Backdrop(
 ) {
     val backdropState = rememberBackdropScaffoldState(BackdropValue.Revealed)
 
+    var isFrontLayerDisabled by remember { mutableStateOf<Boolean?>(null) }
     var hasFacilitySelected by remember { mutableStateOf(false) }
     var hasDestinationSelected by remember { mutableStateOf<Boolean?>(null) }
     var toolbarTitle by remember {
         mutableStateOf(TransactionType.DISTRIBUTION.name)
     }
-    var dpHeight by remember { mutableStateOf<Dp?>(0.dp) }
 
     BackdropScaffold(
         appBar = {
@@ -58,7 +57,7 @@ fun Backdrop(
         },
         backLayerBackgroundColor = themeColor,
         backLayerContent = {
-            dpHeight = FilterList(
+            FilterList(
                 viewModel, themeColor,
                 { hasFacilitySelected = it },
                 { hasDestinationSelected = it }
@@ -66,20 +65,24 @@ fun Backdrop(
         },
         frontLayerElevation = 5.dp,
         frontLayerContent = {
-            MainContent(dpHeight!!, backdropState, toolbarTitle)
+            MainContent(backdropState, isFrontLayerDisabled)
         },
         scaffoldState = backdropState,
         gesturesEnabled = false,
         frontLayerScrimColor = if (toolbarTitle == TransactionType.DISTRIBUTION.name) {
             if (hasFacilitySelected && hasDestinationSelected == true) {
+                isFrontLayerDisabled = false
                 Color.Unspecified
             } else {
+                isFrontLayerDisabled = true
                 MaterialTheme.colors.surface.copy(alpha = 0.60f)
             }
         } else {
             if (!hasFacilitySelected) {
+                isFrontLayerDisabled = true
                 MaterialTheme.colors.surface.copy(alpha = 0.60f)
             } else {
+                isFrontLayerDisabled = false
                 Color.Unspecified
             }
         }
