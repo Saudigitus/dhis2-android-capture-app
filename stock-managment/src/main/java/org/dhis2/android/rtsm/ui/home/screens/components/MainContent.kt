@@ -1,7 +1,6 @@
 package org.dhis2.android.rtsm.ui.home.screens.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,7 +8,6 @@ import androidx.compose.material.BackdropScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -44,9 +42,17 @@ fun MainContent(
                 .padding(8.dp)
         ) {
             if (isFrontLayerDisabled == true) {
-                Icon(resource, contentDescription = null, tint = colorResource(id = R.color.primary_stock))
+                Icon(
+                    resource,
+                    contentDescription = null,
+                    tint = colorResource(id = R.color.primary_stock)
+                )
             } else {
-                Icon(resource, contentDescription = null, tint = colorResource(id = R.color.primary_stock))
+                Icon(
+                    resource,
+                    contentDescription = null,
+                    tint = colorResource(id = R.color.primary_stock)
+                )
             }
         }
     }
