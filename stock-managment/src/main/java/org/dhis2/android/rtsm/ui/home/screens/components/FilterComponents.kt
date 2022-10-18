@@ -51,8 +51,7 @@ fun FilterList(
         modifier = Modifier
             .onSizeChanged { coordinates ->
                 heightIs = with(localDensity) { coordinates.height.toDp() }
-            }
-            .onGloballyPositioned { coordinates ->
+            }.onGloballyPositioned { coordinates ->
                 heightIs = with(localDensity) { coordinates.size.height.toDp() }
             }.apply {
                 val condition: Boolean = toolbarTitle == TransactionType.DISTRIBUTION.name
@@ -74,7 +73,6 @@ fun FilterList(
                         )
                     }
                 )
-
             }
     ) {
         item {
