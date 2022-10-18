@@ -1,5 +1,6 @@
 package org.dhis2.android.rtsm.ui.home.screens.components
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
@@ -12,13 +13,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Backdrop(
@@ -28,7 +32,7 @@ fun Backdrop(
     scaffoldState: ScaffoldState,
     syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> }
 ) {
-    val backdropState = rememberBackdropScaffoldState(BackdropValue.Revealed)
+    val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
 
     var isFrontLayerDisabled by remember { mutableStateOf<Boolean?>(null) }
     var hasFacilitySelected by remember { mutableStateOf(false) }
@@ -36,6 +40,7 @@ fun Backdrop(
     var toolbarTitle by remember {
         mutableStateOf(TransactionType.DISTRIBUTION.name)
     }
+    val scope = rememberCoroutineScope()
 
     BackdropScaffold(
         appBar = {
@@ -57,11 +62,15 @@ fun Backdrop(
         },
         backLayerBackgroundColor = themeColor,
         backLayerContent = {
-            FilterList(
+            val height = FilterList(
                 viewModel, themeColor,
                 { hasFacilitySelected = it },
                 { hasDestinationSelected = it }
             )
+
+            if (height > 160.dp) {
+                scope.launch { backdropState.reveal() }
+            }
         },
         frontLayerElevation = 5.dp,
         frontLayerContent = {
