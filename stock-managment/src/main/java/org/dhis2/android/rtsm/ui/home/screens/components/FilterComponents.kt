@@ -72,7 +72,8 @@ fun FilterList(
                                 easing = LinearOutSlowInEasing
                             )
                         )
-                    })
+                    }
+                )
             }
     ) {
         item {
