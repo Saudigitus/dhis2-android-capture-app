@@ -55,7 +55,8 @@ fun FilterList(
                 heightIs = with(localDensity) { coordinates.size.height.toDp() }
             }.apply {
                 val condition: Boolean = toolbarTitle == TransactionType.DISTRIBUTION.name
-                this.conditional(condition,
+                this.conditional(
+                    condition,
                     ifFalse = {
                         this.animateContentSize(
                             animationSpec = tween(
