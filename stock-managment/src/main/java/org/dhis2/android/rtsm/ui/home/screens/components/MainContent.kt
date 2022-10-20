@@ -1,5 +1,8 @@
 package org.dhis2.android.rtsm.ui.home.screens.components
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -16,7 +19,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,13 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
@@ -56,9 +56,13 @@ fun MainContent(
     val closeResource = painterResource(R.drawable.ic_close)
     val commentsAlpha = if (backdropState.isRevealed) 1f else 0f
     var closeButtonVisibility by remember { mutableStateOf(0f) }
+    val textFieldWeightValue = if (backdropState.isRevealed) 5f else 10f
+    val weightValue = if (backdropState.isRevealed) 1f else 2f
+    val weightValueArrow = if (backdropState.isRevealed) 1f else 0.1f
+    val focusManager = LocalFocusManager.current
     Row(
         modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.End,
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.Top
     ) {
         var search by remember { mutableStateOf("") }
@@ -82,13 +86,14 @@ fun MainContent(
                 )
                 .offset(0.dp, 0.dp)
                 .background(color = Color.White, shape = RoundedCornerShape(30.dp))
-                .weight(3f),
+                .weight(textFieldWeightValue),
             shape = RoundedCornerShape(30.dp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.White
             ),
             textStyle = LocalTextStyle.current.copy(fontSize = 14.sp),
+            enabled = isFrontLayerDisabled != true,
             leadingIcon = {
                 Icon(
                     painter = searchResource,
@@ -113,19 +118,22 @@ fun MainContent(
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Search
+                imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
                 onSearch = {
                     Timber.tag("SEARCH_DATA").v(search)
+                },
+                onDone = {
+                    focusManager.clearFocus()
                 }
-            )
+            ),
         )
         IconButton(
             onClick = { /*TODO*/ },
             modifier = Modifier
                 .padding(8.dp)
-                .weight(1f)
+                .weight(weightValue)
         ) {
             Icon(
                 painter = qrcodeResource,
@@ -140,7 +148,13 @@ fun MainContent(
             modifier = Modifier
                 .alpha(commentsAlpha)
                 .padding(8.dp)
-                .weight(1f)
+                .weight(weightValueArrow)
+                .animateContentSize(
+                    animationSpec = tween(
+                        delayMillis = 400,
+                        easing = LinearOutSlowInEasing
+                    )
+                )
         ) {
             if (isFrontLayerDisabled == true) {
                 Icon(
