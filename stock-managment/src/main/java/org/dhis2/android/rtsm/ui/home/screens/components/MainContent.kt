@@ -13,7 +13,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -23,7 +23,8 @@ import org.dhis2.android.rtsm.R
 @Composable
 fun MainContent(
     backdropState: BackdropScaffoldState,
-    isFrontLayerDisabled: Boolean?
+    isFrontLayerDisabled: Boolean?,
+    themeColor: Color,
 ) {
     val scope = rememberCoroutineScope()
     val resource = painterResource(R.drawable.ic_arrow_up)
@@ -45,13 +46,13 @@ fun MainContent(
                 Icon(
                     resource,
                     contentDescription = null,
-                    tint = colorResource(id = R.color.primary_stock)
+                    tint = themeColor
                 )
             } else {
                 Icon(
                     resource,
                     contentDescription = null,
-                    tint = colorResource(id = R.color.primary_stock)
+                    tint = themeColor
                 )
             }
         }
