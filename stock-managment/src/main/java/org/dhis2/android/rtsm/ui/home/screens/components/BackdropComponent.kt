@@ -81,7 +81,7 @@ fun Backdrop(
         },
         frontLayerElevation = 5.dp,
         frontLayerContent = {
-            MainContent(backdropState, isFrontLayerDisabled)
+            MainContent(backdropState, isFrontLayerDisabled, themeColor)
         },
         scaffoldState = backdropState,
         gesturesEnabled = false,
