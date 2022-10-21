@@ -17,9 +17,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.data.TransactionType
+import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -27,8 +30,10 @@ import org.dhis2.android.rtsm.ui.home.HomeViewModel
 @Composable
 fun Backdrop(
     activity: Activity,
-    viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    viewModel: HomeViewModel = viewModel(),
     themeColor: Color,
+    supportFragmentManager: FragmentManager,
+    homeContext: HomeActivity,
     scaffoldState: ScaffoldState,
     syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> }
 ) {
@@ -63,11 +68,13 @@ fun Backdrop(
         backLayerBackgroundColor = themeColor,
         backLayerContent = {
             val height = FilterList(
-                viewModel, themeColor,
+                viewModel,
+                themeColor,
+                supportFragmentManager,
+                homeContext,
                 { hasFacilitySelected = it },
                 { hasDestinationSelected = it }
             )
-
             if (height > 160.dp) {
                 scope.launch { backdropState.reveal() }
             }

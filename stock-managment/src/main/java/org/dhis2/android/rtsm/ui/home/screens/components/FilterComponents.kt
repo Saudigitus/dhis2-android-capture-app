@@ -19,10 +19,12 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentManager
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.OperationState
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.data.models.TransactionItem
+import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
@@ -31,6 +33,8 @@ import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 fun FilterList(
     viewModel: HomeViewModel,
     themeColor: Color,
+    supportFragmentManager: FragmentManager,
+    homeContext: HomeActivity,
     isFacilitySelected: (value: Boolean) -> Unit = {},
     isDestinationSelected: (value: Boolean) -> Unit = {}
 ): Dp {
@@ -88,6 +92,8 @@ fun FilterList(
             DropdownComponentFacilities(
                 viewModel,
                 themeColor,
+                supportFragmentManager,
+                homeContext,
                 getFacilities(facilities)
             ) { facility ->
                 isFacilitySelected(facility.isNotEmpty())
