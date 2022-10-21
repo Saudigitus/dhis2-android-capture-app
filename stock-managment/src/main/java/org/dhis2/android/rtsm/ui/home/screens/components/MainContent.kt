@@ -95,7 +95,8 @@ fun MainContent(
                 shape = RoundedCornerShape(30.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White
+                    unfocusedBorderColor = Color.White,
+                    cursorColor = themeColor
                 ),
                 textStyle = LocalTextStyle.current.copy(fontSize = 14.sp),
                 enabled = isFrontLayerDisabled != true,
@@ -103,7 +104,7 @@ fun MainContent(
                     Icon(
                         painter = searchResource,
                         contentDescription = "",
-                        tint = colorResource(id = R.color.primary_stock)
+                        tint = themeColor
                     )
                 },
                 trailingIcon = {
@@ -143,7 +144,7 @@ fun MainContent(
                 Icon(
                     painter = qrcodeResource,
                     contentDescription = "",
-                    tint = colorResource(id = R.color.primary_stock)
+                    tint = themeColor
                 )
             }
             IconButton(
