@@ -24,7 +24,7 @@ import org.dhis2.android.rtsm.R
 fun MainContent(
     backdropState: BackdropScaffoldState,
     isFrontLayerDisabled: Boolean?,
-    themeColor: Color,
+    themeColor: Color
 ) {
     val scope = rememberCoroutineScope()
     val resource = painterResource(R.drawable.ic_arrow_up)
