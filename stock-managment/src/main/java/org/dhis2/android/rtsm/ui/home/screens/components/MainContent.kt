@@ -133,7 +133,7 @@ fun MainContent(
                     onDone = {
                         focusManager.clearFocus()
                     }
-                ),
+                )
             )
             IconButton(
                 onClick = { /*TODO*/ },
