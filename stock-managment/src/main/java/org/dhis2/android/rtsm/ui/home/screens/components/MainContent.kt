@@ -41,7 +41,6 @@ import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 import timber.log.Timber
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainContent(
