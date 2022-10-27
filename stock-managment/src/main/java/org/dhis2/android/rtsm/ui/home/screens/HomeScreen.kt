@@ -21,11 +21,13 @@ import kotlinx.coroutines.CoroutineScope
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
+import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 
 @Composable
 fun HomeScreen(
     activity: Activity,
     viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    manageStockViewModel: ManageStockViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     themeColor: Color,
     proceedAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> },
     syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> }
@@ -60,7 +62,7 @@ fun HomeScreen(
         }
     ) {
         it.calculateBottomPadding()
-        Backdrop(activity, viewModel, themeColor, scaffoldState) { coroutineScope, scaffold ->
+        Backdrop(activity, viewModel, manageStockViewModel, themeColor, scaffoldState) { coroutineScope, scaffold ->
             syncAction(coroutineScope, scaffold)
         }
     }
