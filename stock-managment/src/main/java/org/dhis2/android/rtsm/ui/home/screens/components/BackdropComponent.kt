@@ -1,13 +1,10 @@
 package org.dhis2.android.rtsm.ui.home.screens.components
 
 import android.app.Activity
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -15,17 +12,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.google.android.material.composethemeadapter.MdcTheme
 import kotlinx.coroutines.CoroutineScope
+import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
+import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
+import org.dhis2.android.rtsm.ui.managestock.components.ManageStockTable
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Backdrop(
     activity: Activity,
-    viewModel: HomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    viewModel: HomeViewModel,
+    manageStockViewModel: ManageStockViewModel,
     themeColor: Color,
     scaffoldState: ScaffoldState,
     syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> }
@@ -34,6 +35,7 @@ fun Backdrop(
 
     var hasFacilitySelected by remember { mutableStateOf(false) }
     var hasDestinationSelected by remember { mutableStateOf<Boolean?>(null) }
+    var hasFilterSelected by remember { mutableStateOf(false) }
 
     BackdropScaffold(
         appBar = {
@@ -56,17 +58,48 @@ fun Backdrop(
         backLayerContent = {
             FilterList(
                 viewModel, themeColor,
-                { hasFacilitySelected = it },
-                { hasDestinationSelected = it }
+                {
+                    hasFacilitySelected = it
+                    updateTableState(hasFilterSelected, manageStockViewModel, viewModel)
+                },
+                {
+                    hasDestinationSelected = it
+                    updateTableState(hasFilterSelected, manageStockViewModel, viewModel)
+                }
             )
         },
         frontLayerElevation = 5.dp,
         frontLayerContent = {
-            Column(Modifier.padding(16.dp)) {
-                Text(text = "Main content")
-            }
+                if (viewModel.toolbarTitle.collectAsState().value.name
+                    == TransactionType.DISTRIBUTION.name) {
+                    if (hasFacilitySelected && hasDestinationSelected == true) {
+                        hasFilterSelected = true
+                        MdcTheme {
+                            updateTableState(hasFilterSelected, manageStockViewModel, viewModel)
+                            ManageStockTable(manageStockViewModel)
+                        }
+                    }
+                } else if (hasFacilitySelected) {
+                    hasFilterSelected = true
+                    MdcTheme {
+                        updateTableState(hasFilterSelected, manageStockViewModel, viewModel)
+                        ManageStockTable(manageStockViewModel)
+                    }
+                }
+
         },
         scaffoldState = backdropState,
-        gesturesEnabled = false
+        gesturesEnabled = false,
+        frontLayerScrimColor = Color.Unspecified
     )
+}
+
+private fun updateTableState(
+    value: Boolean,
+    manageStockViewModel: ManageStockViewModel,
+    viewModel: HomeViewModel
+) {
+    if (value) {
+        manageStockViewModel.setup(viewModel.getData())
+    }
 }
