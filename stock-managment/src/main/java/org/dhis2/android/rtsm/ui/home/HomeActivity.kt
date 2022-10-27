@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
-import androidx.core.content.ContextCompat.startActivity
 import androidx.work.WorkInfo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -29,12 +28,14 @@ import org.dhis2.android.rtsm.data.AppConfig
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.screens.HomeScreen
 import org.dhis2.android.rtsm.ui.managestock.ManageStockActivity
+import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.android.rtsm.utils.NetworkUtils
 
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
     private val viewModel: HomeViewModel by viewModels()
+    private val manageStockViewModel: ManageStockViewModel by viewModels()
     private var themeColor = R.color.colorPrimary
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +47,8 @@ class HomeActivity : ComponentActivity() {
             ) {
                 updateTheme(viewModel.transactionType.collectAsState().value)
                 HomeScreen(
-                    this, viewModel, Color(colorResource(themeColor).toArgb()),
+                    this, viewModel, manageStockViewModel,
+                    Color(colorResource(themeColor).toArgb()),
                     { scope, scaffold -> navigateToManageStock(scope, scaffold) },
                     { scope, scaffold -> synchronizeData(scope, scaffold) }
                 )
@@ -152,7 +154,6 @@ class HomeActivity : ComponentActivity() {
             return
         }
         startActivity(
-            this.baseContext,
             ManageStockActivity
                 .getManageStockActivityIntent(
                     this.baseContext,
