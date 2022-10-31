@@ -188,7 +188,7 @@ dependencies {
 
     androidTestImplementation "androidx.test.ext:junit:$libraries.junit_ext"
     androidTestImplementation "androidx.test.espresso:espresso-core:$libraries.espresso_core"
-
+    androidTestImplementation "androidx.arch.core:core-testing:$libraries.android_core_testing"
 
     //Serialization library
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:${libraries.kotlinxserialization}"
