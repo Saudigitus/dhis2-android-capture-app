@@ -2,7 +2,6 @@ package org.dhis2.android.rtsm.ui.home
 
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.WindowManager
@@ -17,8 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
-import androidx.core.content.ContextCompat.startActivity
-import androidx.lifecycle.Observer
 import androidx.work.WorkInfo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -29,7 +26,7 @@ import org.dhis2.android.rtsm.commons.Constants.INTENT_EXTRA_APP_CONFIG
 import org.dhis2.android.rtsm.data.AppConfig
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.screens.HomeScreen
-import org.dhis2.android.rtsm.ui.managestock.ManageStockActivity
+import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.android.rtsm.utils.NetworkUtils
 import org.dhis2.commons.filters.FilterManager
 import org.dhis2.commons.orgunitselector.OnOrgUnitSelectionFinished
@@ -37,7 +34,9 @@ import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
+
     private val viewModel: HomeViewModel by viewModels()
+    private val manageStockViewModel: ManageStockViewModel by viewModels()
     private var themeColor = R.color.colorPrimary
     private lateinit var filterManager: FilterManager
     private var orgUnitList = listOf<OrganisationUnit>()
@@ -46,11 +45,10 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
         super.onCreate(savedInstanceState)
 
         viewModel.orgUnitList.observe(
-            this,
-            Observer {
-                orgUnitList = it
-            }
-        )
+            this
+        ) {
+            orgUnitList = it
+        }
         filterManager = FilterManager.getInstance()
 
         setContent {
@@ -59,9 +57,12 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
             ) {
                 updateTheme(viewModel.transactionType.collectAsState().value)
                 HomeScreen(
-                    this, viewModel, manageStockViewModel,
-                    supportFragmentManager, this@HomeActivity,
+                    this,
+                    viewModel,
+                    manageStockViewModel,
                     Color(colorResource(themeColor).toArgb()),
+                    supportFragmentManager,
+                    this@HomeActivity,
                     { scope, scaffold -> navigateToManageStock(scope, scaffold) },
                     { scope, scaffold -> synchronizeData(scope, scaffold) }
                 )
@@ -166,7 +167,7 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
             }
             return
         }
-        startActivity(
+        /*startActivity(
             this.baseContext,
             ManageStockActivity
                 .getManageStockActivityIntent(
@@ -177,12 +178,12 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
                     this.addFlags(FLAG_ACTIVITY_NEW_TASK)
                 },
             null
-        )
+        )*/
     }
 
     companion object {
         @JvmStatic
-        fun getHomeActivityIntent(context: Context, config: AppConfig): Intent? {
+        fun getHomeActivityIntent(context: Context, config: AppConfig): Intent {
             val intent = Intent(context, HomeActivity::class.java)
             intent.putExtra(INTENT_EXTRA_APP_CONFIG, config)
             return intent
