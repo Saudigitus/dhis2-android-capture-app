@@ -158,7 +158,9 @@ fun MainContent(
                     tint = themeColor
                 )
             }
-            AnimatedVisibility(visible = backdropState.isRevealed) {
+            AnimatedVisibility(
+                visible = backdropState.isRevealed
+            ) {
                 IconButton(
                     onClick = {
                         scope.launch { backdropState.conceal() }
