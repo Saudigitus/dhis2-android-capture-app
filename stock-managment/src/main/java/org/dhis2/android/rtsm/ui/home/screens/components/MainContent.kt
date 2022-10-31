@@ -1,11 +1,20 @@
 package org.dhis2.android.rtsm.ui.home.screens.components
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -30,11 +39,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.FirstBaseline
+import androidx.compose.ui.layout.LastBaseline
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
@@ -55,119 +66,133 @@ fun MainContent(
     val closeResource = painterResource(R.drawable.ic_close)
     val commentsAlpha = if (backdropState.isRevealed) 1f else 0f
     var closeButtonVisibility by remember { mutableStateOf(0f) }
-    val textFieldWeightValue = if (backdropState.isRevealed) 5f else 15f
-    val weightValue = if (backdropState.isRevealed) 1f else 2f
-    val weightValueArrow = if (backdropState.isRevealed) 1f else 0.1f
+    val weightValue = if (backdropState.isRevealed) 0.15f else 0.10f
+    val weightValueArrow = if (backdropState.isRevealed) 0.10f else 0.05f
     val weightValueArrowStatus = backdropState.isRevealed
     val focusManager = LocalFocusManager.current
-    Row(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxSize(),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.Top
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var search by remember { mutableStateOf("") }
-        OutlinedTextField(
-            value = search,
-            onValueChange = {
-                search = it
-                closeButtonVisibility = when (search) {
-                    "" -> 0f
-                    else -> 1f
-                }
-            },
+        Row(
             modifier = Modifier
-                .background(Color.White, shape = CircleShape)
-                .shadow(
-                    elevation = 8.dp,
-                    ambientColor = Color.Black.copy(alpha = 0.1f),
-                    shape = RoundedCornerShape(30.dp),
-                    clip = false
-                )
-                .offset(0.dp, 0.dp)
-                .background(color = Color.White, shape = RoundedCornerShape(30.dp))
-                .weight(textFieldWeightValue)
-                .alignBy(FirstBaseline),
-            shape = RoundedCornerShape(30.dp),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.White,
-                unfocusedBorderColor = Color.White,
-                cursorColor = themeColor
-            ),
-            textStyle = LocalTextStyle.current.copy(fontSize = 14.sp),
-            enabled = isFrontLayerDisabled != true,
-            leadingIcon = {
+                .padding(16.dp)
+                .fillMaxWidth()
+                .height(60.dp),
+            horizontalArrangement = Arrangement.SpaceAround,
+            verticalAlignment = Alignment.Top
+        ) {
+            var search by remember { mutableStateOf("") }
+            OutlinedTextField(
+                value = search,
+                onValueChange = {
+                    search = it
+                    closeButtonVisibility = when (search) {
+                        "" -> 0f
+                        else -> 1f
+                    }
+                },
+                modifier = Modifier
+                    .padding(horizontal = 5.dp)
+                    .background(Color.White, shape = CircleShape)
+                    .shadow(
+                        elevation = 8.dp,
+                        ambientColor = Color.Black.copy(alpha = 0.1f),
+                        shape = RoundedCornerShape(30.dp),
+                        clip = false
+                    )
+                    .offset(0.dp, 0.dp)
+                    .background(color = Color.White, shape = RoundedCornerShape(30.dp))
+                    .weight(1 - (weightValue + weightValueArrow))
+                    .alignBy(FirstBaseline),
+                shape = RoundedCornerShape(30.dp),
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    focusedBorderColor = Color.White,
+                    unfocusedBorderColor = Color.White,
+                    cursorColor = themeColor
+                ),
+                textStyle = LocalTextStyle.current.copy(fontSize = 14.sp),
+                enabled = isFrontLayerDisabled != true,
+                leadingIcon = {
+                    Icon(
+                        painter = searchResource,
+                        contentDescription = "",
+                        tint = themeColor
+                    )
+                },
+                trailingIcon = {
+                    IconButton(
+                        modifier = Modifier
+                            .alpha(closeButtonVisibility),
+                        onClick = {
+                            search = ""
+                            closeButtonVisibility = 0f
+                        }
+                    ) {
+                        Icon(
+                            painter = closeResource,
+                            contentDescription = ""
+                        )
+                    }
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        Timber.tag("SEARCH_DATA").v(search)
+                    },
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
+                singleLine = true,
+                placeholder = {
+                    Text(text = stringResource(id = R.string.search_placeholder))
+                }
+            )
+            IconButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .weight(weightValue)
+                    .alignBy(FirstBaseline)
+            ) {
                 Icon(
-                    painter = searchResource,
+                    painter = qrcodeResource,
                     contentDescription = "",
                     tint = themeColor
                 )
-            },
-            trailingIcon = {
-                IconButton(
-                    modifier = Modifier
-                        .alpha(closeButtonVisibility),
-                    onClick = {
-                        search = ""
-                        closeButtonVisibility = 0f
-                    }
-                ) {
+            }
+            IconButton(
+                onClick = {
+                    scope.launch { backdropState.conceal() }
+                },
+                modifier = Modifier
+                    .alpha(commentsAlpha)
+                    .weight(weightValueArrow, weightValueArrowStatus)
+                    .alignBy(FirstBaseline)
+            ) {
+                if (isFrontLayerDisabled == true) {
                     Icon(
-                        painter = closeResource,
-                        contentDescription = ""
+                        resource,
+                        contentDescription = null,
+                        tint = themeColor
+                    )
+                } else {
+                    Icon(
+                        resource,
+                        contentDescription = null,
+                        tint = themeColor
                     )
                 }
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    Timber.tag("SEARCH_DATA").v(search)
-                },
-                onDone = {
-                    focusManager.clearFocus()
-                }
-            ),
-            singleLine = true,
-            placeholder = {
-                Text(text = stringResource(id = R.string.search_placeholder))
             }
-        )
-        IconButton(
-            onClick = { /*TODO*/ },
-            modifier = Modifier
-                .weight(weightValue)
-        ) {
-            Icon(
-                painter = qrcodeResource,
-                contentDescription = "",
-                tint = themeColor
-            )
         }
-        IconButton(
-            onClick = {
-                scope.launch { backdropState.conceal() }
-            },
-            modifier = Modifier
-                .alpha(commentsAlpha)
-                .weight(weightValueArrow, weightValueArrowStatus)
-        ) {
-            if (isFrontLayerDisabled == true) {
-                Icon(
-                    resource,
-                    contentDescription = null,
-                    tint = themeColor
-                )
-            } else {
-                Icon(
-                    resource,
-                    contentDescription = null,
-                    tint = themeColor
-                )
-            }
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = "Table content", textAlign = TextAlign.Center)
         }
     }
+
 }
