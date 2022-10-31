@@ -10,8 +10,6 @@ import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
-import java.time.LocalDateTime
-import java.time.ZoneId
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,6 +52,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 @RunWith(MockitoJUnitRunner::class)
 class HomeViewModelUnitTest {
@@ -190,9 +190,9 @@ class HomeViewModelUnitTest {
     fun init_shouldSetTransactionDateToCurrentDate() {
         val today = LocalDateTime.now()
 
-        assertEquals(viewModel.transactionDate.value?.year, today.year)
-        assertEquals(viewModel.transactionDate.value?.month, today.month)
-        assertEquals(viewModel.transactionDate.value?.dayOfMonth, today.dayOfMonth)
+        assertEquals(viewModel.transactionDate.value.year, today.year)
+        assertEquals(viewModel.transactionDate.value.month, today.month)
+        assertEquals(viewModel.transactionDate.value.dayOfMonth, today.dayOfMonth)
     }
 
     @Test
