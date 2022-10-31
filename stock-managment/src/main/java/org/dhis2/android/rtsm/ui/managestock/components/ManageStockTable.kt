@@ -17,7 +17,6 @@ import org.dhis2.composetable.model.TableRowModel
 import org.dhis2.composetable.model.TextInputModel
 import org.dhis2.composetable.ui.DataSetTableScreen
 
-
 @Composable
 private fun mapTableModel(
     stocks: List<TableRowModel>
@@ -29,7 +28,7 @@ private fun mapTableModel(
                 TableHeaderRow(
                     mutableListOf(
                         TableHeaderCell(stringResource(R.string.stock)),
-                        TableHeaderCell(stringResource(R.string.quantity)),
+                        TableHeaderCell(stringResource(R.string.quantity))
                     )
                 )
             )

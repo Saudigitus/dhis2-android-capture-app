@@ -94,7 +94,8 @@ fun Backdrop(
             MainContent(backdropState, isFrontLayerDisabled, themeColor)
 
             if (viewModel.toolbarTitle.collectAsState().value.name
-                == TransactionType.DISTRIBUTION.name) {
+                == TransactionType.DISTRIBUTION.name
+            ) {
                 if (hasFacilitySelected && hasDestinationSelected == true) {
                     hasFilterSelected = true
                     MdcTheme {

@@ -9,6 +9,10 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import org.dhis2.android.rtsm.commons.Constants.QUANTITY_ENTRY_DEBOUNCE
 import org.dhis2.android.rtsm.commons.Constants.SEARCH_QUERY_DEBOUNCE
 import org.dhis2.android.rtsm.data.AppConfig
@@ -31,10 +35,6 @@ import org.dhis2.composetable.model.TableCell
 import org.dhis2.composetable.model.TableRowModel
 import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -86,7 +86,6 @@ class ManageStockViewModel @Inject constructor(
     val operationState: LiveData<OperationState<LiveData<PagedList<StockItem>>>>
         get() = _networkState
 
-
     fun setup(transaction: Transaction) {
         _transaction.value = transaction
 
@@ -96,7 +95,8 @@ class ManageStockViewModel @Inject constructor(
 
     private fun loadStockItems() {
         search.value = transaction.value?.facility?.uid?.let {
-            SearchParametersModel(null, null,
+            SearchParametersModel(
+                null, null,
                 it
             )
         }
@@ -117,11 +117,11 @@ class ManageStockViewModel @Inject constructor(
                     { result ->
                         search.value =
                             transaction.value?.facility?.uid?.let {
-                                SearchParametersModel(result, null,
+                                SearchParametersModel(
+                                    result, null,
                                     it
                                 )
                             }
-
                     },
                     { it.printStackTrace() }
                 )
@@ -173,7 +173,7 @@ class ManageStockViewModel @Inject constructor(
                         row = index,
                         column = 0,
                         editable = false,
-                        value = item.stockOnHand,
+                        value = item.stockOnHand
                     ),
                     1 to TableCell(
                         id = item.id,
@@ -197,7 +197,7 @@ class ManageStockViewModel @Inject constructor(
     }
 
     fun onScanCompleted(itemCode: String) {
-        search.postValue(SearchParametersModel(null, itemCode,transaction.value?.facility?.uid!!))
+        search.postValue(SearchParametersModel(null, itemCode, transaction.value?.facility?.uid!!))
     }
 
     fun setQuantity(
