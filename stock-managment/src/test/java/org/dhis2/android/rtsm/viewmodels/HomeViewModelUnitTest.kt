@@ -10,8 +10,6 @@ import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
-import java.time.LocalDateTime
-import java.time.ZoneId
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,6 +52,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 @RunWith(MockitoJUnitRunner::class)
 class HomeViewModelUnitTest {
@@ -445,7 +445,7 @@ class HomeViewModelUnitTest {
     fun shouldChangeToolbarTitle_forDistribution() {
         viewModel.setToolbarTitle(TransactionType.DISTRIBUTION)
 
-        val title = viewModel.toolbarTitle.value?.name
+        val title = viewModel.toolbarTitle.value.name
         assertEquals(TransactionType.DISTRIBUTION.name, title)
     }
 
@@ -453,7 +453,7 @@ class HomeViewModelUnitTest {
     fun shouldChangeToolbarTitle_forDiscard() {
         viewModel.setToolbarTitle(TransactionType.DISCARD)
 
-        val title = viewModel.toolbarTitle.value?.name
+        val title = viewModel.toolbarTitle.value.name
         assertEquals(TransactionType.DISCARD.name, title)
     }
 
