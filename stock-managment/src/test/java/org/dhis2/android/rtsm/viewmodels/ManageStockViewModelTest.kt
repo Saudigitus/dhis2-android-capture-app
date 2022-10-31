@@ -146,6 +146,7 @@ class ManageStockViewModelTest {
             distributedTo = distributedTo
         )
         val viewModel = getModel(transaction)
+        viewModel.setup(transaction)
 
         viewModel.transaction.let {
             assertNotNull(it.value?.facility)
@@ -164,6 +165,7 @@ class ManageStockViewModelTest {
             distributedTo = null
         )
         val viewModel = getModel(transaction)
+        viewModel.setup(transaction)
 
         viewModel.transaction.let {
             assertNotNull(it.value?.facility)
@@ -182,6 +184,7 @@ class ManageStockViewModelTest {
             distributedTo = null
         )
         val viewModel = getModel(transaction)
+        viewModel.setup(transaction)
 
         viewModel.transaction.let {
             assertNotNull(it.value?.facility)
