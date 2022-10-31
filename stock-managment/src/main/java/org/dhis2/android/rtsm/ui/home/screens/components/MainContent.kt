@@ -1,5 +1,6 @@
 package org.dhis2.android.rtsm.ui.home.screens.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -57,7 +58,6 @@ fun MainContent(
     val qrcodeResource = painterResource(R.drawable.ic_qr_code_scanner)
     val searchResource = painterResource(R.drawable.ic_search)
     val closeResource = painterResource(R.drawable.ic_close)
-    val commentsAlpha = if (backdropState.isRevealed) 1f else 0f
     var closeButtonVisibility by remember { mutableStateOf(0f) }
     val weightValue = if (backdropState.isRevealed) 0.15f else 0.10f
     val weightValueArrow = if (backdropState.isRevealed) 0.10f else 0.05f
@@ -158,27 +158,28 @@ fun MainContent(
                     tint = themeColor
                 )
             }
-            IconButton(
-                onClick = {
-                    scope.launch { backdropState.conceal() }
-                },
-                modifier = Modifier
-                    .alpha(commentsAlpha)
-                    .weight(weightValueArrow, weightValueArrowStatus)
-                    .alignBy(FirstBaseline)
-            ) {
-                if (isFrontLayerDisabled == true) {
-                    Icon(
-                        resource,
-                        contentDescription = null,
-                        tint = themeColor
-                    )
-                } else {
-                    Icon(
-                        resource,
-                        contentDescription = null,
-                        tint = themeColor
-                    )
+            AnimatedVisibility(visible = backdropState.isRevealed) {
+                IconButton(
+                    onClick = {
+                        scope.launch { backdropState.conceal() }
+                    },
+                    modifier = Modifier
+                        .weight(weightValueArrow, weightValueArrowStatus)
+                        .alignBy(FirstBaseline)
+                ) {
+                    if (isFrontLayerDisabled == true) {
+                        Icon(
+                            resource,
+                            contentDescription = null,
+                            tint = themeColor
+                        )
+                    } else {
+                        Icon(
+                            resource,
+                            contentDescription = null,
+                            tint = themeColor
+                        )
+                    }
                 }
             }
         }
