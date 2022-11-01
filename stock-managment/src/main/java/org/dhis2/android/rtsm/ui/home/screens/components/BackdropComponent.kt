@@ -18,14 +18,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
-import com.google.android.material.composethemeadapter.MdcTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
-import org.dhis2.android.rtsm.ui.managestock.components.ManageStockTable
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterialApi::class)
@@ -45,7 +43,6 @@ fun Backdrop(
     var isFrontLayerDisabled by remember { mutableStateOf<Boolean?>(null) }
     var hasFacilitySelected by remember { mutableStateOf(false) }
     var hasDestinationSelected by remember { mutableStateOf<Boolean?>(null) }
-    var hasFilterSelected by remember { mutableStateOf(false) }
     var toolbarTitle by remember {
         mutableStateOf(TransactionType.DISTRIBUTION.name)
     }
@@ -76,14 +73,8 @@ fun Backdrop(
                 themeColor,
                 supportFragmentManager,
                 homeContext,
-                {
-                    hasFacilitySelected = it
-                    updateTableState(hasFilterSelected, manageStockViewModel, viewModel)
-                },
-                {
-                    hasDestinationSelected = it
-                    updateTableState(hasFilterSelected, manageStockViewModel, viewModel)
-                }
+                { hasFacilitySelected = it },
+                { hasDestinationSelected = it }
             )
             if (height > 160.dp) {
                 scope.launch { backdropState.reveal() }
@@ -91,25 +82,15 @@ fun Backdrop(
         },
         frontLayerElevation = 5.dp,
         frontLayerContent = {
-            MainContent(backdropState, isFrontLayerDisabled, themeColor)
-
-            if (viewModel.toolbarTitle.collectAsState().value.name
-                == TransactionType.DISTRIBUTION.name
-            ) {
-                if (hasFacilitySelected && hasDestinationSelected == true) {
-                    hasFilterSelected = true
-                    MdcTheme {
-                        updateTableState(hasFilterSelected, manageStockViewModel, viewModel)
-                        ManageStockTable(manageStockViewModel)
-                    }
-                }
-            } else if (hasFacilitySelected) {
-                hasFilterSelected = true
-                MdcTheme {
-                    updateTableState(hasFilterSelected, manageStockViewModel, viewModel)
-                    ManageStockTable(manageStockViewModel)
-                }
-            }
+            MainContent(
+                backdropState,
+                isFrontLayerDisabled,
+                themeColor,
+                viewModel,
+                manageStockViewModel,
+                hasFacilitySelected,
+                hasDestinationSelected
+            )
         },
         scaffoldState = backdropState,
         gesturesEnabled = false,
@@ -133,12 +114,4 @@ fun Backdrop(
     )
 }
 
-private fun updateTableState(
-    value: Boolean,
-    manageStockViewModel: ManageStockViewModel,
-    viewModel: HomeViewModel
-) {
-    if (value) {
-        manageStockViewModel.setup(viewModel.getData())
-    }
-}
+
