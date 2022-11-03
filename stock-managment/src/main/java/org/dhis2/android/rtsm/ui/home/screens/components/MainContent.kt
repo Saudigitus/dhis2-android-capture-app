@@ -49,7 +49,6 @@ import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.android.rtsm.ui.managestock.components.ManageStockTable
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -94,6 +93,7 @@ fun MainContent(
                         "" -> 0f
                         else -> 1f
                     }
+                    manageStockViewModel.onSearchQueryChanged(it)
                 },
                 modifier = Modifier
                     .padding(horizontal = 5.dp)
@@ -144,7 +144,7 @@ fun MainContent(
                 ),
                 keyboardActions = KeyboardActions(
                     onSearch = {
-                        Timber.tag("SEARCH_DATA").v(search)
+                        manageStockViewModel.onSearchQueryChanged(search)
                     },
                     onDone = {
                         focusManager.clearFocus()
