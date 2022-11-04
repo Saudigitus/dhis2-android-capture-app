@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.work.WorkInfo
+import com.google.android.material.composethemeadapter.MdcTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -56,20 +57,23 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
             ?.let { manageStockViewModel.setConfig(it) }
 
         setContent {
-            Surface(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                updateTheme(viewModel.transactionType.collectAsState().value)
-                HomeScreen(
-                    this,
-                    viewModel,
-                    manageStockViewModel,
-                    Color(colorResource(themeColor).toArgb()),
-                    supportFragmentManager,
-                    this@HomeActivity,
-                    { scope, scaffold -> navigateToReviewStock(scope, scaffold) },
-                    { scope, scaffold -> synchronizeData(scope, scaffold) }
-                )
+            updateTheme(viewModel.transactionType.collectAsState().value)
+            MdcTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color(colorResource(themeColor).toArgb())
+                ) {
+                    HomeScreen(
+                        this,
+                        viewModel,
+                        manageStockViewModel,
+                        Color(colorResource(themeColor).toArgb()),
+                        supportFragmentManager,
+                        this@HomeActivity,
+                        { scope, scaffold -> navigateToReviewStock(scope, scaffold) },
+                        { scope, scaffold -> synchronizeData(scope, scaffold) }
+                    )
+                }
             }
         }
     }
