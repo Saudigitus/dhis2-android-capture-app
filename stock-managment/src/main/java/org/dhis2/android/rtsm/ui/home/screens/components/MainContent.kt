@@ -42,7 +42,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.android.material.composethemeadapter.MdcTheme
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.TransactionType
@@ -200,16 +199,12 @@ fun MainContent(
                 == TransactionType.DISTRIBUTION.name
             ) {
                 if (hasFacilitySelected && hasDestinationSelected == true) {
-                    MdcTheme {
-                        updateTableState(manageStockViewModel, viewModel)
-                        ManageStockTable(manageStockViewModel)
-                    }
-                }
-            } else if (hasFacilitySelected) {
-                MdcTheme {
                     updateTableState(manageStockViewModel, viewModel)
                     ManageStockTable(manageStockViewModel)
                 }
+            } else if (hasFacilitySelected) {
+                updateTableState(manageStockViewModel, viewModel)
+                ManageStockTable(manageStockViewModel)
             }
         }
     }
