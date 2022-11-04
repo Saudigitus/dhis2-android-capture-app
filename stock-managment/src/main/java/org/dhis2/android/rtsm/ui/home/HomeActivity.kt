@@ -2,6 +2,7 @@ package org.dhis2.android.rtsm.ui.home
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.WindowManager
@@ -27,6 +28,7 @@ import org.dhis2.android.rtsm.data.AppConfig
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.screens.HomeScreen
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
+import org.dhis2.android.rtsm.ui.reviewstock.ReviewStockActivity
 import org.dhis2.android.rtsm.utils.NetworkUtils
 import org.dhis2.commons.filters.FilterManager
 import org.dhis2.commons.orgunitselector.OnOrgUnitSelectionFinished
@@ -50,6 +52,8 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
             orgUnitList = it
         }
         filterManager = FilterManager.getInstance()
+        intent.getParcelableExtra<AppConfig>(INTENT_EXTRA_APP_CONFIG)
+            ?.let { manageStockViewModel.setConfig(it) }
 
         setContent {
             Surface(
@@ -63,7 +67,7 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
                     Color(colorResource(themeColor).toArgb()),
                     supportFragmentManager,
                     this@HomeActivity,
-                    { scope, scaffold -> navigateToManageStock(scope, scaffold) },
+                    { scope, scaffold -> navigateToReviewStock(scope, scaffold) },
                     { scope, scaffold -> synchronizeData(scope, scaffold) }
                 )
             }
@@ -155,7 +159,7 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
         }
     }
 
-    private fun navigateToManageStock(
+    private fun navigateToReviewStock(
         scope: CoroutineScope,
         scaffoldState: ScaffoldState
     ) {
@@ -167,18 +171,17 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
             }
             return
         }
-        /*startActivity(
-            this.baseContext,
-            ManageStockActivity
-                .getManageStockActivityIntent(
+        startActivity(
+            ReviewStockActivity
+                .getReviewStockActivityIntent(
                     this.baseContext,
-                    viewModel.getData(),
+                    manageStockViewModel.getData(),
                     intent.getParcelableExtra(INTENT_EXTRA_APP_CONFIG)
                 ).apply {
                     this.addFlags(FLAG_ACTIVITY_NEW_TASK)
                 },
             null
-        )*/
+        )
     }
 
     companion object {
