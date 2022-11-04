@@ -111,7 +111,6 @@ android {
 dependencies {
 
     implementation project(":commons")
-    implementation project(":form")
     implementation project(":compose-table")
 
     // DHIS2 Android SDK
