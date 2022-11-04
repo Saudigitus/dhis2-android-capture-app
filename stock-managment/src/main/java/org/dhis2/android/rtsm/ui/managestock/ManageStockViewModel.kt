@@ -9,10 +9,6 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 import org.dhis2.android.rtsm.commons.Constants.QUANTITY_ENTRY_DEBOUNCE
 import org.dhis2.android.rtsm.commons.Constants.SEARCH_QUERY_DEBOUNCE
 import org.dhis2.android.rtsm.data.AppConfig
@@ -35,6 +31,10 @@ import org.dhis2.composetable.model.TableCell
 import org.dhis2.composetable.model.TableRowModel
 import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -50,18 +50,7 @@ class ManageStockViewModel @Inject constructor(
     schedulerProvider,
     speechRecognitionManager
 ) {
-    private val _config = MutableLiveData(
-        AppConfig(
-            "F5ijs28K4s8",
-            "wBr4wccNBj1",
-            "MBczRWvfM46",
-            "ypCQAFr1a5l",
-            "yfsEseIcEXr",
-            "lpGYJoVUudr",
-            "ej1YwWaYGmm",
-            "I7cmT3iXT0y"
-        )
-    )
+    private val _config = MutableLiveData<AppConfig>()
     val config: LiveData<AppConfig> = _config
 
     private val _transaction = MutableLiveData<Transaction>()
@@ -91,6 +80,10 @@ class ManageStockViewModel @Inject constructor(
 
         configureRelays()
         loadStockItems()
+    }
+
+    fun setConfig(config: AppConfig) {
+        _config.value = config
     }
 
     private fun loadStockItems() {
