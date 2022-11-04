@@ -30,9 +30,6 @@ import org.dhis2.android.rtsm.services.rules.RuleValidationHelper
 import org.dhis2.android.rtsm.services.scheduler.BaseSchedulerProvider
 import org.dhis2.android.rtsm.ui.base.ItemWatcher
 import org.dhis2.android.rtsm.ui.base.SpeechRecognitionAwareViewModel
-import org.dhis2.composetable.model.RowHeader
-import org.dhis2.composetable.model.TableCell
-import org.dhis2.composetable.model.TableRowModel
 import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
 
@@ -50,18 +47,7 @@ class ManageStockViewModel @Inject constructor(
     schedulerProvider,
     speechRecognitionManager
 ) {
-    private val _config = MutableLiveData(
-        AppConfig(
-            "F5ijs28K4s8",
-            "wBr4wccNBj1",
-            "MBczRWvfM46",
-            "ypCQAFr1a5l",
-            "yfsEseIcEXr",
-            "lpGYJoVUudr",
-            "ej1YwWaYGmm",
-            "I7cmT3iXT0y"
-        )
-    )
+    private val _config = MutableLiveData<AppConfig>()
     val config: LiveData<AppConfig> = _config
 
     private val _transaction = MutableLiveData<Transaction>()
@@ -91,6 +77,10 @@ class ManageStockViewModel @Inject constructor(
 
         configureRelays()
         loadStockItems()
+    }
+
+    fun setConfig(config: AppConfig) {
+        _config.value = config
     }
 
     private fun loadStockItems() {
@@ -157,7 +147,11 @@ class ManageStockViewModel @Inject constructor(
         )
     }
 
-    fun tableRowData(stockItems: State<PagedList<StockItem>?>): MutableList<TableRowModel> {
+    fun tableRowData(
+        stockItems: State<PagedList<StockItem>?>,
+        stockLabel: String,
+        qtdLabel: String
+    ): MutableList<TableModel> {
         val tableRowModels = mutableListOf<TableRowModel>()
 
         stockItems.value?.forEachIndexed { index, item ->
@@ -189,8 +183,34 @@ class ManageStockViewModel @Inject constructor(
             tableRowModels.add(tableRowModel)
         }
 
-        return tableRowModels
+        return mapTableModel(
+            tableRowModels,
+            stockLabel,
+            qtdLabel
+        )
     }
+
+    private fun mapTableModel(
+        stocks: List<TableRowModel>,
+        stockLabel: String,
+        qtdLabel: String
+    ) = mutableListOf(
+        TableModel(
+            id = "STOCK",
+            tableHeaderModel = TableHeader(
+                rows = mutableListOf(
+                    TableHeaderRow(
+                        mutableListOf(
+                            TableHeaderCell(stockLabel),
+                            TableHeaderCell(qtdLabel)
+                        )
+                    )
+                )
+            ),
+            tableRows = stocks,
+            upperPadding = false
+        )
+    )
 
     fun onSearchQueryChanged(query: String) {
         searchRelay.accept(query)
