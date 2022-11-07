@@ -30,6 +30,13 @@ import org.dhis2.android.rtsm.services.rules.RuleValidationHelper
 import org.dhis2.android.rtsm.services.scheduler.BaseSchedulerProvider
 import org.dhis2.android.rtsm.ui.base.ItemWatcher
 import org.dhis2.android.rtsm.ui.base.SpeechRecognitionAwareViewModel
+import org.dhis2.composetable.model.RowHeader
+import org.dhis2.composetable.model.TableCell
+import org.dhis2.composetable.model.TableHeader
+import org.dhis2.composetable.model.TableHeaderCell
+import org.dhis2.composetable.model.TableHeaderRow
+import org.dhis2.composetable.model.TableModel
+import org.dhis2.composetable.model.TableRowModel
 import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
 
