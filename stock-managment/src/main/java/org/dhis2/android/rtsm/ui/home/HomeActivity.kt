@@ -49,7 +49,6 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
     private lateinit var filterManager: FilterManager
     private var orgUnitList = listOf<OrganisationUnit>()
     private lateinit var barcodeLauncher: ActivityResultLauncher<ScanOptions>
-    private var scanText: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
