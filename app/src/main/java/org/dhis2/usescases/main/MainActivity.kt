@@ -28,6 +28,8 @@ import org.dhis2.commons.filters.FilterItem
 import org.dhis2.commons.filters.FilterManager
 import org.dhis2.commons.filters.FiltersAdapter
 import org.dhis2.commons.prefs.Preference
+import org.dhis2.commons.sync.ConflictType
+import org.dhis2.commons.sync.OnDismissListener
 import org.dhis2.databinding.ActivityMainBinding
 import org.dhis2.usescases.development.DevelopmentActivity
 import org.dhis2.usescases.general.ActivityGlobalAbstract
@@ -37,7 +39,6 @@ import org.dhis2.utils.analytics.CLICK
 import org.dhis2.utils.analytics.CLOSE_SESSION
 import org.dhis2.utils.customviews.navigationbar.NavigationPageConfigurator
 import org.dhis2.utils.extension.navigateTo
-import org.dhis2.utils.granularsync.GranularSyncContracts
 import org.dhis2.utils.granularsync.SyncStatusDialog
 import org.dhis2.utils.session.PIN_DIALOG_TAG
 import org.dhis2.utils.session.PinDialog
@@ -222,7 +223,7 @@ class MainActivity :
 
     private fun observeSyncState() {
         presenter.observeDataSync().observe(this) {
-            if (it.isDownloading()) {
+            if (it.running) {
                 setFilterButtonVisibility(false)
                 setBottomNavigationVisibility(false)
             } else {
@@ -235,10 +236,10 @@ class MainActivity :
 
     override fun showGranularSync() {
         SyncStatusDialog.Builder()
-            .setConflictType(SyncStatusDialog.ConflictType.ALL)
+            .setConflictType(ConflictType.ALL)
             .setUid("")
             .onDismissListener(
-                object : GranularSyncContracts.OnDismissListener {
+                object : OnDismissListener {
                     override fun onDismiss(hasChanged: Boolean) {
                         if (hasChanged) {
                             mainNavigator.getCurrentIfProgram()?.presenter?.updateProgramQueries()
@@ -416,6 +417,7 @@ class MainActivity :
                 mainNavigator.openQR()
             }
             R.id.menu_jira -> {
+                presenter.trackJiraReport()
                 mainNavigator.openJira()
             }
             R.id.menu_about -> {

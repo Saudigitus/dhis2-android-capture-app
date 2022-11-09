@@ -4,12 +4,12 @@ ext {
             sdk   : 32,
             tools : "32.0.0",
             minSdk: 21,
-            vCode : 115,
+            vCode : 117,
             vName : "2.7"
     ]
     libraries = [
             //DHIS2
-            dhis2sdk                  : "1.6.2",
+            dhis2sdk                  : "1.7.0",
             ruleEngine                : "2.0.43",
 
             //androidX
@@ -33,7 +33,7 @@ ext {
             composeTheme              : "1.1.16",
             composeConstraintLayout   : "1.0.1",
             activityCompose           : "1.5.1",
-            fragmentCompose           : "1.5.2", 
+            fragmentCompose           : "1.5.2",
             viewModelCompose          : "2.5.1",
 
             //Google

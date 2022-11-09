@@ -57,7 +57,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
 
-        
+
 javaCompileOptions {
             annotationProcessorOptions {
                 arguments += [
@@ -365,4 +365,7 @@ dependencies {
 
     //Conscrypt
     implementation "org.conscrypt:conscrypt-android:${libraries.conscrypt}"
+
+    implementation "com.google.dagger:hilt-android:$libraries.hilt"
+    kapt "com.google.dagger:hilt-compiler:$libraries.hilt"
 }
