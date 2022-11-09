@@ -52,9 +52,10 @@ fun HomeScreen(
                 },
                 text = { Text(stringResource(R.string.proceed)) },
                 onClick = { proceedAction(scope, scaffoldState) },
+                //modifier = Modifier.,
                 backgroundColor = Color.White,
                 contentColor = themeColor,
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
             )
         },
         snackbarHost = {
