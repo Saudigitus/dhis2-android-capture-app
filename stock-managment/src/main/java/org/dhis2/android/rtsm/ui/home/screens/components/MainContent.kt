@@ -218,8 +218,10 @@ fun MainContent(
             } else if (viewModel.toolbarTitle.collectAsState().value.name
                 == TransactionType.DISCARD.name
             ) {
-                updateTableState(manageStockViewModel, viewModel)
-                ManageStockTable(manageStockViewModel)
+                if (hasFacilitySelected) {
+                    updateTableState(manageStockViewModel, viewModel)
+                    ManageStockTable(manageStockViewModel)
+                }
             }
         }
     }
