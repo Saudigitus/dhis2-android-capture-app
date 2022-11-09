@@ -16,7 +16,6 @@ import androidx.multidex.MultiDexApplication;
 import androidx.work.Configuration;
 
 import org.dhis2.commons.Constants;
-import org.dhis2.commons.sync.SyncComponentProvider;
 import org.dhis2.commons.di.dagger.PerActivity;
 import org.dhis2.commons.di.dagger.PerServer;
 import org.dhis2.commons.di.dagger.PerUser;
@@ -31,8 +30,10 @@ import org.dhis2.commons.orgunitselector.OUTreeComponent;
 import org.dhis2.commons.orgunitselector.OUTreeModule;
 import org.dhis2.commons.prefs.Preference;
 import org.dhis2.commons.prefs.PreferenceModule;
+import org.dhis2.commons.reporting.CrashReportModule;
 import org.dhis2.commons.schedulers.SchedulerModule;
 import org.dhis2.commons.schedulers.SchedulersProviderImpl;
+import org.dhis2.commons.sync.SyncComponentProvider;
 import org.dhis2.data.appinspector.AppInspector;
 import org.dhis2.data.dispatcher.DispatcherModule;
 import org.dhis2.data.server.SSLContextInitializer;
@@ -50,7 +51,6 @@ import org.dhis2.usescases.login.LoginModule;
 import org.dhis2.usescases.teiDashboard.TeiDashboardComponent;
 import org.dhis2.usescases.teiDashboard.TeiDashboardModule;
 import org.dhis2.utils.analytics.AnalyticsModule;
-import org.dhis2.commons.reporting.CrashReportModule;
 import org.dhis2.utils.granularsync.SyncStatusDialogProvider;
 import org.dhis2.utils.session.PinModule;
 import org.dhis2.utils.session.SessionComponent;
@@ -392,5 +392,4 @@ public class App extends MultiDexApplication implements Components, LifecycleObs
                 .setWorkerFactory(workerFactory)
                 .build();
     }
-
 }
