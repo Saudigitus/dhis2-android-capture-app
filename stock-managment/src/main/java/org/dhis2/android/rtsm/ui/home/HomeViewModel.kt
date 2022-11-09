@@ -115,6 +115,12 @@ class HomeViewModel @Inject constructor(
                     }
                 )
         )
+        ds
+        dvs
+        vsd
+        sdvsd
+        sdv
+        dvs
     }
 
     private fun loadFacilities() {
