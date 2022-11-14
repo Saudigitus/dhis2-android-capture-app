@@ -9,8 +9,10 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import org.dhis2.android.rtsm.commons.Constants.QUANTITY_ENTRY_DEBOUNCE
 import org.dhis2.android.rtsm.commons.Constants.SEARCH_QUERY_DEBOUNCE
 import org.dhis2.android.rtsm.data.AppConfig
@@ -28,7 +30,7 @@ import org.dhis2.android.rtsm.services.rules.RuleValidationHelper
 import org.dhis2.android.rtsm.services.scheduler.BaseSchedulerProvider
 import org.dhis2.android.rtsm.ui.base.ItemWatcher
 import org.dhis2.android.rtsm.ui.base.SpeechRecognitionAwareViewModel
-import org.dhis2.composetable.model.KeyboardInputType
+import org.dhis2.composetable.TableScreenState
 import org.dhis2.composetable.model.RowHeader
 import org.dhis2.composetable.model.TableCell
 import org.dhis2.composetable.model.TableHeader
@@ -36,13 +38,8 @@ import org.dhis2.composetable.model.TableHeaderCell
 import org.dhis2.composetable.model.TableHeaderRow
 import org.dhis2.composetable.model.TableModel
 import org.dhis2.composetable.model.TableRowModel
-import org.dhis2.composetable.model.TextInputModel
 import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -82,15 +79,6 @@ class ManageStockViewModel @Inject constructor(
     private val _networkState = MutableLiveData<OperationState<LiveData<PagedList<StockItem>>>>()
     val operationState: LiveData<OperationState<LiveData<PagedList<StockItem>>>>
         get() = _networkState
-
-    private val _allTableState = MutableStateFlow<List<TableModel>>(mutableListOf())
-    private val allTableState: StateFlow<List<TableModel>> = _allTableState
-
-    private val _tableState = MutableStateFlow<List<TableModel>>(mutableListOf())
-    private val tableState: StateFlow<List<TableModel>> = _tableState
-
-    private val _tableCell = MutableLiveData<MutableList<TableCell>>()
-    private val tableCell: LiveData<MutableList<TableCell>> = _tableCell
 
     fun setup(transaction: Transaction) {
         _transaction.value = transaction
@@ -170,23 +158,47 @@ class ManageStockViewModel @Inject constructor(
     fun tableRowData(
         stockItems: State<PagedList<StockItem>?>,
         stockLabel: String,
-        qtdLabel: String,
-        qtdValue: String? = null
-    ): List<TableModel> {
+        qtdLabel: String
+    ): TableScreenState {
         val tableRowModels = mutableListOf<TableRowModel>()
 
         stockItems.value?.forEachIndexed { index, item ->
-            val tableRowModel = tableRowModel(item, index, qtdValue)
+            val tableRowModel = TableRowModel(
+                rowHeader = RowHeader(
+                    id = item.id,
+                    title = item.name,
+                    row = index
+                ),
+                values = mapOf(
+                    0 to TableCell(
+                        id = item.id,
+                        row = index,
+                        column = 0,
+                        editable = false,
+                        value = item.stockOnHand
+                    ),
+                    1 to TableCell(
+                        id = item.id,
+                        row = index,
+                        column = 1,
+                        value = null,
+                        editable = true
+                    )
+                ),
+                maxLines = 3
+            )
+
             tableRowModels.add(tableRowModel)
         }
 
-        _allTableState.value = mapTableModel(
-            tableRowModels,
-            stockLabel,
-            qtdLabel
+        return TableScreenState(
+            tables = mapTableModel(
+                tableRowModels,
+                stockLabel,
+                qtdLabel
+            ),
+            selectNext = true
         )
-
-        return allTableState.value
     }
 
     private fun mapTableModel(
@@ -209,86 +221,6 @@ class ManageStockViewModel @Inject constructor(
             tableRows = stocks
         )
     )
-
-    private fun tableRowModel(item: StockItem, index: Int, qtdValue: String? = null) =
-        TableRowModel(
-            rowHeader = RowHeader(
-                id = item.id,
-                title = item.name,
-                row = index
-            ),
-            values = mapOf(
-                0 to TableCell(
-                    id = item.id,
-                    row = index,
-                    column = 0,
-                    editable = false,
-                    value = item.stockOnHand
-                ),
-                1 to TableCell(
-                    id = item.id,
-                    row = index,
-                    column = 1,
-                    value = qtdValue,
-                    editable = true
-                )
-            ),
-            maxLines = 3
-        )
-
-    fun onCellValueChanged(tableCell: TableCell) {
-        val updatedData = allTableState.value.map { tableModel ->
-            val hasRowWithDataElement = tableModel.tableRows.find {
-                tableCell.id?.contains(it.rowHeader.id.toString()) == true
-            }
-            if (hasRowWithDataElement != null) {
-                tableModel.copy(
-                    overwrittenValues = mapOf(
-                        Pair(tableCell.column!!, tableCell)
-                    )
-                )
-            } else {
-                tableModel
-            }
-        }
-
-        _allTableState.value = updatedData.toMutableList()
-    }
-
-    fun onCellClick(cell: TableCell): TextInputModel =
-        TextInputModel(
-            id = cell.id ?: "",
-            mainLabel = "Quantity",
-            currentValue = cell.value,
-            keyboardInputType = KeyboardInputType.NumericInput(
-                allowDecimal = false,
-                allowSigned = false
-            )
-        )
-
-
-    private fun updateData(datasetTableModel: TableModel) {
-
-    }
-
-
-    fun onSaveValueChange(cell: TableCell) {
-        val ids = cell.id?.split("_")
-
-        allTableState.value.forEach { tableModel ->
-            tableModel.tableRows.forEachIndexed { index, tableRowModel ->
-                tableRowModel.values.values.forEach { tableCell ->
-                    if (tableCell.id == cell.id) {
-                        tableModel.tableRows.toMutableList().apply {
-                            removeAt(index)
-                            val stockItem = StockItem(cell.id!!, "", cell.value)
-                            add(index, tableRowModel(stockItem, index))
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     fun onSearchQueryChanged(query: String) {
         searchRelay.accept(query)

@@ -23,6 +23,7 @@ import org.dhis2.App;
 import org.dhis2.Bindings.ExtensionsKt;
 import org.dhis2.Bindings.ViewExtensionsKt;
 import org.dhis2.R;
+import org.dhis2.commons.sync.ConflictType;
 import org.dhis2.commons.filters.FilterItem;
 import org.dhis2.commons.filters.FilterManager;
 import org.dhis2.commons.filters.FiltersAdapter;
@@ -183,7 +184,7 @@ public class ProgramEventDetailActivity extends ActivityGlobalAbstract implement
 
     private void showSyncDialogProgram(){
         SyncStatusDialog syncDialog = new SyncStatusDialog.Builder()
-                .setConflictType(SyncStatusDialog.ConflictType.PROGRAM)
+                .setConflictType(ConflictType.PROGRAM)
                 .setUid(programUid)
                 .onDismissListener(hasChanged -> {
                     if (hasChanged)
@@ -208,7 +209,7 @@ public class ProgramEventDetailActivity extends ActivityGlobalAbstract implement
         presenter.onDettach();
         FilterManager.getInstance().clearEventStatus();
         FilterManager.getInstance().clearCatOptCombo();
-        FilterManager.getInstance().clearWorkingList(false);
+        FilterManager.getInstance().clearWorkingList(true);
         FilterManager.getInstance().clearAssignToMe();
         presenter.clearOtherFiltersIfWebAppIsConfig();
     }
@@ -227,7 +228,7 @@ public class ProgramEventDetailActivity extends ActivityGlobalAbstract implement
     public void renderError(String message) {
         if (getActivity() != null)
             new AlertDialog.Builder(getActivity())
-                    .setPositiveButton(android.R.string.ok, null)
+                    .setPositiveButton(getString(R.string.button_ok), null)
                     .setTitle(getString(R.string.error))
                     .setMessage(message)
                     .show();
@@ -361,7 +362,7 @@ public class ProgramEventDetailActivity extends ActivityGlobalAbstract implement
     @Override
     public void showSyncDialog(String uid) {
         SyncStatusDialog dialog = new SyncStatusDialog.Builder()
-                .setConflictType(SyncStatusDialog.ConflictType.EVENT)
+                .setConflictType(ConflictType.EVENT)
                 .setUid(uid)
                 .onDismissListener(hasChanged -> {
                     if (hasChanged)

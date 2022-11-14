@@ -515,6 +515,10 @@ class FormViewModel(
         }
     }
 
+    fun clearFocus() {
+        repository.clearFocusItem()
+    }
+
     companion object {
         const val TAG = "FormViewModel"
     }

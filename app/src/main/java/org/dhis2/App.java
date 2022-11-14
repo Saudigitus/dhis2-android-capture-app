@@ -30,8 +30,10 @@ import org.dhis2.commons.orgunitselector.OUTreeComponent;
 import org.dhis2.commons.orgunitselector.OUTreeModule;
 import org.dhis2.commons.prefs.Preference;
 import org.dhis2.commons.prefs.PreferenceModule;
+import org.dhis2.commons.reporting.CrashReportModule;
 import org.dhis2.commons.schedulers.SchedulerModule;
 import org.dhis2.commons.schedulers.SchedulersProviderImpl;
+import org.dhis2.commons.sync.SyncComponentProvider;
 import org.dhis2.data.appinspector.AppInspector;
 import org.dhis2.data.dispatcher.DispatcherModule;
 import org.dhis2.data.server.SSLContextInitializer;
@@ -49,7 +51,7 @@ import org.dhis2.usescases.login.LoginModule;
 import org.dhis2.usescases.teiDashboard.TeiDashboardComponent;
 import org.dhis2.usescases.teiDashboard.TeiDashboardModule;
 import org.dhis2.utils.analytics.AnalyticsModule;
-import org.dhis2.commons.reporting.CrashReportModule;
+import org.dhis2.utils.granularsync.SyncStatusDialogProvider;
 import org.dhis2.utils.session.PinModule;
 import org.dhis2.utils.session.SessionComponent;
 import org.dhis2.utils.timber.DebugTree;
@@ -376,6 +378,13 @@ public class App extends MultiDexApplication implements Components, LifecycleObs
         return serverComponent.plus(module);
     }
 
+
+    @NonNull
+    @Override
+    public SyncComponentProvider getSyncComponentProvider() {
+        return new SyncStatusDialogProvider();
+    }
+
     @NonNull
     @Override
     public Configuration getWorkManagerConfiguration() {
@@ -383,5 +392,4 @@ public class App extends MultiDexApplication implements Components, LifecycleObs
                 .setWorkerFactory(workerFactory)
                 .build();
     }
-
 }

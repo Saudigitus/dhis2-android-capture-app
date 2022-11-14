@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -31,6 +30,8 @@ import org.dhis2.commons.Constants
 import org.dhis2.commons.filters.FilterManager
 import org.dhis2.commons.orgunitselector.OUTreeFragment
 import org.dhis2.commons.orgunitselector.OnOrgUnitSelectionFinished
+import org.dhis2.commons.sync.ConflictType
+import org.dhis2.commons.sync.OnDismissListener
 import org.dhis2.databinding.FragmentProgramBinding
 import org.dhis2.usescases.datasets.datasetDetail.DataSetDetailActivity
 import org.dhis2.usescases.general.FragmentGlobalAbstract
@@ -39,7 +40,6 @@ import org.dhis2.usescases.programEventDetail.ProgramEventDetailActivity
 import org.dhis2.utils.HelpManager
 import org.dhis2.utils.analytics.SELECT_PROGRAM
 import org.dhis2.utils.analytics.TYPE_PROGRAM_SELECTED
-import org.dhis2.utils.granularsync.GranularSyncContracts
 import org.dhis2.utils.granularsync.SyncStatusDialog
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 import org.hisp.dhis.android.core.program.ProgramType
@@ -55,11 +55,8 @@ class ProgramFragment : FragmentGlobalAbstract(), ProgramView, OnOrgUnitSelectio
     @Inject
     lateinit var animation: ProgramAnimation
 
-    private var hasToShowProgressLoading = true
-
     private val getActivityContent =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            hasToShowProgressLoading = false
         }
 
     // -------------------------------------------
@@ -79,7 +76,7 @@ class ProgramFragment : FragmentGlobalAbstract(), ProgramView, OnOrgUnitSelectio
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_program, container, false)
         ViewCompat.setTransitionName(binding.drawerLayout, "contenttest")
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         (binding.drawerLayout.background as GradientDrawable).cornerRadius = 0f
         return binding.apply {
             presenter = this@ProgramFragment.presenter
@@ -99,7 +96,9 @@ class ProgramFragment : FragmentGlobalAbstract(), ProgramView, OnOrgUnitSelectio
             )
             setContent {
                 val items by presenter.programs().observeAsState(emptyList())
+                val state by presenter.downloadState().observeAsState()
                 ProgramList(
+                    downLoadState = state,
                     programs = items,
                     onItemClick = {
                         presenter.onItemClick(it)
@@ -131,29 +130,14 @@ class ProgramFragment : FragmentGlobalAbstract(), ProgramView, OnOrgUnitSelectio
     //endregion
 
     override fun swapProgramModelData(programs: List<ProgramViewModel>) {
-        binding.progressLayout.visibility = View.GONE
         binding.emptyView.visibility = if (programs.isEmpty()) View.VISIBLE else View.GONE
-        if (!hasToShowProgressLoading) hasToShowProgressLoading = true
     }
 
     override fun showFilterProgress() {
-        if (hasToShowProgressLoading) {
-            binding.progressLayout.visibility = View.VISIBLE
-        }
         Bindings.setViewVisibility(
             binding.clearFilter,
             FilterManager.getInstance().totalFilters > 0
         )
-    }
-
-    override fun renderError(message: String) {
-        if (isAdded && activity != null) {
-            AlertDialog.Builder(requireActivity())
-                .setPositiveButton(android.R.string.ok, null)
-                .setTitle(getString(R.string.error))
-                .setMessage(message)
-                .show()
-        }
     }
 
     override fun openOrgUnitTreeSelector() {
@@ -273,14 +257,14 @@ class ProgramFragment : FragmentGlobalAbstract(), ProgramView, OnOrgUnitSelectio
         val dialog = SyncStatusDialog.Builder()
             .setConflictType(
                 if (program.programType.isNotEmpty()) {
-                    SyncStatusDialog.ConflictType.PROGRAM
+                    ConflictType.PROGRAM
                 } else {
-                    SyncStatusDialog.ConflictType.DATA_SET
+                    ConflictType.DATA_SET
                 }
             )
             .setUid(program.uid)
             .onDismissListener(
-                object : GranularSyncContracts.OnDismissListener {
+                object : OnDismissListener {
                     override fun onDismiss(hasChanged: Boolean) {
                         if (hasChanged) {
                             presenter.updateProgramQueries()
