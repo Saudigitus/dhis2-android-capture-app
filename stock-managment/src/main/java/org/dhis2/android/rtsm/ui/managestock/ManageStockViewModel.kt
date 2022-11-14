@@ -39,7 +39,6 @@ import org.dhis2.composetable.model.TableRowModel
 import org.dhis2.composetable.model.TextInputModel
 import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
-import timber.log.Timber
 import java.util.Collections
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -171,36 +170,13 @@ class ManageStockViewModel @Inject constructor(
     fun tableRowData(
         stockItems: State<PagedList<StockItem>?>,
         stockLabel: String,
-        qtdLabel: String
+        qtdLabel: String,
+        qtdValue: String? = null
     ): List<TableModel> {
         val tableRowModels = mutableListOf<TableRowModel>()
 
         stockItems.value?.forEachIndexed { index, item ->
-            val tableRowModel = TableRowModel(
-                rowHeader = RowHeader(
-                    id = item.id,
-                    title = item.name,
-                    row = index
-                ),
-                values = mapOf(
-                    0 to TableCell(
-                        id = item.id,
-                        row = index,
-                        column = 0,
-                        editable = false,
-                        value = item.stockOnHand
-                    ),
-                    1 to TableCell(
-                        id = item.id,
-                        row = index,
-                        column = 1,
-                        value = if (index == 0) "127" else null,
-                        editable = true
-                    )
-                ),
-                maxLines = 3
-            )
-
+            val tableRowModel = tableRowModel(item, index, qtdValue)
             tableRowModels.add(tableRowModel)
         }
 
@@ -230,10 +206,35 @@ class ManageStockViewModel @Inject constructor(
                     )
                 )
             ),
-            tableRows = stocks,
-            upperPadding = false
+            tableRows = stocks
         )
     )
+
+    private fun tableRowModel(item: StockItem, index: Int, qtdValue: String? = null) =
+        TableRowModel(
+            rowHeader = RowHeader(
+                id = item.id,
+                title = item.name,
+                row = index
+            ),
+            values = mapOf(
+                0 to TableCell(
+                    id = item.id,
+                    row = index,
+                    column = 0,
+                    editable = false,
+                    value = item.stockOnHand
+                ),
+                1 to TableCell(
+                    id = item.id,
+                    row = index,
+                    column = 1,
+                    value = qtdValue,
+                    editable = true
+                )
+            ),
+            maxLines = 3
+        )
 
     fun onCellValueChanged(tableCell: TableCell) {
         val updatedData = allTableState.value.map { tableModel ->
@@ -274,17 +275,19 @@ class ManageStockViewModel @Inject constructor(
     fun onSaveValueChange(cell: TableCell) {
         val ids = cell.id?.split("_")
 
-        val tableModel = allTableState.value.find { tableModel ->
-            tableModel.tableRows.find { tableRowModel ->
-                tableRowModel.values.values.find { tableCell ->
-                    tableCell.id == cell.id
-                } != null
-            } != null
+        allTableState.value.forEach { tableModel ->
+            tableModel.tableRows.forEachIndexed { index, tableRowModel ->
+                tableRowModel.values.values.forEach { tableCell ->
+                    if (tableCell.id == cell.id) {
+                        tableModel.tableRows.toMutableList().apply {
+                            removeAt(index)
+                            val stockItem = StockItem(cell.id!!, "", cell.value)
+                            add(index, tableRowModel(stockItem, index))
+                        }
+                    }
+                }
+            }
         }
-
-
-
-        Timber.tag("TBV").e(cell.value)
     }
 
     fun onSearchQueryChanged(query: String) {

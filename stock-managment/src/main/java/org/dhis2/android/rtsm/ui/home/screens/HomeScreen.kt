@@ -1,22 +1,15 @@
 package org.dhis2.android.rtsm.ui.home.screens
 
 import android.app.Activity
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExtendedFloatingActionButton
-import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
-import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +36,7 @@ fun HomeScreen(
     Scaffold(
         scaffoldState = scaffoldState,
         floatingActionButton = {
-            ExtendedFloatingActionButton(
+            /*ExtendedFloatingActionButton(
                 icon = {
                     Icon(
                         painter = painterResource(R.drawable.arrow_forward),
@@ -56,7 +49,7 @@ fun HomeScreen(
                 backgroundColor = Color.White,
                 contentColor = themeColor,
                 shape = RoundedCornerShape(10.dp),
-            )
+            )*/
         },
         snackbarHost = {
             SnackbarHost(hostState = it) { data ->
