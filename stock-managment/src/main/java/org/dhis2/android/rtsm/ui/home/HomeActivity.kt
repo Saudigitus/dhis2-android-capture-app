@@ -222,7 +222,7 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
                 ScanContract()
             ) { scanIntentResult ->
                 if (scanIntentResult.getContents() == null) {
-                    Toast.makeText(this, "Scan cancelled!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.scan_cancelled), Toast.LENGTH_SHORT).show()
                 } else {
                     onScanCompleted(
                         scanIntentResult
