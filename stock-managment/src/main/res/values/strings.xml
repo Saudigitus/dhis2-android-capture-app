@@ -280,4 +280,5 @@
     <string name="from_facility">From facility</string>
     <string name="to_facility">To facility</string>
     <string name="stock">Stock</string>
+    <string name="scan_cancelled">Scan cancelled!</string>
 </resources>
