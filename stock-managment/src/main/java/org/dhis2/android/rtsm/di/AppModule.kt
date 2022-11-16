@@ -23,6 +23,7 @@ import org.dhis2.android.rtsm.services.preferences.PreferenceProviderImpl
 import org.dhis2.android.rtsm.services.rules.ExpressionEvaluatorImpl
 import org.dhis2.android.rtsm.utils.ConfigUtils
 import org.dhis2.android.rtsm.utils.Sdk
+import org.dhis2.commons.resources.ResourceManager
 import org.hisp.dhis.android.core.D2
 import org.hisp.dhis.rules.RuleExpressionEvaluator
 
@@ -92,5 +93,11 @@ class AppModule {
     @Singleton
     fun provideOpenIdProvider(@ApplicationContext appContext: Context): OpenIdProvider {
         return OpenIdProviderImpl(appContext.applicationContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideResourcesProvider(@ApplicationContext appContext: Context): ResourceManager {
+        return ResourceManager(appContext)
     }
 }
