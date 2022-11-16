@@ -34,6 +34,8 @@ class ProgramPresenterTest {
     private val filterManager: FilterManager = mock()
     private val matomoAnalyticsController: MatomoAnalyticsController = mock()
     private val syncStatusController: SyncStatusController = mock()
+    private val identifyProgramType: IdentifyProgramType = mock()
+    private val stockManagementMapper: StockManagementMapper = mock()
 
     @Before
     fun setUp() {
@@ -44,7 +46,9 @@ class ProgramPresenterTest {
             themeManager,
             filterManager,
             matomoAnalyticsController,
-            syncStatusController
+            syncStatusController,
+            identifyProgramType,
+            stockManagementMapper
         )
     }
 
