@@ -1,6 +1,5 @@
 package org.dhis2.android.rtsm.ui.managestock
 
-import androidx.compose.runtime.State
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -9,10 +8,8 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import org.dhis2.android.rtsm.commons.Constants.QUANTITY_ENTRY_DEBOUNCE
 import org.dhis2.android.rtsm.commons.Constants.SEARCH_QUERY_DEBOUNCE
 import org.dhis2.android.rtsm.data.AppConfig
@@ -31,6 +28,7 @@ import org.dhis2.android.rtsm.services.scheduler.BaseSchedulerProvider
 import org.dhis2.android.rtsm.ui.base.ItemWatcher
 import org.dhis2.android.rtsm.ui.base.SpeechRecognitionAwareViewModel
 import org.dhis2.composetable.TableScreenState
+import org.dhis2.composetable.model.KeyboardInputType
 import org.dhis2.composetable.model.RowHeader
 import org.dhis2.composetable.model.TableCell
 import org.dhis2.composetable.model.TableHeader
@@ -38,8 +36,13 @@ import org.dhis2.composetable.model.TableHeaderCell
 import org.dhis2.composetable.model.TableHeaderRow
 import org.dhis2.composetable.model.TableModel
 import org.dhis2.composetable.model.TableRowModel
+import org.dhis2.composetable.model.TextInputModel
 import org.jetbrains.annotations.NotNull
 import org.jetbrains.annotations.Nullable
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -79,6 +82,22 @@ class ManageStockViewModel @Inject constructor(
     private val _networkState = MutableLiveData<OperationState<LiveData<PagedList<StockItem>>>>()
     val operationState: LiveData<OperationState<LiveData<PagedList<StockItem>>>>
         get() = _networkState
+
+    private val _allTableState = MutableStateFlow<List<TableModel>>(mutableListOf())
+    private val allTableState: StateFlow<List<TableModel>> = _allTableState
+
+    private val _screenState: MutableLiveData<TableScreenState> = MutableLiveData(
+        TableScreenState(emptyList(), false)
+    )
+    val screenState: LiveData<TableScreenState> = _screenState
+
+
+    private val _tableState = MutableStateFlow<List<TableModel>>(mutableListOf())
+    private val tableState: StateFlow<List<TableModel>> = _tableState
+
+    private val _tableCell = MutableLiveData<MutableList<TableCell>>()
+    private val tableCell: LiveData<MutableList<TableCell>> = _tableCell
+
 
     fun setup(transaction: Transaction) {
         _transaction.value = transaction
@@ -156,13 +175,12 @@ class ManageStockViewModel @Inject constructor(
     }
 
     fun tableRowData(
-        stockItems: State<PagedList<StockItem>?>,
         stockLabel: String,
         qtdLabel: String
-    ): TableScreenState {
+    ): LiveData<TableScreenState> {
         val tableRowModels = mutableListOf<TableRowModel>()
 
-        stockItems.value?.forEachIndexed { index, item ->
+        getStockItems().value?.forEachIndexed { index, item ->
             val tableRowModel = TableRowModel(
                 rowHeader = RowHeader(
                     id = item.id,
@@ -191,14 +209,18 @@ class ManageStockViewModel @Inject constructor(
             tableRowModels.add(tableRowModel)
         }
 
-        return TableScreenState(
-            tables = mapTableModel(
-                tableRowModels,
-                stockLabel,
-                qtdLabel
-            ),
-            selectNext = true
+        _allTableState.value = mapTableModel(
+            tableRowModels,
+            stockLabel,
+            qtdLabel
         )
+
+        _screenState.value = TableScreenState(
+            tables = allTableState.value,
+            selectNext = false
+        )
+
+        return screenState
     }
 
     private fun mapTableModel(
@@ -221,6 +243,51 @@ class ManageStockViewModel @Inject constructor(
             tableRows = stocks
         )
     )
+
+    fun onCellValueChanged(tableCell: TableCell) {
+        val updatedData = screenState.value?.tables?.map { tableModel ->
+            if (tableModel.hasCellWithId(tableCell.id)) {
+                tableModel.copy(
+                    overwrittenValues = mapOf(
+                        Pair(tableCell.column!!, tableCell)
+                    )
+                )
+            } else {
+                tableModel
+            }
+        } ?: emptyList()
+
+        _screenState.postValue(TableScreenState(
+            tables = updatedData,
+            selectNext = false
+        ))
+    }
+
+    fun onCellClick(cell: TableCell): TextInputModel =
+        TextInputModel(
+            id = cell.id ?: "",
+            mainLabel = "Quantity",
+            currentValue = cell.value,
+            keyboardInputType = KeyboardInputType.NumericInput(
+                allowDecimal = false,
+                allowSigned = false
+            )
+        )
+
+
+    private fun updateData(datasetTableModel: TableModel) {
+        //DataTable(tableList = allTableState.value, false)
+    }
+
+    fun onSaveValueChange(cell: TableCell, selectNext: Boolean) {
+        val tableModel = allTableState.value.find { tableModel ->
+            tableModel.tableRows.find { tableRowModel ->
+                tableRowModel.values.values.find { tableCell ->
+                    tableCell.id == cell.id
+                } != null
+            } != null
+        }
+    }
 
     fun onSearchQueryChanged(query: String) {
         searchRelay.accept(query)
