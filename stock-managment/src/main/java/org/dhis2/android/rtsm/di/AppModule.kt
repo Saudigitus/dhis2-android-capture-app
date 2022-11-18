@@ -14,10 +14,6 @@ import org.dhis2.android.rtsm.services.OpenIdProvider
 import org.dhis2.android.rtsm.services.OpenIdProviderImpl
 import org.dhis2.android.rtsm.services.SpeechRecognitionManager
 import org.dhis2.android.rtsm.services.SpeechRecognitionManagerImpl
-import org.dhis2.android.rtsm.services.SyncManager
-import org.dhis2.android.rtsm.services.SyncManagerImpl
-import org.dhis2.android.rtsm.services.WorkManagerController
-import org.dhis2.android.rtsm.services.WorkManagerControllerImpl
 import org.dhis2.android.rtsm.services.preferences.PreferenceProvider
 import org.dhis2.android.rtsm.services.preferences.PreferenceProviderImpl
 import org.dhis2.android.rtsm.services.rules.ExpressionEvaluatorImpl
@@ -51,22 +47,6 @@ class AppModule {
     @Singleton
     fun providesWorkManager(@ApplicationContext appContext: Context): WorkManager {
         return WorkManager.getInstance(appContext)
-    }
-
-    @Provides
-    @Singleton
-    fun providesWorkManagerController(workManager: WorkManager): WorkManagerController {
-        return WorkManagerControllerImpl(workManager)
-    }
-
-    @Provides
-    @Singleton
-    fun providesSyncManager(
-        d2: D2,
-        preferenceProvider: PreferenceProvider,
-        workManagerController: WorkManagerController
-    ): SyncManager {
-        return SyncManagerImpl(d2, preferenceProvider, workManagerController)
     }
 
     @Provides
