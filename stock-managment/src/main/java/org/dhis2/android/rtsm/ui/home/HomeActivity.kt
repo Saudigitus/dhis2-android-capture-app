@@ -143,7 +143,7 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
                 conflictType = ConflictType.PROGRAM,
                 dismissListener = object : OnDismissListener {
                     override fun onDismiss(hasChanged: Boolean) {
-
+                        manageStockViewModel.refreshData()
                     }
                 }
 
