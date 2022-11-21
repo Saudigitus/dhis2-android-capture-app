@@ -6,6 +6,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagedList
 import com.github.javafaker.Faker
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
+import org.dhis2.android.rtsm.MainDispatcherRule
 import org.dhis2.android.rtsm.commons.Constants.INTENT_EXTRA_APP_CONFIG
 import org.dhis2.android.rtsm.commons.Constants.INTENT_EXTRA_TRANSACTION
 import org.dhis2.android.rtsm.data.AppConfig
@@ -25,6 +28,7 @@ import org.dhis2.android.rtsm.services.scheduler.TrampolineSchedulerProvider
 import org.dhis2.android.rtsm.ui.base.ItemWatcher
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.android.rtsm.utils.ParcelUtils
+import org.dhis2.commons.resources.ResourceManager
 import org.hisp.dhis.android.core.attribute.AttributeValue
 import org.hisp.dhis.rules.models.RuleEffect
 import org.junit.Assert.assertEquals
@@ -38,12 +42,17 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.kotlin.mock
 import timber.log.Timber
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(MockitoJUnitRunner::class)
 class ManageStockViewModelTest {
     @get:Rule
     val taskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private lateinit var facility: IdentifiableModel
     private lateinit var distributedTo: IdentifiableModel
@@ -76,6 +85,8 @@ class ManageStockViewModelTest {
     @Captor
     private lateinit var stockItemsCaptor: ArgumentCaptor<PagedList<AttributeValue>>
 
+    private val resourceManager: ResourceManager = mock()
+
     private fun getStateHandle(transaction: Transaction): SavedStateHandle {
         val state = hashMapOf<String, Any>(
             INTENT_EXTRA_TRANSACTION to transaction,
@@ -92,7 +103,8 @@ class ManageStockViewModelTest {
             preferenceProvider,
             stockManager,
             ruleValidationHelperImpl,
-            speechRecognitionManagerImpl
+            speechRecognitionManagerImpl,
+            resourceManager
         )
 
     private fun createStockEntry(uid: String) = StockItem(
@@ -138,7 +150,7 @@ class ManageStockViewModelTest {
     }
 
     @Test
-    fun init_shouldSetFacilityDateAndDistributedToForDistribution() {
+    fun init_shouldSetFacilityDateAndDistributedToForDistribution() = runTest {
         val transaction = Transaction(
             transactionType = TransactionType.DISTRIBUTION,
             facility = facility,
@@ -157,7 +169,7 @@ class ManageStockViewModelTest {
     }
 
     @Test
-    fun init_shouldSetFacilityAndDateForDiscard() {
+    fun init_shouldSetFacilityAndDateForDiscard() = runTest {
         val transaction = Transaction(
             transactionType = TransactionType.DISCARD,
             facility = facility,
@@ -176,7 +188,7 @@ class ManageStockViewModelTest {
     }
 
     @Test
-    fun init_shouldSetFacilityAndDateForCorrection() {
+    fun init_shouldSetFacilityAndDateForCorrection() = runTest {
         val transaction = Transaction(
             transactionType = TransactionType.CORRECTION,
             facility = facility,
