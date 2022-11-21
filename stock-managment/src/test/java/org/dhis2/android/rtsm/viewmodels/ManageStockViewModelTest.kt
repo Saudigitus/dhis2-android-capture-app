@@ -1,9 +1,7 @@
 package org.dhis2.android.rtsm.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import androidx.lifecycle.SavedStateHandle
-import androidx.paging.PagedList
 import com.github.javafaker.Faker
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,7 +16,6 @@ import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.data.models.IdentifiableModel
 import org.dhis2.android.rtsm.data.models.StockItem
 import org.dhis2.android.rtsm.data.models.Transaction
-import org.dhis2.android.rtsm.services.MetadataManager
 import org.dhis2.android.rtsm.services.SpeechRecognitionManager
 import org.dhis2.android.rtsm.services.StockManager
 import org.dhis2.android.rtsm.services.preferences.PreferenceProvider
@@ -29,7 +26,6 @@ import org.dhis2.android.rtsm.ui.base.ItemWatcher
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.android.rtsm.utils.ParcelUtils
 import org.dhis2.commons.resources.ResourceManager
-import org.hisp.dhis.android.core.attribute.AttributeValue
 import org.hisp.dhis.rules.models.RuleEffect
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -38,8 +34,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentCaptor
-import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.mock
@@ -71,19 +65,10 @@ class ManageStockViewModelTest {
     private lateinit var speechRecognitionManagerImpl: SpeechRecognitionManager
 
     @Mock
-    private lateinit var metadataManager: MetadataManager
-
-    @Mock
     private lateinit var preferenceProvider: PreferenceProvider
 
     @Mock
     private lateinit var stockManager: StockManager
-
-    @Mock
-    private lateinit var stockItemsObserver: Observer<PagedList<AttributeValue>>
-
-    @Captor
-    private lateinit var stockItemsCaptor: ArgumentCaptor<PagedList<AttributeValue>>
 
     private val resourceManager: ResourceManager = mock()
 
