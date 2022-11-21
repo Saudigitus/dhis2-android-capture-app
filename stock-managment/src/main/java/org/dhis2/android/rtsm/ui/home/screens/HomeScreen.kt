@@ -97,7 +97,8 @@ fun HomeScreen(
                         text = {
                             Text(
                                 stringResource(R.string.proceed),
-                                color = if (enabled) themeColor else colorResource(id = R.color.proceed_text_color)
+                                color = if (enabled) themeColor
+                                else colorResource(id = R.color.proceed_text_color)
                             )
                         },
                         onClick = {
@@ -108,7 +109,8 @@ fun HomeScreen(
                                 enabled = !enabled
                             }
                         },
-                        backgroundColor = if (enabled) Color.White else colorResource(id = R.color.proceed_color),
+                        backgroundColor = if (enabled) Color.White
+                        else colorResource(id = R.color.proceed_color),
                         shape = RoundedCornerShape(16.dp)
                     )
                 }
@@ -144,16 +146,31 @@ private object NoRippleTheme : RippleTheme {
 
     @Composable
     override fun rippleAlpha(): RippleAlpha =
-        RippleAlpha(0.0f, 0.0f, 0.0f, 0.0f)
+        RippleAlpha(
+            0.0f, 0.0f,
+            0.0f, 0.0f
+        )
 }
+
 @Composable
 fun checkVisibility(viewModel: HomeViewModel): Boolean {
-    return if ((viewModel.toolbarTitle.collectAsState().value.name == TransactionType.DISCARD.name)) {
+    return if ((
+        viewModel.toolbarTitle.collectAsState().value.name ==
+            TransactionType.DISCARD.name
+        )
+    ) {
         return viewModel.hasFacilitySelected.collectAsState().value
-    } else if ((viewModel.toolbarTitle.collectAsState().value.name == TransactionType.CORRECTION.name)) {
+    } else if ((
+        viewModel.toolbarTitle.collectAsState().value.name ==
+            TransactionType.CORRECTION.name
+        )
+    ) {
         return viewModel.hasFacilitySelected.collectAsState().value
     } else (
-        (viewModel.toolbarTitle.collectAsState().value.name == TransactionType.DISTRIBUTION.name) &&
+        (
+            viewModel.toolbarTitle.collectAsState().value.name ==
+                TransactionType.DISTRIBUTION.name
+            ) &&
             viewModel.hasFacilitySelected.collectAsState().value &&
             viewModel.hasDestinationSelected.collectAsState().value
         )
