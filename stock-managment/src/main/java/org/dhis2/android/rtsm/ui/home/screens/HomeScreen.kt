@@ -68,15 +68,13 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = checkVisibility(viewModel),
-                enter = fadeIn(),
-                exit = fadeOut()
+                visible = checkVisibility(viewModel), enter = fadeIn(), exit = fadeOut()
             ) {
                 CompositionLocalProvider(
                     LocalRippleTheme provides
-                        if (enabled) LocalRippleTheme.current else NoRippleTheme
+                        if (enabled) LocalRippleTheme.current
+                        else NoRippleTheme
                 ) {
-
                     ExtendedFloatingActionButton(
                         modifier = Modifier
                             .shadow(
@@ -86,14 +84,14 @@ fun HomeScreen(
                             )
                             .height(70.dp)
                             .animateEnterExit(
-                                enter = slideInHorizontally(),
-                                exit = slideOutHorizontally()
+                                enter = slideInHorizontally(), exit = slideOutHorizontally()
                             ),
                         icon = {
                             Icon(
                                 painter = painterResource(R.drawable.proceed_icon),
                                 contentDescription = stringResource(R.string.proceed),
-                                tint = if (enabled) themeColor else colorResource(id = R.color.proceed_text_color)
+                                tint = if (enabled) themeColor
+                                else colorResource(id = R.color.proceed_text_color)
                             )
                         },
                         text = {
@@ -119,8 +117,7 @@ fun HomeScreen(
         snackbarHost = {
             SnackbarHost(hostState = it) { data ->
                 Snackbar(
-                    snackbarData = data,
-                    backgroundColor = colorResource(R.color.error)
+                    snackbarData = data, backgroundColor = colorResource(R.color.error)
                 )
             }
         }
@@ -139,7 +136,6 @@ fun HomeScreen(
             syncAction(coroutineScope, scaffold)
         }
     }
-
 }
 
 private object NoRippleTheme : RippleTheme {
@@ -147,14 +143,18 @@ private object NoRippleTheme : RippleTheme {
     override fun defaultColor() = Color.Unspecified
 
     @Composable
-    override fun rippleAlpha(): RippleAlpha = RippleAlpha(0.0f, 0.0f, 0.0f, 0.0f)
+    override fun rippleAlpha(): RippleAlpha =
+        RippleAlpha(0.0f, 0.0f, 0.0f, 0.0f)
 }
-
 @Composable
 fun checkVisibility(viewModel: HomeViewModel): Boolean {
     return if ((viewModel.toolbarTitle.collectAsState().value.name == TransactionType.DISCARD.name)) {
         return viewModel.hasFacilitySelected.collectAsState().value
     } else if ((viewModel.toolbarTitle.collectAsState().value.name == TransactionType.CORRECTION.name)) {
         return viewModel.hasFacilitySelected.collectAsState().value
-    } else ((viewModel.toolbarTitle.collectAsState().value.name == TransactionType.DISTRIBUTION.name) && viewModel.hasFacilitySelected.collectAsState().value && viewModel.hasDestinationSelected.collectAsState().value)
+    } else (
+        (viewModel.toolbarTitle.collectAsState().value.name == TransactionType.DISTRIBUTION.name) &&
+            viewModel.hasFacilitySelected.collectAsState().value &&
+            viewModel.hasDestinationSelected.collectAsState().value
+        )
 }
