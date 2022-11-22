@@ -1,5 +1,7 @@
 package org.dhis2.android.rtsm.ui.home
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -60,8 +62,8 @@ class HomeViewModel @Inject constructor(
     val hasDestinationSelected: StateFlow<Boolean>
         get() = _hasDestinationSelected
 
-    private val _buttonVisible = MutableStateFlow<Boolean?>(null)
-    val buttonVisible: StateFlow<Boolean?>
+    private val _buttonVisible = MutableStateFlow(false)
+    val buttonVisible: StateFlow<Boolean>
         get() = _buttonVisible
 
     private val _facility = MutableStateFlow<OrganisationUnit?>(null)
@@ -249,13 +251,40 @@ class HomeViewModel @Inject constructor(
     fun setScannedText(text: String) {
         _scanText.value = text
     }
+
     fun setFacilitySelected(status: Boolean) {
         _hasFacilitySelected.value = status
     }
+
     fun setDestinationSelected(status: Boolean) {
         _hasDestinationSelected.value = status
     }
+
     fun setButtonVisibility(status: Boolean) {
         _buttonVisible.value = status
+    }
+
+    @Composable
+    fun checkVisibility(): Boolean {
+        return if ((
+            toolbarTitle.collectAsState().value.name ==
+                TransactionType.DISCARD.name
+            )
+        ) {
+            return hasFacilitySelected.collectAsState().value
+        } else if ((
+            toolbarTitle.collectAsState().value.name ==
+                TransactionType.CORRECTION.name
+            )
+        ) {
+            return hasFacilitySelected.collectAsState().value
+        } else (
+            (
+                toolbarTitle.collectAsState().value.name ==
+                    TransactionType.DISTRIBUTION.name
+                ) &&
+                hasFacilitySelected.collectAsState().value &&
+                hasDestinationSelected.collectAsState().value
+            )
     }
 }

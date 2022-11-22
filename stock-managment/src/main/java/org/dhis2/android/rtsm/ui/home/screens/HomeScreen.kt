@@ -23,7 +23,6 @@ import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,7 +40,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
 import org.dhis2.android.rtsm.R
-import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
@@ -68,7 +66,9 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = checkVisibility(viewModel), enter = fadeIn(), exit = fadeOut()
+                visible = viewModel.checkVisibility(),
+                enter = fadeIn(),
+                exit = fadeOut()
             ) {
                 CompositionLocalProvider(
                     LocalRippleTheme provides
@@ -149,29 +149,5 @@ private object NoRippleTheme : RippleTheme {
         RippleAlpha(
             0.0f, 0.0f,
             0.0f, 0.0f
-        )
-}
-
-@Composable
-fun checkVisibility(viewModel: HomeViewModel): Boolean {
-    return if ((
-        viewModel.toolbarTitle.collectAsState().value.name ==
-            TransactionType.DISCARD.name
-        )
-    ) {
-        return viewModel.hasFacilitySelected.collectAsState().value
-    } else if ((
-        viewModel.toolbarTitle.collectAsState().value.name ==
-            TransactionType.CORRECTION.name
-        )
-    ) {
-        return viewModel.hasFacilitySelected.collectAsState().value
-    } else (
-        (
-            viewModel.toolbarTitle.collectAsState().value.name ==
-                TransactionType.DISTRIBUTION.name
-            ) &&
-            viewModel.hasFacilitySelected.collectAsState().value &&
-            viewModel.hasDestinationSelected.collectAsState().value
         )
 }
