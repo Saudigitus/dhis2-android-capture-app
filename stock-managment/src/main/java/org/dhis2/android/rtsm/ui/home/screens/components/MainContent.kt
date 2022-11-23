@@ -77,6 +77,7 @@ fun MainContent(
     val weightValueArrowStatus = backdropState.isRevealed
     val focusManager = LocalFocusManager.current
     val search = viewModel.scanText.collectAsState().value
+    viewModel.checkVisibility()
 
     Column(
         modifier = Modifier.fillMaxSize(),
