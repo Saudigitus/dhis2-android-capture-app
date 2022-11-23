@@ -1,7 +1,5 @@
 package org.dhis2.android.rtsm.ui.home
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -266,16 +264,16 @@ class HomeViewModel @Inject constructor(
 
     fun checkVisibility(): Boolean {
         return if ((
-                toolbarTitle.value.name ==
-                    TransactionType.DISCARD.name
-                )
+            toolbarTitle.value.name ==
+                TransactionType.DISCARD.name
+            )
         ) {
             setButtonVisibility(hasFacilitySelected.value)
             return hasFacilitySelected.value
         } else if ((
-                toolbarTitle.value.name ==
-                    TransactionType.CORRECTION.name
-                )
+            toolbarTitle.value.name ==
+                TransactionType.CORRECTION.name
+            )
         ) {
             setButtonVisibility(hasFacilitySelected.value)
             return hasFacilitySelected.value
@@ -289,14 +287,14 @@ class HomeViewModel @Inject constructor(
                     hasDestinationSelected.value
 
             )
-            ((
-                toolbarTitle.value.name ==
-                    TransactionType.DISTRIBUTION.name
-                ) &&
-                hasFacilitySelected.value &&
-                hasDestinationSelected.value
+            (
+                (
+                    toolbarTitle.value.name ==
+                        TransactionType.DISTRIBUTION.name
+                    ) &&
+                    hasFacilitySelected.value &&
+                    hasDestinationSelected.value
                 )
         }
     }
-
 }
