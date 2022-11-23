@@ -264,27 +264,39 @@ class HomeViewModel @Inject constructor(
         _buttonVisible.value = status
     }
 
-    @Composable
     fun checkVisibility(): Boolean {
         return if ((
-            toolbarTitle.collectAsState().value.name ==
-                TransactionType.DISCARD.name
-            )
+                toolbarTitle.value.name ==
+                    TransactionType.DISCARD.name
+                )
         ) {
-            return hasFacilitySelected.collectAsState().value
+            setButtonVisibility(hasFacilitySelected.value)
+            return hasFacilitySelected.value
         } else if ((
-            toolbarTitle.collectAsState().value.name ==
-                TransactionType.CORRECTION.name
-            )
+                toolbarTitle.value.name ==
+                    TransactionType.CORRECTION.name
+                )
         ) {
-            return hasFacilitySelected.collectAsState().value
-        } else (
-            (
-                toolbarTitle.collectAsState().value.name ==
+            setButtonVisibility(hasFacilitySelected.value)
+            return hasFacilitySelected.value
+        } else {
+            setButtonVisibility(
+                (
+                    toolbarTitle.value.name ==
+                        TransactionType.DISTRIBUTION.name
+                    ) &&
+                    hasFacilitySelected.value &&
+                    hasDestinationSelected.value
+
+            )
+            ((
+                toolbarTitle.value.name ==
                     TransactionType.DISTRIBUTION.name
                 ) &&
-                hasFacilitySelected.collectAsState().value &&
-                hasDestinationSelected.collectAsState().value
-            )
+                hasFacilitySelected.value &&
+                hasDestinationSelected.value
+                )
+        }
     }
+
 }
