@@ -6,7 +6,6 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.hilt.work.HiltWorkerFactory;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -60,7 +59,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.net.SocketException;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
@@ -76,9 +74,6 @@ import timber.log.Timber;
 
 @HiltAndroidApp
 public class App extends MultiDexApplication implements Components, LifecycleObserver {
-
-    @Inject
-    HiltWorkerFactory workerFactory;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
