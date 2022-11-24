@@ -56,62 +56,35 @@
         </activity>
         <activity
             android:name=".usescases.login.LoginActivity"
-            android:exported="true"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".usescases.main.MainActivity"
-            android:exported="false" />
-        <activity
-            android:name=".usescases.programEventDetail.ProgramEventDetailActivity"
-            android:exported="false" />
+        <activity android:name=".usescases.main.MainActivity" />
+        <activity android:name=".usescases.programEventDetail.ProgramEventDetailActivity" />
         <activity
             android:name=".usescases.searchTrackEntity.SearchTEActivity"
-            android:configChanges="keyboardHidden|screenSize"
-            android:exported="true" />
-        <activity
-            android:name=".usescases.teiDashboard.TeiDashboardMobileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".usescases.teiDashboard.teiProgramList.TeiProgramListActivity"
-            android:exported="false" />
-        <activity
-            android:name="org.dhis2.maps.views.MapSelectorActivity"
-            android:exported="false" />
-        <activity
-            android:name=".usescases.programStageSelection.ProgramStageSelectionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".utils.WebViewActivity"
-            android:exported="false" />
+            android:configChanges="keyboardHidden|screenSize" />
+        <activity android:name=".usescases.teiDashboard.TeiDashboardMobileActivity" />
+        <activity android:name=".usescases.teiDashboard.teiProgramList.TeiProgramListActivity" />
+        <activity android:name="org.dhis2.maps.views.MapSelectorActivity" />
+        <activity android:name=".usescases.programStageSelection.ProgramStageSelectionActivity" />
+        <activity android:name=".utils.WebViewActivity" />
         <activity
             android:name=".usescases.eventsWithoutRegistration.eventInitial.EventInitialActivity"
-            android:exported="false"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".usescases.qrCodes.QrActivity"
-            android:exported="false" />
-        <activity
-            android:name=".usescases.qrCodes.eventsworegistration.QrEventsWORegistrationActivity"
-            android:exported="false" />
+        <activity android:name=".usescases.qrCodes.QrActivity" />
+        <activity android:name=".usescases.qrCodes.eventsworegistration.QrEventsWORegistrationActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAGNpaLadezvuQFPLMpWEHqsTxLdNWhPGk" />
 
-        <activity
-            android:name=".usescases.datasets.datasetDetail.DataSetDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".usescases.datasets.datasetInitial.DataSetInitialActivity"
-            android:exported="false" />
+        <activity android:name=".usescases.datasets.datasetDetail.DataSetDetailActivity" />
+        <activity android:name=".usescases.datasets.datasetInitial.DataSetInitialActivity" />
         <activity
             android:name=".usescases.datasets.dataSetTable.DataSetTableActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true" />
+            android:configChanges="keyboardHidden|orientation|screenSize" />
 
-        <receiver
-            android:name=".widgets.DhisCustomLauncher"
-            android:exported="true">
+        <receiver android:name=".widgets.DhisCustomLauncher"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -121,25 +94,15 @@
                 android:resource="@xml/dhis_custom_launcher_info" />
         </receiver>
 
-        <activity
-            android:name=".usescases.reservedValue.ReservedValueActivity"
-            android:exported="false" />
+        <activity android:name=".usescases.reservedValue.ReservedValueActivity" />
         <activity
             android:name=".usescases.eventsWithoutRegistration.eventCapture.EventCaptureActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
-            android:name=".usescases.sync.SyncActivity"
-            android:exported="false" />
-        <activity
-            android:name=".usescases.development.DevelopmentActivity"
-            android:exported="false" />
+        <activity android:name=".usescases.sync.SyncActivity" />
+        <activity android:name=".usescases.development.DevelopmentActivity" />
 
-        <service
-            android:name=".usescases.sms.SmsSendingService"
-            android:exported="true"
-            android:permission="" />
+        <service android:name=".usescases.sms.SmsSendingService" />
 
         <activity android:name=".usescases.teiDashboard.nfcdata.NfcDataWriteActivity" />
 
@@ -149,10 +112,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".usescases.events.ScheduledEventActivity" />
 
-        <service
-            android:name="com.facebook.flipper.plugins.leakcanary.RecordLeakService"
-            android:exported="true"
-            android:permission="" />
+        <service android:name="com.facebook.flipper.plugins.leakcanary.RecordLeakService" />
     </application>
 
 </manifest>

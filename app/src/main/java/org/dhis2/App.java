@@ -6,16 +6,13 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.hilt.work.HiltWorkerFactory;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
-import androidx.work.Configuration;
 
-import org.dhis2.commons.Constants;
 import org.dhis2.commons.di.dagger.PerActivity;
 import org.dhis2.commons.di.dagger.PerServer;
 import org.dhis2.commons.di.dagger.PerUser;
@@ -56,14 +53,12 @@ import org.dhis2.utils.session.PinModule;
 import org.dhis2.utils.session.SessionComponent;
 import org.dhis2.utils.timber.DebugTree;
 import org.dhis2.utils.timber.ReleaseTree;
-import org.hisp.dhis.android.core.D2;
 import org.hisp.dhis.android.core.D2Manager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.SocketException;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import cat.ereza.customactivityoncrash.config.CaocConfig;
@@ -78,10 +73,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 import timber.log.Timber;
 
 @HiltAndroidApp
-public class App extends MultiDexApplication implements Components, LifecycleObserver, Configuration.Provider {
-
-    @Inject
-    HiltWorkerFactory workerFactory;
+public class App extends MultiDexApplication implements Components, LifecycleObserver {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -155,17 +147,8 @@ public class App extends MultiDexApplication implements Components, LifecycleObs
     }
 
     protected void setUpServerComponent() {
-        boolean isLogged = false;
-        try {
-            D2 d2Configuration = D2Manager.blockingInstantiateD2(ServerModule.getD2Configuration(this));
-            d2Configuration.userModule().accountManager().setMaxAccounts(Constants.MAX_ACCOUNTS);
-            isLogged = d2Configuration.userModule().isLogged().blockingGet();
-        } catch (Exception e) {
-            appComponent.injectCrashReportController().trackError(e, e.getMessage());
-        }
         serverComponent = appComponent.plus(new ServerModule());
-
-        if (isLogged)
+        if (Boolean.TRUE.equals(serverComponent.userManager().isUserLoggedIn().blockingFirst()))
             setUpUserComponent();
     }
 
@@ -383,13 +366,5 @@ public class App extends MultiDexApplication implements Components, LifecycleObs
     @Override
     public SyncComponentProvider getSyncComponentProvider() {
         return new SyncStatusDialogProvider();
-    }
-
-    @NonNull
-    @Override
-    public Configuration getWorkManagerConfiguration() {
-        return new Configuration.Builder()
-                .setWorkerFactory(workerFactory)
-                .build();
     }
 }

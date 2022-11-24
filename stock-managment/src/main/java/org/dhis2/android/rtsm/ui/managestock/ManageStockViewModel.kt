@@ -40,24 +40,17 @@ import org.dhis2.composetable.model.TableHeaderCell
 import org.dhis2.composetable.model.TableHeaderRow
 import org.dhis2.composetable.model.TableModel
 import org.dhis2.composetable.model.TableRowModel
-import org.dhis2.composetable.model.TextInputModel
-import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
-import timber.log.Timber
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-
+import org.jetbrains.annotations.Nullable
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
     private val disposable: CompositeDisposable,
     private val schedulerProvider: BaseSchedulerProvider,
-    private val preferenceProvider: PreferenceProvider,
+    preferenceProvider: PreferenceProvider,
     private val stockManager: StockManager,
     private val ruleValidationHelper: RuleValidationHelper,
-    private val speechRecognitionManager: SpeechRecognitionManager,
+    speechRecognitionManager: SpeechRecognitionManager,
     private val resources: ResourceManager
 ) : SpeechRecognitionAwareViewModel(
     preferenceProvider,
@@ -74,15 +67,6 @@ class ManageStockViewModel @Inject constructor(
     private var search = MutableLiveData<SearchParametersModel>()
     private val searchRelay = PublishRelay.create<String>()
     private val entryRelay = PublishRelay.create<RowAction>()
-    private val stockItems = Transformations.switchMap(search) { q ->
-        _networkState.value = OperationState.Loading
-
-        val result = stockManager.search(q, transaction.value?.facility?.uid, config.value!!)
-        _itemsAvailableCount.value = result.totalCount
-
-        _networkState.postValue(OperationState.Completed)
-        result.items
-    }
     private val itemsCache = linkedMapOf<String, StockEntry>()
 
     private val _networkState = MutableLiveData<OperationState<LiveData<PagedList<StockItem>>>>()
@@ -103,8 +87,12 @@ class ManageStockViewModel @Inject constructor(
         configureRelays()
         loadStockItems()
 
+        refreshData()
+    }
+
+    fun refreshData() {
         viewModelScope.launch {
-            stockItems.asFlow().collect {
+            getStockItems().asFlow().collect {
                 tableRowData(
                     it,
                     resources.getString(R.string.stock),
@@ -125,6 +113,16 @@ class ManageStockViewModel @Inject constructor(
                 it
             )
         }
+    }
+
+    private fun getStockItems() = Transformations.switchMap(search) { q ->
+        _networkState.value = OperationState.Loading
+
+        val result = stockManager.search(q, transaction.value?.facility?.uid, config.value!!)
+        _itemsAvailableCount.value = result.totalCount
+
+        _networkState.postValue(OperationState.Completed)
+        result.items
     }
 
     fun getAvailableCount(): LiveData<Int> = _itemsAvailableCount
@@ -234,7 +232,7 @@ class ManageStockViewModel @Inject constructor(
         qtdLabel: String
     ) = mutableListOf(
         TableModel(
-            id = resources.getString(R.string.table_stock_id),
+            id = "STOCK",
             tableHeaderModel = TableHeader(
                 rows = mutableListOf(
                     TableHeaderRow(
