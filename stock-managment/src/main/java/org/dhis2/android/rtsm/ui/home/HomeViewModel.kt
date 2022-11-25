@@ -60,10 +60,6 @@ class HomeViewModel @Inject constructor(
     val hasDestinationSelected: StateFlow<Boolean>
         get() = _hasDestinationSelected
 
-    private val _buttonVisible = MutableStateFlow(false)
-    val buttonVisible: StateFlow<Boolean>
-        get() = _buttonVisible
-
     private val _facility = MutableStateFlow<OrganisationUnit?>(null)
     val facility: StateFlow<OrganisationUnit?>
         get() = _facility
@@ -256,45 +252,5 @@ class HomeViewModel @Inject constructor(
 
     fun setDestinationSelected(status: Boolean) {
         _hasDestinationSelected.value = status
-    }
-
-    fun setButtonVisibility(status: Boolean) {
-        _buttonVisible.value = status
-    }
-
-    fun checkVisibility(): Boolean {
-        return if ((
-            toolbarTitle.value.name ==
-                TransactionType.DISCARD.name
-            )
-        ) {
-            setButtonVisibility(hasFacilitySelected.value)
-            return hasFacilitySelected.value
-        } else if ((
-            toolbarTitle.value.name ==
-                TransactionType.CORRECTION.name
-            )
-        ) {
-            setButtonVisibility(hasFacilitySelected.value)
-            return hasFacilitySelected.value
-        } else {
-            setButtonVisibility(
-                (
-                    toolbarTitle.value.name ==
-                        TransactionType.DISTRIBUTION.name
-                    ) &&
-                    hasFacilitySelected.value &&
-                    hasDestinationSelected.value
-
-            )
-            (
-                (
-                    toolbarTitle.value.name ==
-                        TransactionType.DISTRIBUTION.name
-                    ) &&
-                    hasFacilitySelected.value &&
-                    hasDestinationSelected.value
-                )
-        }
     }
 }
