@@ -87,6 +87,8 @@
             android:name=".usescases.eventsWithoutRegistration.eventInitial.EventInitialActivity"
             android:exported="false"
             android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".usescases.qrCodes.QrActivity" />
+        <activity android:name=".usescases.qrCodes.eventsworegistration.QrEventsWORegistrationActivity" />
         <activity
             android:name=".usescases.qrCodes.QrActivity"
             android:exported="false" />
@@ -98,6 +100,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAGNpaLadezvuQFPLMpWEHqsTxLdNWhPGk" />
 
+        <activity android:name=".usescases.datasets.datasetDetail.DataSetDetailActivity" />
+        <activity android:name=".usescases.datasets.datasetInitial.DataSetInitialActivity" />
+        <activity
+            android:name=".usescases.datasets.dataSetTable.DataSetTableActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".usescases.datasets.datasetDetail.DataSetDetailActivity"
             android:exported="false" />
@@ -109,9 +116,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true" />
 
-        <receiver
-            android:name=".widgets.DhisCustomLauncher"
-            android:exported="true">
+        <receiver android:name=".widgets.DhisCustomLauncher"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

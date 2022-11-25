@@ -253,6 +253,13 @@ class ProgramFragment : FragmentGlobalAbstract(), ProgramView, OnOrgUnitSelectio
         }
     }
 
+    override fun navigateToStockManagement(config: AppConfig) {
+        Intent(activity, HomeActivity::class.java).apply {
+            putExtra(INTENT_EXTRA_APP_CONFIG, config)
+            getActivityContent.launch(this)
+        }
+    }
+
     override fun showSyncDialog(program: ProgramViewModel) {
         val dialog = SyncStatusDialog.Builder()
             .setConflictType(

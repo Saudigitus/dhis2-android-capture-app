@@ -2,13 +2,6 @@ package org.dhis2.android.rtsm.ui.home.screens
 
 import android.app.Activity
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
@@ -18,6 +11,8 @@ import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material.ripple.RippleTheme
@@ -121,7 +116,8 @@ fun HomeScreen(
         snackbarHost = {
             SnackbarHost(hostState = it) { data ->
                 Snackbar(
-                    snackbarData = data, backgroundColor = colorResource(R.color.error)
+                    snackbarData = data,
+                    backgroundColor = colorResource(R.color.error)
                 )
             }
         }
