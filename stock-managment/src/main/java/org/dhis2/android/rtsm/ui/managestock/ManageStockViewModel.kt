@@ -40,8 +40,14 @@ import org.dhis2.composetable.model.TableHeaderCell
 import org.dhis2.composetable.model.TableHeaderRow
 import org.dhis2.composetable.model.TableModel
 import org.dhis2.composetable.model.TableRowModel
+import org.dhis2.composetable.model.TextInputModel
+import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
-import org.jetbrains.annotations.Nullable
+import timber.log.Timber
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -57,6 +63,7 @@ class ManageStockViewModel @Inject constructor(
     schedulerProvider,
     speechRecognitionManager
 ) {
+    private val _stockItems: MutableLiveData<PagedList<StockItem>> = MutableLiveData<PagedList<StockItem>>()
     private val _config = MutableLiveData<AppConfig>()
     val config: LiveData<AppConfig> = _config
 
@@ -93,6 +100,7 @@ class ManageStockViewModel @Inject constructor(
     fun refreshData() {
         viewModelScope.launch {
             getStockItems().asFlow().collect {
+                _stockItems.value = it
                 tableRowData(
                     it,
                     resources.getString(R.string.stock),
@@ -260,7 +268,7 @@ class ManageStockViewModel @Inject constructor(
             }
         } ?: emptyList()
 
-        val stockItem = stockItems.value?.find { it.id == tableCell.id }
+        val stockItem = _stockItems.value?.find { it.id == tableCell.id }
 
         stockItem?.let {
             addItem(it, tableCell.value, it.stockOnHand, false)
@@ -335,9 +343,6 @@ class ManageStockViewModel @Inject constructor(
         searchRelay.accept(query)
 
     }
-
-    fun getStockItems() = stockItems
-
     fun onScanCompleted(itemCode: String) {
         search.postValue(SearchParametersModel(null, itemCode, transaction.value?.facility?.uid!!))
     }
