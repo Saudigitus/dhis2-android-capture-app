@@ -9,6 +9,10 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -45,11 +49,6 @@ import org.dhis2.composetable.model.TextInputModel
 import org.hisp.dhis.rules.models.RuleActionAssign
 import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
-import timber.log.Timber
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -205,7 +204,8 @@ class ManageStockViewModel @Inject constructor(
                 ),
                 values = mapOf(
                     Pair(
-                        0, TableCell(
+                        0,
+                        TableCell(
                             id = item.id,
                             row = index,
                             column = 0,
@@ -214,7 +214,8 @@ class ManageStockViewModel @Inject constructor(
                         )
                     ),
                     Pair(
-                        1, TableCell(
+                        1,
+                        TableCell(
                             id = item.id,
                             row = index,
                             column = 1,
@@ -283,42 +284,47 @@ class ManageStockViewModel @Inject constructor(
         )
     }
 
-    fun onCellClick(cell: TableCell): TextInputModel =
-        TextInputModel(
+    fun onCellClick(cell: TableCell): TextInputModel {
+        val stockItem = _stockItems.value?.find { it.id == cell.id }
+        val itemName = stockItem?.name ?: ""
+        return TextInputModel(
             id = cell.id ?: "",
-            mainLabel = "Quantity",
-            secondaryLabels = mutableListOf("Teste"),
+            mainLabel = itemName,
+            secondaryLabels = mutableListOf(resources.getString(R.string.quantity)),
             currentValue = cell.value,
             keyboardInputType = KeyboardInputType.NumericInput(
                 allowDecimal = false,
                 allowSigned = false
             )
         )
-
+    }
 
     fun onSaveValueChange(
         cell: TableCell,
         selectNext: Boolean
     ) {
-        //When user taps on done or next. We should apply program rules here
+        // When user taps on done or next. We should apply program rules here
         val stockItem = _stockItems.value?.find { it.id == cell.id }
         stockItem?.let {
             cell.value?.let { value ->
-                setQuantity(it, 0, value,
+                setQuantity(
+                    it, 0, value,
                     object : ItemWatcher.OnQuantityValidated {
                         override fun validationCompleted(ruleEffects: List<RuleEffect>) {
-                            //Update fields
+                            // Update fields
                             ruleEffects.forEach { ruleEffect ->
                                 if (ruleEffect.ruleAction() is RuleActionAssign &&
-                                    ((ruleEffect.ruleAction() as RuleActionAssign).field()
-                                        == config.value?.stockOnHand)
+                                    (
+                                        (ruleEffect.ruleAction() as RuleActionAssign).field()
+                                            == config.value?.stockOnHand
+                                        )
                                 ) {
                                     val value = ruleEffect.data()
                                     val isValid: Boolean = isValidStockOnHand(value)
                                     val stockOnHand = if (isValid) value else it.stockOnHand
                                     addItem(it, cell.value, stockOnHand, !isValid)
                                     if (!isValid) {
-                                        //TODO Display error
+                                        // TODO Display error
                                         /*displayError(
                                             binding.getRoot(),
                                             R.string.stock_on_hand_exceeded_message
@@ -330,7 +336,7 @@ class ManageStockViewModel @Inject constructor(
                                             tableRows = updateTableRows(tableModel.tableRows, cell)
                                         )
                                     }
-                                    //updateNextButton()
+                                    // updateNextButton()
                                 }
                             }
 
@@ -341,11 +347,10 @@ class ManageStockViewModel @Inject constructor(
                                 )
                             )
                         }
-                    })
+                    }
+                )
             }
         }
-
-
     }
 
     private fun updateTableRows(
@@ -354,8 +359,9 @@ class ManageStockViewModel @Inject constructor(
     ): List<TableRowModel> {
         return tableRowModels.map { tableRowModel ->
             if (tableRowModel.values.values.find { tableCell ->
-                    tableCell.id == cell.id
-                } != null) {
+                tableCell.id == cell.id
+            } != null
+            ) {
                 tableRowModel.copy(
                     values = updateTableCells(tableRowModel.values, cell)
                 )
@@ -384,7 +390,6 @@ class ManageStockViewModel @Inject constructor(
 
     fun onSearchQueryChanged(query: String) {
         searchRelay.accept(query)
-
     }
 
     fun onScanCompleted(itemCode: String) {

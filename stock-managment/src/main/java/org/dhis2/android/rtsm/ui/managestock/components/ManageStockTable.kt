@@ -7,12 +7,10 @@ import com.google.android.material.composethemeadapter.MdcTheme
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.composetable.ui.DataSetTableScreen
 
-
 @Composable
 fun ManageStockTable(
     viewModel: ManageStockViewModel
 ) {
-
     val screenState by viewModel.screenState.observeAsState()
 
     MdcTheme {
@@ -29,6 +27,6 @@ fun ManageStockTable(
 }
 
 fun editingCellValue(editing: Boolean) {
-    //TODO Collapse settings in order to see the input field
-    //TODO Hide review button
+    // TODO Collapse settings in order to see the input field
+    // TODO Hide review button
 }
