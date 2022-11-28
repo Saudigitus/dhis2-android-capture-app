@@ -31,14 +31,9 @@
             android:name=".ui.home.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.managestock.ManageStockActivity"
-            android:exported="false"
-            android:parentActivityName=".ui.home.HomeActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
             android:name=".ui.reviewstock.ReviewStockActivity"
             android:exported="false"
-            android:parentActivityName=".ui.managestock.ManageStockActivity"
+            android:parentActivityName=".ui.home.HomeActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name=".ui.scanner.ScannerActivity"

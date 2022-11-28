@@ -123,6 +123,7 @@ dependencies {
 
 
     implementation "androidx.legacy:legacy-support-v4:$libraries.legacysupport"
+    implementation 'androidx.hilt:hilt-common:1.0.0'
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:$libraries.desugar_jdk_libs"
 
     implementation "androidx.appcompat:appcompat:$libraries.appcompat"

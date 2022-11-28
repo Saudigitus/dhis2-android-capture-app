@@ -121,7 +121,7 @@ class FormViewModel(
                     runDataIntegrityCheck()
                 }
             }
-            null -> {}
+//            null -> {}
         }
     }
 

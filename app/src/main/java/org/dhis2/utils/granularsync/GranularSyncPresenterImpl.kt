@@ -402,7 +402,7 @@ class GranularSyncPresenterImpl(
                     updateStatusToSentBySMS()
                 }
             }
-            else -> {}
+//            else -> {}
         }
         restartSmsSender()
     }
