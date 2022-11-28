@@ -28,4 +28,7 @@ fun ManageStockTable(
     }
 }
 
-fun editingCellValue(editing: Boolean) {}
+fun editingCellValue(editing: Boolean) {
+    //TODO Collapse settings in order to see the input field
+    //TODO Hide review button
+}
