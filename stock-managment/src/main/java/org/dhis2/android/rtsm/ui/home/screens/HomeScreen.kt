@@ -47,6 +47,7 @@ import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
     activity: Activity,
