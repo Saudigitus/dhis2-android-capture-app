@@ -210,7 +210,6 @@ fun MainContent(
                 == TransactionType.CORRECTION.name
             ) {
                 if (hasFacilitySelected) {
-
                     updateTableState(manageStockViewModel, viewModel)
                     ManageStockTable(manageStockViewModel, backdropState, scope)
                 }

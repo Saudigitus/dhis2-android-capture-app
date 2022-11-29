@@ -9,6 +9,10 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -45,10 +49,6 @@ import org.dhis2.composetable.model.TextInputModel
 import org.hisp.dhis.rules.models.RuleActionAssign
 import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -302,7 +302,7 @@ class ManageStockViewModel @Inject constructor(
                 allowDecimal = false,
                 allowSigned = false
             ),
-            error =  errors.value[cell.id!!]
+            error = errors.value[cell.id!!]
         )
     }
 
@@ -324,7 +324,7 @@ class ManageStockViewModel @Inject constructor(
                                     (
                                         (ruleEffect.ruleAction() as RuleActionAssign).field()
                                             == config.value?.stockOnHand
-                                    )
+                                        )
                                 ) {
                                     val data = ruleEffect.data()
                                     val isValid: Boolean = isValidStockOnHand(data)
@@ -388,7 +388,7 @@ class ManageStockViewModel @Inject constructor(
                 )
                 else -> tableCell.copy(
                     value = stockEntry?.qty,
-                    error =  errors.value[cell.id]
+                    error = errors.value[cell.id]
                 )
             }
         }
