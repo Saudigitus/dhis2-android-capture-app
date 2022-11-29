@@ -76,9 +76,7 @@ fun Backdrop(
                 themeColor,
                 supportFragmentManager,
                 homeContext,
-                {
-                    hasFacilitySelected = it
-                },
+                { hasFacilitySelected = it },
                 {
                     hasDestinationSelected = it
                     viewModel.setDestinationSelected(it)
