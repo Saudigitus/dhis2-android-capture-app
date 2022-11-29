@@ -9,10 +9,6 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -49,6 +45,10 @@ import org.dhis2.composetable.model.TextInputModel
 import org.hisp.dhis.rules.models.RuleActionAssign
 import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -82,9 +82,6 @@ class ManageStockViewModel @Inject constructor(
 
     private val _allTableState = MutableStateFlow<List<TableModel>>(mutableListOf())
     private val allTableState: StateFlow<List<TableModel>> = _allTableState
-
-    private val _tableError = MutableLiveData<String>()
-    private val tableError: LiveData<String> = _tableError
 
     private val _screenState: MutableLiveData<TableScreenState> = MutableLiveData(
         TableScreenState(emptyList(), false)
