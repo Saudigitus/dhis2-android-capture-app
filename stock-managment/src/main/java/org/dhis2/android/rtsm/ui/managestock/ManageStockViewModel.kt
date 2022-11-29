@@ -9,10 +9,6 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -49,6 +45,10 @@ import org.dhis2.composetable.model.TextInputModel
 import org.hisp.dhis.rules.models.RuleActionAssign
 import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -83,6 +83,9 @@ class ManageStockViewModel @Inject constructor(
     private val _allTableState = MutableStateFlow<List<TableModel>>(mutableListOf())
     private val allTableState: StateFlow<List<TableModel>> = _allTableState
 
+    private val _tableError = MutableLiveData<String>()
+    private val tableError: LiveData<String> = _tableError
+
     private val _screenState: MutableLiveData<TableScreenState> = MutableLiveData(
         TableScreenState(emptyList(), false)
     )
@@ -90,6 +93,8 @@ class ManageStockViewModel @Inject constructor(
 
     private val _stockItems: MutableLiveData<PagedList<StockItem>> =
         MutableLiveData<PagedList<StockItem>>()
+
+    private val errors = MutableStateFlow<MutableMap<String, String>>(mutableMapOf())
 
     fun setup(transaction: Transaction) {
         _transaction.value = transaction
@@ -220,7 +225,8 @@ class ManageStockViewModel @Inject constructor(
                             row = index,
                             column = 1,
                             value = null,
-                            editable = true
+                            editable = true,
+                            error = errors.value[item.id]
                         )
                     )
                 ),
@@ -295,7 +301,8 @@ class ManageStockViewModel @Inject constructor(
             keyboardInputType = KeyboardInputType.NumericInput(
                 allowDecimal = false,
                 allowSigned = false
-            )
+            ),
+            error =  errors.value[cell.id!!]
         )
     }
 
@@ -317,18 +324,17 @@ class ManageStockViewModel @Inject constructor(
                                     (
                                         (ruleEffect.ruleAction() as RuleActionAssign).field()
                                             == config.value?.stockOnHand
-                                        )
+                                    )
                                 ) {
-                                    val value = ruleEffect.data()
-                                    val isValid: Boolean = isValidStockOnHand(value)
-                                    val stockOnHand = if (isValid) value else it.stockOnHand
+                                    val data = ruleEffect.data()
+                                    val isValid: Boolean = isValidStockOnHand(data)
+                                    val stockOnHand = if (isValid) data else it.stockOnHand
                                     addItem(it, cell.value, stockOnHand, !isValid)
                                     if (!isValid) {
-                                        // TODO Display error
-                                        /*displayError(
-                                            binding.getRoot(),
-                                            R.string.stock_on_hand_exceeded_message
-                                        )*/
+                                        errors.value[cell.id!!] = resources
+                                            .getString(R.string.stock_on_hand_exceeded_message)
+                                    } else {
+                                        errors.value.remove(cell.id)
                                     }
 
                                     _allTableState.value = _allTableState.value.map { tableModel ->
@@ -336,7 +342,6 @@ class ManageStockViewModel @Inject constructor(
                                             tableRows = updateTableRows(tableModel.tableRows, cell)
                                         )
                                     }
-                                    // updateNextButton()
                                 }
                             }
 
@@ -382,7 +387,8 @@ class ManageStockViewModel @Inject constructor(
                     value = stockEntry?.stockOnHand
                 )
                 else -> tableCell.copy(
-                    value = stockEntry?.qty
+                    value = stockEntry?.qty,
+                    error =  errors.value[cell.id]
                 )
             }
         }
