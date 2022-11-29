@@ -93,8 +93,7 @@ fun Backdrop(
                 manageStockViewModel,
                 hasFacilitySelected,
                 hasDestinationSelected,
-                barcodeLauncher,
-
+                barcodeLauncher
             )
         },
         scaffoldState = backdropState,
