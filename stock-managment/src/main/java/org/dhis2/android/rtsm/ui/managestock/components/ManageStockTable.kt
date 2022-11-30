@@ -1,13 +1,10 @@
 package org.dhis2.android.rtsm.ui.managestock.components
 
-import androidx.compose.material.BackdropScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import com.google.android.material.composethemeadapter.MdcTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.composetable.ui.DataSetTableScreen
 
@@ -15,8 +12,7 @@ import org.dhis2.composetable.ui.DataSetTableScreen
 @Composable
 fun ManageStockTable(
     viewModel: ManageStockViewModel,
-    backdropState: BackdropScaffoldState,
-    scope: CoroutineScope
+    concealBackdropState: () -> Unit = { }
 ) {
     val screenState by viewModel.screenState.observeAsState()
 
@@ -27,11 +23,7 @@ fun ManageStockTable(
                 viewModel.onCellClick(cell)
             },
             onEdition = { isEditing ->
-                editingCellValue(isEditing) {
-                    scope.launch {
-                        backdropState.conceal()
-                    }
-                }
+                editingCellValue(isEditing, concealBackdropState)
             },
             onCellValueChange = viewModel::onCellValueChanged,
             onSaveValue = viewModel::onSaveValueChange
@@ -39,7 +31,6 @@ fun ManageStockTable(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 fun editingCellValue(
     editing: Boolean,
     onEditionStart: () -> Unit

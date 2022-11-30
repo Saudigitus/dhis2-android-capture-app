@@ -204,21 +204,27 @@ fun MainContent(
             ) {
                 if (hasFacilitySelected && hasDestinationSelected == true) {
                     updateTableState(manageStockViewModel, viewModel)
-                    ManageStockTable(manageStockViewModel, backdropState, scope)
+                    ManageStockTable(manageStockViewModel) {
+                        scope.launch { backdropState.conceal() }
+                    }
                 }
             } else if (viewModel.toolbarTitle.collectAsState().value.name
                 == TransactionType.CORRECTION.name
             ) {
                 if (hasFacilitySelected) {
                     updateTableState(manageStockViewModel, viewModel)
-                    ManageStockTable(manageStockViewModel, backdropState, scope)
+                    ManageStockTable(manageStockViewModel) {
+                        scope.launch { backdropState.conceal() }
+                    }
                 }
             } else if (viewModel.toolbarTitle.collectAsState().value.name
                 == TransactionType.DISCARD.name
             ) {
                 if (hasFacilitySelected) {
                     updateTableState(manageStockViewModel, viewModel)
-                    ManageStockTable(manageStockViewModel, backdropState, scope)
+                    ManageStockTable(manageStockViewModel) {
+                        scope.launch { backdropState.conceal() }
+                    }
                 }
             }
         }
