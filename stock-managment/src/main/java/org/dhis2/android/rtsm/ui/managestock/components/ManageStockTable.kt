@@ -1,6 +1,5 @@
 package org.dhis2.android.rtsm.ui.managestock.components
 
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -8,11 +7,10 @@ import com.google.android.material.composethemeadapter.MdcTheme
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.composetable.ui.DataSetTableScreen
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ManageStockTable(
     viewModel: ManageStockViewModel,
-    concealBackdropState: () -> Unit = { }
+    concealBackdropState: () -> Unit
 ) {
     val screenState by viewModel.screenState.observeAsState()
 
