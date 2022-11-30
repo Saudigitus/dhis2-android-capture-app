@@ -27,7 +27,11 @@ fun ManageStockTable(
                 viewModel.onCellClick(cell)
             },
             onEdition = { isEditing ->
-                editingCellValue(isEditing, backdropState, scope)
+                editingCellValue(isEditing) {
+                    scope.launch {
+                        backdropState.conceal()
+                    }
+                }
             },
             onCellValueChange = viewModel::onCellValueChanged,
             onSaveValue = viewModel::onSaveValueChange
@@ -38,11 +42,10 @@ fun ManageStockTable(
 @OptIn(ExperimentalMaterialApi::class)
 fun editingCellValue(
     editing: Boolean,
-    backdropState: BackdropScaffoldState,
-    scope: CoroutineScope
+    onEditionStart: () -> Unit
 ) {
     // TODO Hide review button
     if (editing) {
-        scope.launch { backdropState.conceal() }
+        onEditionStart.invoke()
     }
 }
