@@ -86,19 +86,19 @@ fun HomeScreen(
                             )
                             .height(70.dp)
                             .animateEnterExit(
-                                enter = slideInHorizontally(), exit = slideOutHorizontally()
+                                enter = fadeIn(), exit = fadeOut()
                             ),
                         icon = {
                             Icon(
                                 painter = painterResource(R.drawable.proceed_icon),
-                                contentDescription = stringResource(R.string.proceed),
+                                contentDescription = stringResource(R.string.review),
                                 tint = if (enabled) themeColor
                                 else colorResource(id = R.color.proceed_text_color)
                             )
                         },
                         text = {
                             Text(
-                                stringResource(R.string.proceed),
+                                stringResource(R.string.review),
                                 color = if (enabled) themeColor
                                 else colorResource(id = R.color.proceed_text_color)
                             )
