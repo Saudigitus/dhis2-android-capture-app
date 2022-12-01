@@ -23,9 +23,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -86,9 +83,9 @@ fun DropdownComponent(
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
     val icon = if (isExpanded) {
-        Icons.Filled.KeyboardArrowUp
+        painterResource(id = R.drawable.ic_arrow_drop_up)
     } else {
-        Icons.Filled.KeyboardArrowDown
+        painterResource(id = R.drawable.ic_arrow_drop_down)
     }
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -220,9 +217,9 @@ fun DropdownComponentFacilities(
     }
 
     val icon = if (isExpanded) {
-        Icons.Filled.KeyboardArrowUp
+        painterResource(id = R.drawable.ic_arrow_drop_up)
     } else {
-        Icons.Filled.KeyboardArrowDown
+        painterResource(id = R.drawable.ic_arrow_drop_down)
     }
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -354,9 +351,9 @@ fun DropdownComponentDistributedTo(
     }
 
     val icon = if (isExpanded) {
-        Icons.Filled.KeyboardArrowUp
+        painterResource(id = R.drawable.ic_arrow_drop_up)
     } else {
-        Icons.Filled.KeyboardArrowDown
+        painterResource(id = R.drawable.ic_arrow_drop_down)
     }
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -486,6 +483,7 @@ fun openOrgUnitTreeSelector(
                 viewModel.setSelectedText(orgUnitDialog.selectedOrgUnitName)
                 viewModel.setOldSelectedFacility(orgUnitDialog.selectedOrgUnitName)
                 orgUnitData = orgUnitDialog.selectedOrgUnitModel
+                viewModel.setFacilitySelected(true)
             }
             orgUnitDialog.dismiss()
         }
