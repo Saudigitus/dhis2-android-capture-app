@@ -224,6 +224,7 @@ fun DropdownComponentFacilities(
 
     val interactionSource = remember { MutableInteractionSource() }
     if (interactionSource.collectIsPressedAsState().value) {
+        viewModel.setFacilitySelected(false)
         openOrgUnitTreeSelector(supportFragmentManager, homeContext, data, viewModel)
     }
 
@@ -261,6 +262,7 @@ fun DropdownComponentFacilities(
             trailingIcon = {
                 IconButton(
                     onClick = {
+                        viewModel.setFacilitySelected(false)
                         openOrgUnitTreeSelector(
                             supportFragmentManager,
                             homeContext,
@@ -488,6 +490,9 @@ fun openOrgUnitTreeSelector(
             orgUnitDialog.dismiss()
         }
         .setNegativeListener {
+            if(viewModel.oldSelectedFacility.value != "") {
+                viewModel.setFacilitySelected(true)
+            }
             orgUnitDialog.dismiss()
         }
 
