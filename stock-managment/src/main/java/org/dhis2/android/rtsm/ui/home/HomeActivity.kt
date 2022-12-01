@@ -87,7 +87,6 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
                         )
                     }
                 }
-                Toast.makeText(this, viewModel.oldSelectedFacility.collectAsState().value, Toast.LENGTH_SHORT).show()
             }
         }
 
