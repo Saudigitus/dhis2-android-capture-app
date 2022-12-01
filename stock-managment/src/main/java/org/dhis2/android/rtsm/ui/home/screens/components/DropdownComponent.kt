@@ -54,7 +54,6 @@ import org.dhis2.android.rtsm.utils.Utils.Companion.capitalizeText
 import org.dhis2.commons.orgunitdialog.CommonOrgUnitDialog
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
-import timber.log.Timber
 
 var orgUnitData: OrganisationUnit? = null
 var orgUnitName: String? = null
@@ -490,7 +489,7 @@ fun openOrgUnitTreeSelector(
             orgUnitDialog.dismiss()
         }
         .setNegativeListener {
-            if(viewModel.oldSelectedFacility.value != "") {
+            if (viewModel.oldSelectedFacility.value != "") {
                 viewModel.setFacilitySelected(true)
             }
             orgUnitDialog.dismiss()

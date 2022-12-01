@@ -247,7 +247,7 @@ class HomeViewModel @Inject constructor(
     fun setDestinationSelected(status: Boolean) {
         _hasDestinationSelected.value = status
     }
-    fun setOldSelectedFacility(text: String){
-       _oldSelectedFacility.value = text
+    fun setOldSelectedFacility(text: String) {
+        _oldSelectedFacility.value = text
     }
 }

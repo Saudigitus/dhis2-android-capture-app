@@ -202,7 +202,9 @@ fun MainContent(
             if (viewModel.toolbarTitle.collectAsState().value.name
                 == TransactionType.DISTRIBUTION.name
             ) {
-                if (viewModel.hasFacilitySelected.collectAsState().value && hasDestinationSelected == true) {
+                if (viewModel.hasFacilitySelected.collectAsState().value &&
+                    hasDestinationSelected == true
+                ) {
                     updateTableState(manageStockViewModel, viewModel)
                     ManageStockTable(manageStockViewModel) {
                         scope.launch { backdropState.conceal() }
