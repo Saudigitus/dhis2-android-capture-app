@@ -156,7 +156,8 @@ fun MainContent(
                 },
                 modifier = Modifier
                     .weight(weightValue)
-                    .alignBy(FirstBaseline)
+                    .alignBy(FirstBaseline),
+                enabled = isFrontLayerDisabled != true
             ) {
                 Icon(
                     painter = qrcodeResource,
