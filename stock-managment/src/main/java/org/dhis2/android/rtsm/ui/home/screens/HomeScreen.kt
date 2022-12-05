@@ -146,23 +146,23 @@ fun checkVisibility(viewModel: HomeViewModel, manageStockViewModel: ManageStockV
             TransactionType.DISCARD.name
         )
     ) {
-        return viewModel.hasFacilitySelected.collectAsState().value
-            && manageStockViewModel.sizeTableData.collectAsState().value > 0
+        return viewModel.hasFacilitySelected.collectAsState().value &&
+            manageStockViewModel.sizeTableData.collectAsState().value > 0
     } else if ((
         viewModel.toolbarTitle.collectAsState().value.name ==
             TransactionType.CORRECTION.name
         )
     ) {
-        return viewModel.hasFacilitySelected.collectAsState().value
-            && manageStockViewModel.sizeTableData.collectAsState().value > 0
+        return viewModel.hasFacilitySelected.collectAsState().value &&
+            manageStockViewModel.sizeTableData.collectAsState().value > 0
     } else (
         (
             viewModel.toolbarTitle.collectAsState().value.name ==
                 TransactionType.DISTRIBUTION.name
             ) &&
             viewModel.hasFacilitySelected.collectAsState().value &&
-            viewModel.hasDestinationSelected.collectAsState().value
-            && manageStockViewModel.sizeTableData.collectAsState().value > 0
+            viewModel.hasDestinationSelected.collectAsState().value &&
+            manageStockViewModel.sizeTableData.collectAsState().value > 0
         )
 }
 private object NoRippleTheme : RippleTheme {
