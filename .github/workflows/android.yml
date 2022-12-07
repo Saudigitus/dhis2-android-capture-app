@@ -29,3 +29,5 @@ jobs:
       run: ./gradlew ktlintCheck
     - name: Build with Gradle
       run: ./gradlew testDhisDebugUnitTest
+    - name: Run Sonarqube
+      run: ./gradlew sonarqube
