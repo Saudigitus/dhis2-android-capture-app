@@ -36,7 +36,6 @@ import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
 @Composable
-@OptIn(ExperimentalMaterialApi::class)
 fun filterList(
     viewModel: HomeViewModel,
     themeColor: Color,
@@ -48,7 +47,6 @@ fun filterList(
     val facilities = viewModel.facilities.collectAsState().value
     val destinations = viewModel.destinationsList.collectAsState().value
     val showDestination = viewModel.isDistribution.collectAsState().value
-    val toolbarTitle = viewModel.toolbarTitle.collectAsState().value.name
 
     // get local density from composable
     val localDensity = LocalDensity.current
@@ -109,20 +107,6 @@ fun filterList(
         }
     }
     return heightIs
-}
-
-fun Modifier.conditional(
-    condition: Boolean,
-    ifTrue: Modifier.() -> Modifier,
-    ifFalse: (Modifier.() -> Modifier)? = null
-): Modifier {
-    return if (condition) {
-        then(ifTrue(Modifier))
-    } else if (ifFalse != null) {
-        then(ifFalse(Modifier))
-    } else {
-        this
-    }
 }
 
 private fun mapTransaction(): MutableList<TransactionItem> {
