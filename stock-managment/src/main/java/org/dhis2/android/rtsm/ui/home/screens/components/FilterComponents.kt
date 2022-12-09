@@ -3,9 +3,13 @@ package org.dhis2.android.rtsm.ui.home.screens.components
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -13,10 +17,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
@@ -30,6 +36,7 @@ import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
 @Composable
+@OptIn(ExperimentalMaterialApi::class)
 fun filterList(
     viewModel: HomeViewModel,
     themeColor: Color,
@@ -53,31 +60,17 @@ fun filterList(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(vertical = 16.dp),
         modifier = Modifier
+            .animateContentSize(
+                animationSpec = tween(
+                    delayMillis = 180,
+                    easing = LinearOutSlowInEasing
+                )
+            )
             .onSizeChanged { coordinates ->
                 heightIs = with(localDensity) { coordinates.height.toDp() }
-            }.onGloballyPositioned { coordinates ->
+            }
+            .onGloballyPositioned { coordinates ->
                 heightIs = with(localDensity) { coordinates.size.height.toDp() }
-            }.apply {
-                val condition: Boolean = toolbarTitle == TransactionType.DISTRIBUTION.name
-                this.conditional(
-                    condition,
-                    ifFalse = {
-                        this.animateContentSize(
-                            animationSpec = tween(
-                                delayMillis = 400,
-                                easing = LinearOutSlowInEasing
-                            )
-                        )
-                    },
-                    ifTrue = {
-                        this.animateContentSize(
-                            animationSpec = tween(
-                                delayMillis = 300,
-                                easing = LinearOutSlowInEasing
-                            )
-                        )
-                    }
-                )
             }
     ) {
         item {
