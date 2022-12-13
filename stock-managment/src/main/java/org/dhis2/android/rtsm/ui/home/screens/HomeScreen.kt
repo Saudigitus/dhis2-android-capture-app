@@ -1,15 +1,12 @@
 package org.dhis2.android.rtsm.ui.home.screens
 
 import android.app.Activity
-import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExtendedFloatingActionButton
 import androidx.compose.material.Icon
@@ -24,29 +21,18 @@ import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
 import org.dhis2.android.rtsm.R
@@ -55,7 +41,6 @@ import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
-import timber.log.Timber
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -77,17 +62,17 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = checkVisibility(viewModel = viewModel)
-                    && manageStockViewModel.canReview.collectAsState().value
-                    && !manageStockViewModel.isEditing.collectAsState().value,
+                visible = checkVisibility(viewModel = viewModel) &&
+                    manageStockViewModel.canReview.collectAsState().value &&
+                    !manageStockViewModel.isEditing.collectAsState().value,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
                 CompositionLocalProvider(
                     LocalRippleTheme provides
-                        if (manageStockViewModel.canReview.collectAsState().value)
+                        if (manageStockViewModel.canReview.collectAsState().value) {
                             LocalRippleTheme.current
-                        else NoRippleTheme
+                        } else { NoRippleTheme }
                 ) {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
@@ -104,26 +89,27 @@ fun HomeScreen(
                             Icon(
                                 painter = painterResource(R.drawable.proceed_icon),
                                 contentDescription = stringResource(R.string.review),
-                                tint = if (manageStockViewModel.canReview.collectAsState().value)
+                                tint = if (manageStockViewModel.canReview.collectAsState().value) {
                                     themeColor
-                                else colorResource(id = R.color.proceed_text_color)
+                                } else { colorResource(id = R.color.proceed_text_color) }
                             )
                         },
                         text = {
                             Text(
                                 stringResource(R.string.review),
-                                color = if (manageStockViewModel.canReview.collectAsState().value)
+                                color = if (manageStockViewModel.canReview.collectAsState().value) {
                                     themeColor
-                                else colorResource(id = R.color.proceed_text_color)
+                                } else { colorResource(id = R.color.proceed_text_color) }
                             )
                         },
                         onClick = {
                             proceedAction(scope, scaffoldState)
                         },
                         backgroundColor = if (manageStockViewModel.canReview.collectAsState()
-                                .value) {
+                            .value
+                        ) {
                             Color.White
-                        } else colorResource(id = R.color.proceed_color),
+                        } else { colorResource(id = R.color.proceed_color) },
                         shape = RoundedCornerShape(16.dp)
                     )
                 }
