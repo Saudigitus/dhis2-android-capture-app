@@ -163,7 +163,7 @@ fun checkVisibility(viewModel: HomeViewModel, manageStockViewModel: ManageStockV
                 TransactionType.DISTRIBUTION.name
             ) &&
             viewModel.hasFacilitySelected.collectAsState().value &&
-            viewModel.hasDestinationSelected.collectAsState().value  &&
+            viewModel.hasDestinationSelected.collectAsState().value &&
             manageStockViewModel.sizeTableData.collectAsState().value > 0 &&
             manageStockViewModel.canReview.collectAsState().value &&
             manageStockViewModel.isEditing.collectAsState().value == ButtonState.ENABLED
