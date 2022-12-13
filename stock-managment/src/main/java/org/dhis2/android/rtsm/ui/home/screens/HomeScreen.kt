@@ -36,6 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
 import org.dhis2.android.rtsm.R
+import org.dhis2.android.rtsm.data.ButtonState
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
@@ -62,9 +63,7 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = checkVisibility(viewModel = viewModel) &&
-                    manageStockViewModel.canReview.collectAsState().value &&
-                    !manageStockViewModel.isEditing.collectAsState().value,
+                visible = checkVisibility(viewModel, manageStockViewModel),
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
@@ -139,26 +138,35 @@ fun HomeScreen(
     }
 }
 @Composable
-fun checkVisibility(viewModel: HomeViewModel): Boolean {
+fun checkVisibility(viewModel: HomeViewModel, manageStockViewModel: ManageStockViewModel): Boolean {
     return if ((
         viewModel.toolbarTitle.collectAsState().value.name ==
             TransactionType.DISCARD.name
         )
     ) {
-        return viewModel.hasFacilitySelected.collectAsState().value
+        viewModel.hasFacilitySelected.collectAsState().value &&
+            manageStockViewModel.sizeTableData.collectAsState().value > 0 &&
+            manageStockViewModel.canReview.collectAsState().value &&
+            manageStockViewModel.isEditing.collectAsState().value == ButtonState.ENABLED
     } else if ((
         viewModel.toolbarTitle.collectAsState().value.name ==
             TransactionType.CORRECTION.name
         )
     ) {
-        return viewModel.hasFacilitySelected.collectAsState().value
+        viewModel.hasFacilitySelected.collectAsState().value &&
+            manageStockViewModel.sizeTableData.collectAsState().value > 0 &&
+            manageStockViewModel.canReview.collectAsState().value &&
+            manageStockViewModel.isEditing.collectAsState().value == ButtonState.ENABLED
     } else (
         (
             viewModel.toolbarTitle.collectAsState().value.name ==
                 TransactionType.DISTRIBUTION.name
             ) &&
             viewModel.hasFacilitySelected.collectAsState().value &&
-            viewModel.hasDestinationSelected.collectAsState().value
+            viewModel.hasDestinationSelected.collectAsState().value  &&
+            manageStockViewModel.sizeTableData.collectAsState().value > 0 &&
+            manageStockViewModel.canReview.collectAsState().value &&
+            manageStockViewModel.isEditing.collectAsState().value == ButtonState.ENABLED
         )
 }
 private object NoRippleTheme : RippleTheme {
