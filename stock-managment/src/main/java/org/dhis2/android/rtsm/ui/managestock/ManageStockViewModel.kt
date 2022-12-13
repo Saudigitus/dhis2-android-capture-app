@@ -9,13 +9,10 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.commons.Constants.QUANTITY_ENTRY_DEBOUNCE
 import org.dhis2.android.rtsm.commons.Constants.SEARCH_QUERY_DEBOUNCE
@@ -49,6 +46,10 @@ import org.dhis2.composetable.model.TextInputModel
 import org.hisp.dhis.rules.models.RuleActionAssign
 import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -90,6 +91,12 @@ class ManageStockViewModel @Inject constructor(
 
     private val _stockItems: MutableLiveData<PagedList<StockItem>> =
         MutableLiveData<PagedList<StockItem>>()
+
+    private val _canReview = MutableStateFlow(false)
+    val canReview: StateFlow<Boolean> = _canReview
+
+    private val _isEditing = MutableStateFlow(false)
+    val isEditing: StateFlow<Boolean> = _isEditing
 
     fun setup(transaction: Transaction) {
         _transaction.value = transaction
@@ -263,6 +270,18 @@ class ManageStockViewModel @Inject constructor(
         )
     )
 
+    fun editingCellValue(
+        isEditing: Boolean,
+        onEditionStart: () -> Unit
+    ) {
+        if (isEditing) {
+            _isEditing.value = true
+            onEditionStart.invoke()
+        } else {
+            _isEditing.value = false
+        }
+    }
+
     fun onCellValueChanged(tableCell: TableCell) {
         val updatedData = screenState.value?.tables?.map { tableModel ->
             if (tableModel.hasCellWithId(tableCell.id)) {
@@ -338,6 +357,8 @@ class ManageStockViewModel @Inject constructor(
                                     selectNext = selectNext
                                 )
                             )
+
+                            runBlocking { canReview() }
                         }
                     }
                 )
@@ -423,7 +444,9 @@ class ManageStockViewModel @Inject constructor(
 
     fun hasError(item: StockItem) = itemsCache[item.id]?.hasError ?: false
 
-    fun canReview(): Boolean = itemsCache.size > 0 && itemsCache.none { it.value.hasError }
+    private fun canReview() {
+        _canReview.value = itemsCache.size > 0 && itemsCache.none { it.value.hasError }
+    }
 
     private fun getPopulatedEntries() = Collections.synchronizedList(itemsCache.values.toList())
 
