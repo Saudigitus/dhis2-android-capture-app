@@ -22,6 +22,7 @@ import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.commons.Constants.QUANTITY_ENTRY_DEBOUNCE
 import org.dhis2.android.rtsm.commons.Constants.SEARCH_QUERY_DEBOUNCE
 import org.dhis2.android.rtsm.data.AppConfig
+import org.dhis2.android.rtsm.data.ButtonState
 import org.dhis2.android.rtsm.data.OperationState
 import org.dhis2.android.rtsm.data.ReviewStockData
 import org.dhis2.android.rtsm.data.RowAction
@@ -99,8 +100,8 @@ class ManageStockViewModel @Inject constructor(
     private val _canReview = MutableStateFlow(false)
     val canReview: StateFlow<Boolean> = _canReview
 
-    private val _isEditing = MutableStateFlow(false)
-    val isEditing: StateFlow<Boolean> = _isEditing
+    private val _isEditing = MutableStateFlow(ButtonState.HIDDEN)
+    val isEditing: StateFlow<ButtonState> = _isEditing
 
     fun setup(transaction: Transaction) {
         _transaction.value = transaction
@@ -281,10 +282,10 @@ class ManageStockViewModel @Inject constructor(
         onEditionStart: () -> Unit
     ) {
         if (isEditing) {
-            _isEditing.value = true
+            _isEditing.value = ButtonState.HIDDEN
             onEditionStart.invoke()
         } else {
-            _isEditing.value = false
+            _isEditing.value = ButtonState.ENABLED
         }
     }
 
