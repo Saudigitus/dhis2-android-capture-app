@@ -3,18 +3,28 @@ package org.dhis2.android.rtsm.ui.home.screens.components
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imeNestedScroll
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BackdropScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -24,6 +34,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,8 +45,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.FirstBaseline
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -62,7 +80,7 @@ fun MainContent(
     manageStockViewModel: ManageStockViewModel,
     hasFacilitySelected: Boolean,
     hasDestinationSelected: Boolean?,
-    barcodeLauncher: ActivityResultLauncher<ScanOptions>
+    barcodeLauncher: ActivityResultLauncher<ScanOptions>,
 ) {
     val scope = rememberCoroutineScope()
     val resource = painterResource(R.drawable.ic_arrow_up)
@@ -75,9 +93,21 @@ fun MainContent(
     val weightValueArrowStatus = backdropState.isRevealed
     val focusManager = LocalFocusManager.current
     val search = viewModel.scanText.collectAsState().value
+    val localDensity = LocalDensity.current
+    var heightIs by remember {
+        mutableStateOf(0.dp)
+    }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .onSizeChanged { coordinates ->
+                heightIs = with(localDensity) { coordinates.height.toDp() }
+            }
+            .onGloballyPositioned { coordinates ->
+                heightIs = with(localDensity) { coordinates.size.height.toDp() }
+            }
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -198,7 +228,10 @@ fun MainContent(
             manageStockViewModel.onSearchQueryChanged(search)
         }
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.height(heightIs)
+        ) {
             if (viewModel.toolbarTitle.collectAsState().value.name
                 == TransactionType.DISTRIBUTION.name
             ) {

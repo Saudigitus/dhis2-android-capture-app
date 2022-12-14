@@ -3,6 +3,9 @@ package org.dhis2.android.rtsm.ui.home.screens.components
 import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -10,13 +13,18 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
 import com.journeyapps.barcodescanner.ScanOptions
@@ -28,7 +36,7 @@ import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 
 @SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun Backdrop(
     activity: Activity,
