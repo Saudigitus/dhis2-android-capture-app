@@ -235,7 +235,7 @@ fun MainContent(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.height(heightIs + 60.dp)
+            modifier = Modifier.height(heightIs + 244.dp)
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
