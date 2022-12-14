@@ -79,7 +79,6 @@ fun Backdrop(
                 { hasFacilitySelected = it },
                 {
                     hasDestinationSelected = it
-                    viewModel.setDestinationSelected(it)
                 }
             )
             if (height > 160.dp) {

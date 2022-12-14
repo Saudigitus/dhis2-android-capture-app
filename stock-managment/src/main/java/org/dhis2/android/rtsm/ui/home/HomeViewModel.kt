@@ -5,13 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.commons.Constants.INTENT_EXTRA_APP_CONFIG
 import org.dhis2.android.rtsm.data.AppConfig
@@ -24,11 +21,16 @@ import org.dhis2.android.rtsm.services.MetadataManager
 import org.dhis2.android.rtsm.services.preferences.PreferenceProvider
 import org.dhis2.android.rtsm.services.scheduler.BaseSchedulerProvider
 import org.dhis2.android.rtsm.ui.base.BaseViewModel
+import org.dhis2.android.rtsm.ui.home.model.SettingsUiState
 import org.dhis2.android.rtsm.utils.ParcelUtils
 import org.dhis2.android.rtsm.utils.UIText
 import org.dhis2.android.rtsm.utils.humanReadableDate
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -42,39 +44,14 @@ class HomeViewModel @Inject constructor(
     val config: AppConfig = savedState.get<AppConfig>(INTENT_EXTRA_APP_CONFIG)
         ?: throw InitializationException("Some configuration parameters are missing")
 
-    private val _transactionType = MutableStateFlow(TransactionType.DISTRIBUTION)
-    val transactionType: StateFlow<TransactionType> get() = _transactionType
-
-    private val _isDistribution = MutableStateFlow(true)
-    val isDistribution: StateFlow<Boolean>
-        get() = _isDistribution
-
-    private val _hasFacilitySelected = MutableStateFlow(false)
-    val hasFacilitySelected: StateFlow<Boolean>
-        get() = _hasFacilitySelected
-
-    private val _hasDestinationSelected = MutableStateFlow(false)
-    val hasDestinationSelected: StateFlow<Boolean>
-        get() = _hasDestinationSelected
-
-    private val _facility = MutableStateFlow<OrganisationUnit?>(null)
-    val facility: StateFlow<OrganisationUnit?>
-        get() = _facility
-
     private val _scanText = MutableStateFlow("")
     val scanText = _scanText.asStateFlow()
-
-    private val _oldSelectedFacility = MutableStateFlow("")
-    val oldSelectedFacility = _oldSelectedFacility.asStateFlow()
 
     private val _transactionDate = MutableStateFlow(LocalDateTime.now())
     val transactionDate: StateFlow<LocalDateTime>
         get() = _transactionDate
 
-    private val _destination = MutableStateFlow<Option?>(null)
-    val destination: StateFlow<Option?>
-        get() = _destination
-
+    //TODO("IS this duplicated: facilities and org units list")
     private val _facilities =
         MutableStateFlow<OperationState<List<OrganisationUnit>>>(OperationState.Loading)
     val facilities: StateFlow<OperationState<List<OrganisationUnit>>>
@@ -102,6 +79,9 @@ class HomeViewModel @Inject constructor(
 
     private val _orgUnitName = MutableStateFlow("")
     val orgUnitName: StateFlow<String> get() = _orgUnitName
+
+    private val _settingsUiSate = MutableStateFlow(SettingsUiState())
+    val settingsUiState: StateFlow<SettingsUiState> = _settingsUiSate
 
     init {
         loadFacilities()
@@ -135,7 +115,12 @@ class HomeViewModel @Inject constructor(
                         _facilities.value = (OperationState.Success(it))
                         _orgUnitList.value = it
 
-                        if (it.size == 1) _facility.value = (it[0])
+                        if (it.size == 1) {
+//                            _facility.value = (it[0])
+                            _settingsUiSate.update { currentUiState ->
+                                currentUiState.copy(facility = it[0])
+                            }
+                        }
                     },
                     {
                         it.printStackTrace()
@@ -146,13 +131,16 @@ class HomeViewModel @Inject constructor(
     }
 
     fun selectTransaction(type: TransactionType) {
-        _transactionType.value = type
-        _isDistribution.value = type == TransactionType.DISTRIBUTION
+        _settingsUiSate.update { currentUiState ->
+            currentUiState.copy(transactionType = type)
+        }
 
         // Distributed to cannot only be set for DISTRIBUTION,
         // so ensure you clear it for others if it has been set
         if (type != TransactionType.DISTRIBUTION) {
-            _destination.value = null
+            _settingsUiSate.update { currentUiState ->
+                currentUiState.copy(destination = null)
+            }
             _deliveryTo.value = null
         } else {
             _deliveryTo.value = UIText.StringRes(R.string.to_facility)
@@ -160,26 +148,30 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setFacility(facility: OrganisationUnit) {
-        _facility.value = facility
+        _settingsUiSate.update { currentUiState ->
+            currentUiState.copy(facility = facility)
+        }
     }
 
     fun setDestination(destination: Option?) {
-        if (!isDistribution.value) {
+        if (!settingsUiState.value.isDistribution()) {
             throw UnsupportedOperationException(
                 "Cannot set 'distributed to' for non-distribution transactions"
             )
         }
 
-        _destination.value = destination
+        _settingsUiSate.update { currentUiState ->
+            currentUiState.copy(destination = destination)
+        }
     }
 
     fun checkForFieldErrors(): Int? {
-        return if (_facility.value == null) {
+        return if (settingsUiState.value.facility == null) {
             R.string.mandatory_facility_selection
-        } else if (_transactionDate.value == null) {
+        } else if (_transactionDate.value == null) { //TODO("This can not be null as transaction date is always current date")
             R.string.mandatory_transaction_date_selection
-        } else if (_transactionType.value == TransactionType.DISTRIBUTION &&
-            _destination.value == null
+        } else if (settingsUiState.value.transactionType == TransactionType.DISTRIBUTION &&
+            settingsUiState.value.destination == null
         ) {
             R.string.mandatory_distributed_to_selection
         } else {
@@ -188,17 +180,21 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getData(): Transaction {
-        if (facility.value == null) {
+        if (settingsUiState.value.facility == null) {
             throw UserIntentParcelCreationException(
                 "Unable to create parcel with empty facility"
             )
         }
 
         return Transaction(
-            transactionType.value,
-            ParcelUtils.facilityToIdentifiableModelParcel(facility.value!!),
+            settingsUiState.value.transactionType,
+            ParcelUtils.facilityToIdentifiableModelParcel(settingsUiState.value.facility!!),
             transactionDate.value.humanReadableDate(),
-            destination.value?.let { ParcelUtils.distributedTo_ToIdentifiableModelParcel(it) }
+            settingsUiState.value.destination?.let {
+                ParcelUtils.distributedTo_ToIdentifiableModelParcel(
+                    it
+                )
+            }
         )
     }
 
@@ -213,7 +209,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun fromFacilitiesLabel(from: String) {
-        when (transactionType.value) {
+        when (settingsUiState.value.transactionType) {
             TransactionType.DISTRIBUTION -> {
                 _fromFacility.value = UIText.StringRes(R.string.subtitle, from)
             }
@@ -227,7 +223,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun deliveryToLabel(to: String) {
-        if (transactionType.value == TransactionType.DISTRIBUTION) {
+        if (settingsUiState.value.isDistribution()) {
             _deliveryTo.value = UIText.StringRes(R.string.subtitle, to)
         }
     }
@@ -238,16 +234,5 @@ class HomeViewModel @Inject constructor(
 
     fun setScannedText(text: String) {
         _scanText.value = text
-    }
-
-    fun setFacilitySelected(status: Boolean) {
-        _hasFacilitySelected.value = status
-    }
-
-    fun setDestinationSelected(status: Boolean) {
-        _hasDestinationSelected.value = status
-    }
-    fun setOldSelectedFacility(text: String) {
-        _oldSelectedFacility.value = text
     }
 }

@@ -65,7 +65,8 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
             ?.let { manageStockViewModel.setConfig(it) }
 
         setContent {
-            updateTheme(viewModel.transactionType.collectAsState().value)
+            val settingsUiState by viewModel.settingsUiState.collectAsState()
+            updateTheme(settingsUiState.transactionType)
             MdcTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -74,6 +75,7 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
                     HomeScreen(
                         this,
                         viewModel,
+                        settingsUiState,
                         manageStockViewModel,
                         Color(colorResource(themeColor).toArgb()),
                         supportFragmentManager,

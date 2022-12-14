@@ -42,6 +42,7 @@ import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
+import org.dhis2.android.rtsm.ui.home.model.SettingsUiState
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 
@@ -50,6 +51,7 @@ import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 fun HomeScreen(
     activity: Activity,
     viewModel: HomeViewModel = viewModel(),
+    settingsUiState: SettingsUiState,
     manageStockViewModel: ManageStockViewModel = viewModel(),
     themeColor: Color,
     supportFragmentManager: FragmentManager,
@@ -66,7 +68,7 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = checkVisibility(viewModel = viewModel, manageStockViewModel),
+                visible = checkVisibility(viewModel = viewModel, manageStockViewModel, settingsUiState),
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
@@ -139,32 +141,34 @@ fun HomeScreen(
         }
     }
 }
+
 @Composable
-fun checkVisibility(viewModel: HomeViewModel, manageStockViewModel: ManageStockViewModel): Boolean {
+fun checkVisibility(viewModel: HomeViewModel, manageStockViewModel: ManageStockViewModel, settingsUiState: SettingsUiState): Boolean {
     return if ((
-        viewModel.toolbarTitle.collectAsState().value.name ==
-            TransactionType.DISCARD.name
-        )
+            viewModel.toolbarTitle.collectAsState().value.name ==
+                TransactionType.DISCARD.name
+            )
     ) {
-        return viewModel.hasFacilitySelected.collectAsState().value &&
+        return settingsUiState.hasFacilitySelected() &&
             manageStockViewModel.sizeTableData.collectAsState().value > 0
     } else if ((
-        viewModel.toolbarTitle.collectAsState().value.name ==
-            TransactionType.CORRECTION.name
-        )
+            viewModel.toolbarTitle.collectAsState().value.name ==
+                TransactionType.CORRECTION.name
+            )
     ) {
-        return viewModel.hasFacilitySelected.collectAsState().value &&
+        return settingsUiState.hasFacilitySelected() &&
             manageStockViewModel.sizeTableData.collectAsState().value > 0
     } else (
         (
             viewModel.toolbarTitle.collectAsState().value.name ==
                 TransactionType.DISTRIBUTION.name
             ) &&
-            viewModel.hasFacilitySelected.collectAsState().value &&
-            viewModel.hasDestinationSelected.collectAsState().value &&
+            settingsUiState.hasFacilitySelected() &&
+            settingsUiState.hasDestinationSelected() &&
             manageStockViewModel.sizeTableData.collectAsState().value > 0
         )
 }
+
 private object NoRippleTheme : RippleTheme {
     @Composable
     override fun defaultColor() = Color.Unspecified
