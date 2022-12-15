@@ -9,13 +9,16 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.absolutePadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BackdropScaffoldState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -37,11 +40,15 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.FirstBaseline
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.journeyapps.barcodescanner.ScanOptions
@@ -63,7 +70,8 @@ fun MainContent(
     manageStockViewModel: ManageStockViewModel,
     hasFacilitySelected: Boolean,
     hasDestinationSelected: Boolean?,
-    barcodeLauncher: ActivityResultLauncher<ScanOptions>
+    barcodeLauncher: ActivityResultLauncher<ScanOptions>,
+    heightBackLayer: Dp
 ) {
     val scope = rememberCoroutineScope()
     val resource = painterResource(R.drawable.ic_arrow_up)
@@ -76,9 +84,20 @@ fun MainContent(
     val weightValueArrowStatus = backdropState.isRevealed
     val focusManager = LocalFocusManager.current
     val search = viewModel.scanText.collectAsState().value
+    val localDensity = LocalDensity.current
+    var heightIs by remember { mutableStateOf(0.dp) }
+    val backLayerHeightData = if (backdropState.isRevealed) 0.dp else heightBackLayer + 80.dp
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .onSizeChanged { coordinates ->
+                heightIs = with(localDensity) { coordinates.height.toDp() }
+            }
+            .onGloballyPositioned { coordinates ->
+                heightIs = with(localDensity) { coordinates.size.height.toDp() }
+            }
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -207,35 +226,45 @@ fun MainContent(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = 0.dp)
+            modifier = Modifier
+                .height(
+                    heightIs +
+                        manageStockViewModel.isEditingBottomValue.collectAsState().value -
+                        backLayerHeightData
+                )
         ) {
-            if (viewModel.toolbarTitle.collectAsState().value.name
-                == TransactionType.DISTRIBUTION.name
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(vertical = 0.dp)
             ) {
-                if (viewModel.hasFacilitySelected.collectAsState().value &&
-                    hasDestinationSelected == true
+                if (viewModel.toolbarTitle.collectAsState().value.name
+                    == TransactionType.DISTRIBUTION.name
                 ) {
-                    updateTableState(manageStockViewModel, viewModel)
-                    ManageStockTable(manageStockViewModel) {
-                        scope.launch { backdropState.conceal() }
+                    if (viewModel.hasFacilitySelected.collectAsState().value &&
+                        hasDestinationSelected == true
+                    ) {
+                        updateTableState(manageStockViewModel, viewModel)
+                        ManageStockTable(manageStockViewModel) {
+                            scope.launch { backdropState.conceal() }
+                        }
                     }
-                }
-            } else if (viewModel.toolbarTitle.collectAsState().value.name
-                == TransactionType.CORRECTION.name
-            ) {
-                if (viewModel.hasFacilitySelected.collectAsState().value) {
-                    updateTableState(manageStockViewModel, viewModel)
-                    ManageStockTable(manageStockViewModel) {
-                        scope.launch { backdropState.conceal() }
+                } else if (viewModel.toolbarTitle.collectAsState().value.name
+                    == TransactionType.CORRECTION.name
+                ) {
+                    if (viewModel.hasFacilitySelected.collectAsState().value) {
+                        updateTableState(manageStockViewModel, viewModel)
+                        ManageStockTable(manageStockViewModel) {
+                            scope.launch { backdropState.conceal() }
+                        }
                     }
-                }
-            } else if (viewModel.toolbarTitle.collectAsState().value.name
-                == TransactionType.DISCARD.name
-            ) {
-                if (viewModel.hasFacilitySelected.collectAsState().value) {
-                    updateTableState(manageStockViewModel, viewModel)
-                    ManageStockTable(manageStockViewModel) {
-                        scope.launch { backdropState.conceal() }
+                } else if (viewModel.toolbarTitle.collectAsState().value.name
+                    == TransactionType.DISCARD.name
+                ) {
+                    if (viewModel.hasFacilitySelected.collectAsState().value) {
+                        updateTableState(manageStockViewModel, viewModel)
+                        ManageStockTable(manageStockViewModel) {
+                            scope.launch { backdropState.conceal() }
+                        }
                     }
                 }
             }
