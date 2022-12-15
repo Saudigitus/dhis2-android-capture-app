@@ -2,6 +2,8 @@ package org.dhis2.android.rtsm.ui.home.screens.components
 
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -59,6 +61,7 @@ import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.android.rtsm.ui.managestock.components.ManageStockTable
 import org.dhis2.android.rtsm.ui.scanner.ScannerActivity
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -86,7 +89,7 @@ fun MainContent(
     val search = viewModel.scanText.collectAsState().value
     val localDensity = LocalDensity.current
     var heightIs by remember { mutableStateOf(0.dp) }
-    val backLayerHeightData = if (backdropState.isRevealed) 0.dp else heightBackLayer
+    val backLayerHeightData = if (backdropState.isRevealed) 0.dp else heightBackLayer + 80.dp
 
     Column(
         modifier = Modifier
@@ -226,11 +229,12 @@ fun MainContent(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.height(
-                heightIs +
-                    manageStockViewModel.isEditingBottomValue.collectAsState().value -
-                    backLayerHeightData
-            )
+            modifier = Modifier
+                .height(
+                    heightIs +
+                        manageStockViewModel.isEditingBottomValue.collectAsState().value -
+                        backLayerHeightData
+                )
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
