@@ -50,6 +50,9 @@ fun Backdrop(
     var toolbarTitle by remember {
         mutableStateOf(TransactionType.DISTRIBUTION.name)
     }
+    var heightBackLayer by remember {
+        mutableStateOf(0.dp)
+    }
     val scope = rememberCoroutineScope()
 
     BackdropScaffold(
@@ -83,6 +86,7 @@ fun Backdrop(
                     viewModel.setDestinationSelected(it)
                 }
             )
+            heightBackLayer = height
             if (height > 160.dp) {
                 scope.launch { backdropState.reveal() }
             }
@@ -97,7 +101,8 @@ fun Backdrop(
                 manageStockViewModel,
                 hasFacilitySelected,
                 hasDestinationSelected,
-                barcodeLauncher
+                barcodeLauncher,
+                heightBackLayer
             )
         },
         scaffoldState = backdropState,

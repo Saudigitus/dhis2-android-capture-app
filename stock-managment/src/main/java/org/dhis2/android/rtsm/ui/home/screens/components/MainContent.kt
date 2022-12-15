@@ -48,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.journeyapps.barcodescanner.ScanOptions
@@ -69,7 +70,8 @@ fun MainContent(
     manageStockViewModel: ManageStockViewModel,
     hasFacilitySelected: Boolean,
     hasDestinationSelected: Boolean?,
-    barcodeLauncher: ActivityResultLauncher<ScanOptions>
+    barcodeLauncher: ActivityResultLauncher<ScanOptions>,
+    heightBackLayer: Dp
 ) {
     val scope = rememberCoroutineScope()
     val resource = painterResource(R.drawable.ic_arrow_up)
@@ -83,9 +85,8 @@ fun MainContent(
     val focusManager = LocalFocusManager.current
     val search = viewModel.scanText.collectAsState().value
     val localDensity = LocalDensity.current
-    var heightIs by remember {
-        mutableStateOf(0.dp)
-    }
+    var heightIs by remember { mutableStateOf(0.dp) }
+    val backLayerHeightData = if (backdropState.isRevealed) 0.dp else heightBackLayer
 
     Column(
         modifier = Modifier
@@ -225,7 +226,11 @@ fun MainContent(
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.height(heightIs + 244.dp)
+            modifier = Modifier.height(
+                heightIs +
+                    manageStockViewModel.isEditingBottomValue.collectAsState().value -
+                    backLayerHeightData
+            )
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
