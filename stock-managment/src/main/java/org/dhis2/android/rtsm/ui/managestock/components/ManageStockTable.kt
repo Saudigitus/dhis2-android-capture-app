@@ -33,7 +33,7 @@ fun ManageStockTable(
                         viewModel.onCellClick(cell)
                     },
                     onEdition = { isEditing ->
-                        editingCellValue(isEditing, concealBackdropState)
+                        editingCellValue(isEditing, concealBackdropState, viewModel)
                     },
                     onCellValueChange = viewModel::onCellValueChanged,
                     onSaveValue = viewModel::onSaveValueChange
@@ -47,10 +47,14 @@ fun ManageStockTable(
 
 fun editingCellValue(
     editing: Boolean,
-    onEditionStart: () -> Unit
+    onEditionStart: () -> Unit,
+    viewModel: ManageStockViewModel
 ) {
     // TODO Hide review button
     if (editing) {
+        viewModel.setEditingBottomValue(0.dp)
         onEditionStart.invoke()
+    } else {
+        viewModel.setEditingBottomValue(244.dp)
     }
 }

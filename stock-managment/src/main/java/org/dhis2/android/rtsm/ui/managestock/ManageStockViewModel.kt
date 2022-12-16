@@ -1,5 +1,7 @@
 package org.dhis2.android.rtsm.ui.managestock
 
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -79,6 +81,9 @@ class ManageStockViewModel @Inject constructor(
 
     private val _sizeTableData = MutableStateFlow(0)
     val sizeTableData = _sizeTableData.asStateFlow()
+
+    private val _isEditingBottomValue = MutableStateFlow(0.dp)
+    val isEditingBottomValue = _isEditingBottomValue.asStateFlow()
 
     private val _networkState = MutableLiveData<OperationState<LiveData<PagedList<StockItem>>>>()
     val operationState: LiveData<OperationState<LiveData<PagedList<StockItem>>>>
@@ -436,4 +441,8 @@ class ManageStockViewModel @Inject constructor(
     fun getData(): ReviewStockData = ReviewStockData(transaction.value!!, getPopulatedEntries())
 
     fun getItemCount(): Int = itemsCache.size
+
+    fun setEditingBottomValue(data: Dp) {
+        _isEditingBottomValue.value = data
+    }
 }
