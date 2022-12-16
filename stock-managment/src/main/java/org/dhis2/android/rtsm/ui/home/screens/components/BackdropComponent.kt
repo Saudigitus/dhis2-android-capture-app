@@ -7,6 +7,7 @@ import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.runtime.Composable
@@ -22,10 +23,14 @@ import androidx.fragment.app.FragmentManager
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
+import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialog
+import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialogUiModel
+import org.dhis2.commons.dialogs.bottomsheet.DialogButtonStyle
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterialApi::class)
@@ -58,8 +63,18 @@ fun Backdrop(
                 viewModel.fromFacility.collectAsState().value.asString(),
                 viewModel.deliveryTo.collectAsState().value?.asString(),
                 themeColor,
-                navigationAction = {
-                    activity.finish()
+                launchBottomSheet = {
+                    if (manageStockViewModel.canReview()) {
+                        launchBottomSheet(
+                            activity.getString(R.string.not_saved),
+                            activity.getString(R.string.transaction_not_confirmed),
+                            supportFragmentManager
+                        ) {
+                            activity.finish()
+                        }
+                    } else {
+                        activity.finish()
+                    }
                 },
                 backdropState,
                 scaffoldState,
@@ -119,4 +134,25 @@ fun Backdrop(
             }
         }
     )
+}
+
+private fun launchBottomSheet(
+    title: String,
+    subtitle: String,
+    supportFragmentManager: FragmentManager,
+    navigationAction: () -> Unit
+) {
+    BottomSheetDialog(
+        bottomSheetDialogUiModel = BottomSheetDialogUiModel(
+            title = title,
+            subtitle = subtitle,
+            iconResource = R.drawable.ic_outline_error_36,
+            mainButton = DialogButtonStyle.MainButton(org.dhis2.commons.R.string.keep_editing),
+            secondaryButton = DialogButtonStyle.DiscardButton()
+        ),
+        onMainButtonClicked = { supportFragmentManager.popBackStack() },
+        onSecondaryButtonClicked = { navigationAction.invoke() }
+    ).apply {
+        this.show(supportFragmentManager.beginTransaction(), "DIALOG")
+    }
 }
