@@ -3,6 +3,7 @@ package org.dhis2.android.rtsm.ui.home.screens.components
 import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.activity.result.ActivityResultLauncher
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
@@ -28,7 +29,7 @@ import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 
 @SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun Backdrop(
     activity: Activity,
@@ -48,6 +49,9 @@ fun Backdrop(
     var hasDestinationSelected by remember { mutableStateOf<Boolean?>(null) }
     var toolbarTitle by remember {
         mutableStateOf(TransactionType.DISTRIBUTION.name)
+    }
+    var heightBackLayer by remember {
+        mutableStateOf(0.dp)
     }
     val scope = rememberCoroutineScope()
 
@@ -82,6 +86,7 @@ fun Backdrop(
                     viewModel.setDestinationSelected(it)
                 }
             )
+            heightBackLayer = height
             if (height > 160.dp) {
                 scope.launch { backdropState.reveal() }
             }
@@ -96,7 +101,8 @@ fun Backdrop(
                 manageStockViewModel,
                 hasFacilitySelected,
                 hasDestinationSelected,
-                barcodeLauncher
+                barcodeLauncher,
+                heightBackLayer
             )
         },
         scaffoldState = backdropState,
