@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -70,9 +69,10 @@ fun HomeScreen(
             ) {
                 CompositionLocalProvider(
                     LocalRippleTheme provides
-                        if (manageStockViewModel.canReview.collectAsState().value
-                            && manageStockViewModel.isEditing.collectAsState().value == ButtonState
-                                .ENABLED) {
+                        if (manageStockViewModel.canReview.collectAsState().value &&
+                            manageStockViewModel.isEditing.collectAsState().value == ButtonState
+                                .ENABLED
+                        ) {
                             LocalRippleTheme.current
                         } else { NoRippleTheme }
                 ) {
@@ -91,9 +91,10 @@ fun HomeScreen(
                             Icon(
                                 painter = painterResource(R.drawable.proceed_icon),
                                 contentDescription = stringResource(R.string.review),
-                                tint = if (manageStockViewModel.canReview.collectAsState().value
-                                    && manageStockViewModel.isEditing
-                                        .collectAsState().value == ButtonState.ENABLED) {
+                                tint = if (manageStockViewModel.canReview.collectAsState().value &&
+                                    manageStockViewModel.isEditing
+                                        .collectAsState().value == ButtonState.ENABLED
+                                ) {
                                     themeColor
                                 } else { colorResource(id = R.color.proceed_text_color) }
                             )
@@ -101,9 +102,10 @@ fun HomeScreen(
                         text = {
                             Text(
                                 stringResource(R.string.review),
-                                color = if (manageStockViewModel.canReview.collectAsState().value
-                                    && manageStockViewModel.isEditing
-                                        .collectAsState().value == ButtonState.ENABLED) {
+                                color = if (manageStockViewModel.canReview.collectAsState().value &&
+                                    manageStockViewModel.isEditing
+                                        .collectAsState().value == ButtonState.ENABLED
+                                ) {
                                     themeColor
                                 } else { colorResource(id = R.color.proceed_text_color) }
                             )
