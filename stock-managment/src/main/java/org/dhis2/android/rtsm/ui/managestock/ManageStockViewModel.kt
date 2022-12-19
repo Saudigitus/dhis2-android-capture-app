@@ -288,9 +288,11 @@ class ManageStockViewModel @Inject constructor(
     ) {
         if (isEditing) {
             _isEditing.value = ButtonState.DISABLED
+            _isEditingBottomValue.value = 0.dp
             onEditionStart.invoke()
         } else {
             _isEditing.value = ButtonState.ENABLED
+            _isEditingBottomValue.value = 244.dp
         }
     }
 
@@ -467,7 +469,4 @@ class ManageStockViewModel @Inject constructor(
 
     fun getItemCount(): Int = itemsCache.size
 
-    fun setEditingBottomValue(data: Dp) {
-        _isEditingBottomValue.value = data
-    }
 }

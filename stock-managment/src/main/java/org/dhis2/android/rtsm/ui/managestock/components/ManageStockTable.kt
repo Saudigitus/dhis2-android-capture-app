@@ -33,7 +33,7 @@ fun ManageStockTable(
                         viewModel.onCellClick(cell)
                     },
                     onEdition = { isEditing ->
-                        editingCellValue(isEditing, concealBackdropState)
+                        viewModel.editingCellValue(isEditing, concealBackdropState)
                     },
                     onCellValueChange = viewModel::onCellValueChanged,
                     onSaveValue = viewModel::onSaveValueChange
@@ -42,19 +42,5 @@ fun ManageStockTable(
         } else {
             Text(text = stringResource(id = R.string.no_data))
         }
-    }
-}
-
-fun editingCellValue(
-    editing: Boolean,
-    onEditionStart: () -> Unit,
-    viewModel: ManageStockViewModel
-) {
-    // TODO Hide review button
-    if (editing) {
-        viewModel.setEditingBottomValue(0.dp)
-        onEditionStart.invoke()
-    } else {
-        viewModel.setEditingBottomValue(244.dp)
     }
 }
