@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
@@ -43,7 +44,7 @@ import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
     activity: Activity,
@@ -69,7 +70,9 @@ fun HomeScreen(
             ) {
                 CompositionLocalProvider(
                     LocalRippleTheme provides
-                        if (manageStockViewModel.canReview.collectAsState().value) {
+                        if (manageStockViewModel.canReview.collectAsState().value
+                            && manageStockViewModel.isEditing.collectAsState().value == ButtonState
+                                .ENABLED) {
                             LocalRippleTheme.current
                         } else { NoRippleTheme }
                 ) {
@@ -88,7 +91,9 @@ fun HomeScreen(
                             Icon(
                                 painter = painterResource(R.drawable.proceed_icon),
                                 contentDescription = stringResource(R.string.review),
-                                tint = if (manageStockViewModel.canReview.collectAsState().value) {
+                                tint = if (manageStockViewModel.canReview.collectAsState().value
+                                    && manageStockViewModel.isEditing
+                                        .collectAsState().value == ButtonState.ENABLED) {
                                     themeColor
                                 } else { colorResource(id = R.color.proceed_text_color) }
                             )
@@ -96,16 +101,24 @@ fun HomeScreen(
                         text = {
                             Text(
                                 stringResource(R.string.review),
-                                color = if (manageStockViewModel.canReview.collectAsState().value) {
+                                color = if (manageStockViewModel.canReview.collectAsState().value
+                                    && manageStockViewModel.isEditing
+                                        .collectAsState().value == ButtonState.ENABLED) {
                                     themeColor
                                 } else { colorResource(id = R.color.proceed_text_color) }
                             )
                         },
                         onClick = {
-                            proceedAction(scope, scaffoldState)
+                            if (manageStockViewModel.canReview.asLiveData().value == true &&
+                                manageStockViewModel.isEditing
+                                    .asLiveData().value == ButtonState.ENABLED
+                            ) {
+                                proceedAction(scope, scaffoldState)
+                            }
                         },
                         backgroundColor = if (manageStockViewModel.canReview.collectAsState()
-                            .value
+                            .value && manageStockViewModel.isEditing
+                                .collectAsState().value == ButtonState.ENABLED
                         ) {
                             Color.White
                         } else { colorResource(id = R.color.proceed_color) },
@@ -138,25 +151,26 @@ fun HomeScreen(
     }
 }
 @Composable
-fun checkVisibility(viewModel: HomeViewModel, manageStockViewModel: ManageStockViewModel): Boolean {
+fun checkVisibility(
+    viewModel: HomeViewModel,
+    manageStockViewModel: ManageStockViewModel
+): Boolean {
     return if ((
         viewModel.toolbarTitle.collectAsState().value.name ==
             TransactionType.DISCARD.name
         )
     ) {
         viewModel.hasFacilitySelected.collectAsState().value &&
-            manageStockViewModel.sizeTableData.collectAsState().value > 0 &&
-            manageStockViewModel.canReview.collectAsState().value &&
-            manageStockViewModel.isEditing.collectAsState().value == ButtonState.ENABLED
+            manageStockViewModel.sizeTableData.collectAsState().value > 0
     } else if ((
         viewModel.toolbarTitle.collectAsState().value.name ==
             TransactionType.CORRECTION.name
         )
     ) {
         viewModel.hasFacilitySelected.collectAsState().value &&
-            manageStockViewModel.sizeTableData.collectAsState().value > 0 &&
-            manageStockViewModel.canReview.collectAsState().value &&
-            manageStockViewModel.isEditing.collectAsState().value == ButtonState.ENABLED
+            manageStockViewModel.sizeTableData.collectAsState().value > 0
+    } else if (manageStockViewModel.isEditing.collectAsState().value != ButtonState.ENABLED) {
+        false
     } else (
         (
             viewModel.toolbarTitle.collectAsState().value.name ==
@@ -164,9 +178,7 @@ fun checkVisibility(viewModel: HomeViewModel, manageStockViewModel: ManageStockV
             ) &&
             viewModel.hasFacilitySelected.collectAsState().value &&
             viewModel.hasDestinationSelected.collectAsState().value &&
-            manageStockViewModel.sizeTableData.collectAsState().value > 0 &&
-            manageStockViewModel.canReview.collectAsState().value &&
-            manageStockViewModel.isEditing.collectAsState().value == ButtonState.ENABLED
+            manageStockViewModel.sizeTableData.collectAsState().value > 0
         )
 }
 private object NoRippleTheme : RippleTheme {

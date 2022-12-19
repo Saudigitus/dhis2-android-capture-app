@@ -100,7 +100,7 @@ class ManageStockViewModel @Inject constructor(
     private val _canReview = MutableStateFlow(false)
     val canReview: StateFlow<Boolean> = _canReview
 
-    private val _isEditing = MutableStateFlow(ButtonState.HIDDEN)
+    private val _isEditing = MutableStateFlow(ButtonState.DISABLED)
     val isEditing: StateFlow<ButtonState> = _isEditing
 
     fun setup(transaction: Transaction) {
@@ -282,7 +282,7 @@ class ManageStockViewModel @Inject constructor(
         onEditionStart: () -> Unit
     ) {
         if (isEditing) {
-            _isEditing.value = ButtonState.HIDDEN
+            _isEditing.value = ButtonState.DISABLED
             onEditionStart.invoke()
         } else {
             _isEditing.value = ButtonState.ENABLED
@@ -313,6 +313,7 @@ class ManageStockViewModel @Inject constructor(
     fun onCellClick(cell: TableCell): TextInputModel {
         val stockItem = _stockItems.value?.find { it.id == cell.id }
         val itemName = stockItem?.name ?: ""
+        _isEditing.value = ButtonState.HIDDEN
         return TextInputModel(
             id = cell.id ?: "",
             mainLabel = itemName,
