@@ -1,6 +1,5 @@
 package org.dhis2.android.rtsm.ui.managestock
 
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -468,5 +467,4 @@ class ManageStockViewModel @Inject constructor(
     fun getData(): ReviewStockData = ReviewStockData(transaction.value!!, getPopulatedEntries())
 
     fun getItemCount(): Int = itemsCache.size
-
 }
