@@ -206,7 +206,7 @@ class ManageStockViewModel @Inject constructor(
 
         _sizeTableData.value = stockItems!!.size
 
-        stockItems?.forEachIndexed { index, item ->
+        stockItems.forEachIndexed { index, item ->
             val tableRowModel = TableRowModel(
                 rowHeader = RowHeader(
                     id = item.id,
