@@ -70,8 +70,7 @@ fun MainContent(
     manageStockViewModel: ManageStockViewModel,
     hasFacilitySelected: Boolean,
     hasDestinationSelected: Boolean?,
-    barcodeLauncher: ActivityResultLauncher<ScanOptions>,
-    heightBackLayer: Dp
+    barcodeLauncher: ActivityResultLauncher<ScanOptions>
 ) {
     val scope = rememberCoroutineScope()
     val resource = painterResource(R.drawable.ic_arrow_up)
@@ -85,19 +84,9 @@ fun MainContent(
     val focusManager = LocalFocusManager.current
     val search = viewModel.scanText.collectAsState().value
     val localDensity = LocalDensity.current
-    var heightIs by remember { mutableStateOf(0.dp) }
-    val backLayerHeightData = if (backdropState.isRevealed) 0.dp else heightBackLayer + 80.dp
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .onSizeChanged { coordinates ->
-                heightIs = with(localDensity) { coordinates.height.toDp() }
-            }
-            .onGloballyPositioned { coordinates ->
-                heightIs = with(localDensity) { coordinates.size.height.toDp() }
-            }
-            .verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -225,13 +214,7 @@ fun MainContent(
         }
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .height(
-                    heightIs +
-                        manageStockViewModel.isEditingBottomValue.collectAsState().value -
-                        backLayerHeightData
-                )
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
