@@ -39,9 +39,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
 import org.dhis2.android.rtsm.R
-import org.dhis2.android.rtsm.data.TransactionType
+import org.dhis2.android.rtsm.data.TransactionType.*
 import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
+import org.dhis2.android.rtsm.ui.home.model.ButtonUiState
+import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState
 import org.dhis2.android.rtsm.ui.home.model.SettingsUiState
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
@@ -51,7 +53,6 @@ import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 fun HomeScreen(
     activity: Activity,
     viewModel: HomeViewModel = viewModel(),
-    settingsUiState: SettingsUiState,
     manageStockViewModel: ManageStockViewModel = viewModel(),
     themeColor: Color,
     supportFragmentManager: FragmentManager,
@@ -64,11 +65,16 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     var enabled by remember { mutableStateOf(false) }
 
+    val settingsUiState by viewModel.settingsUiState.collectAsState()
+    val hasData by manageStockViewModel.hasData.collectAsState()
+
+    val buttonUiState = checkButtonState(settingsUiState, hasData)
+
     Scaffold(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = checkVisibility(viewModel = viewModel, manageStockViewModel, settingsUiState),
+                visible = buttonUiState.isVisible(),
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
@@ -90,15 +96,15 @@ fun HomeScreen(
                             ),
                         icon = {
                             Icon(
-                                painter = painterResource(R.drawable.proceed_icon),
-                                contentDescription = stringResource(R.string.review),
+                                painter = painterResource(buttonUiState.icon),
+                                contentDescription = stringResource(buttonUiState.text),
                                 tint = if (enabled) themeColor
                                 else colorResource(id = R.color.proceed_text_color)
                             )
                         },
                         text = {
                             Text(
-                                stringResource(R.string.review),
+                                stringResource(buttonUiState.text),
                                 color = if (enabled) themeColor
                                 else colorResource(id = R.color.proceed_text_color)
                             )
@@ -142,31 +148,25 @@ fun HomeScreen(
     }
 }
 
-@Composable
-fun checkVisibility(viewModel: HomeViewModel, manageStockViewModel: ManageStockViewModel, settingsUiState: SettingsUiState): Boolean {
-    return if ((
-            viewModel.toolbarTitle.collectAsState().value.name ==
-                TransactionType.DISCARD.name
-            )
-    ) {
-        return settingsUiState.hasFacilitySelected() &&
-            manageStockViewModel.sizeTableData.collectAsState().value > 0
-    } else if ((
-            viewModel.toolbarTitle.collectAsState().value.name ==
-                TransactionType.CORRECTION.name
-            )
-    ) {
-        return settingsUiState.hasFacilitySelected() &&
-            manageStockViewModel.sizeTableData.collectAsState().value > 0
-    } else (
-        (
-            viewModel.toolbarTitle.collectAsState().value.name ==
-                TransactionType.DISTRIBUTION.name
-            ) &&
-            settingsUiState.hasFacilitySelected() &&
+fun checkButtonState(settingsUiState: SettingsUiState, hasData: Boolean): ButtonUiState {
+    val visibilityState = if (settingsUiState.transactionType != DISTRIBUTION) {
+        if (settingsUiState.hasFacilitySelected() && hasData) {
+            ButtonVisibilityState.DISABLED
+        } else {
+            ButtonVisibilityState.HIDDEN
+        }
+    } else {
+        if (settingsUiState.hasFacilitySelected() &&
             settingsUiState.hasDestinationSelected() &&
-            manageStockViewModel.sizeTableData.collectAsState().value > 0
-        )
+            hasData
+        ) {
+            ButtonVisibilityState.DISABLED
+        } else {
+            ButtonVisibilityState.HIDDEN
+        }
+    }
+
+    return ButtonUiState(state = visibilityState)
 }
 
 private object NoRippleTheme : RippleTheme {

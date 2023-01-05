@@ -75,7 +75,6 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
                     HomeScreen(
                         this,
                         viewModel,
-                        settingsUiState,
                         manageStockViewModel,
                         Color(colorResource(themeColor).toArgb()),
                         supportFragmentManager,

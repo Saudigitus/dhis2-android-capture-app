@@ -22,7 +22,7 @@ fun ManageStockTable(
     val screenState by viewModel.screenState.observeAsState()
 
     MdcTheme {
-        if (viewModel.sizeTableData.collectAsState().value > 0) {
+        if (viewModel.hasData.collectAsState().value) {
             TableTheme(
                 tableColors = null,
                 tableDimensions = TableDimensions(defaultRowHeaderWidth = 200.dp)

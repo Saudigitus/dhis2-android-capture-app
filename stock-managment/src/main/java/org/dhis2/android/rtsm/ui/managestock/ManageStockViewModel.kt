@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.commons.Constants.QUANTITY_ENTRY_DEBOUNCE
@@ -77,8 +76,8 @@ class ManageStockViewModel @Inject constructor(
     private val entryRelay = PublishRelay.create<RowAction>()
     private val itemsCache = linkedMapOf<String, StockEntry>()
 
-    private val _sizeTableData = MutableStateFlow(0)
-    val sizeTableData = _sizeTableData.asStateFlow()
+    private val _hasData = MutableStateFlow(false)
+    val hasData = _hasData
 
     private val _networkState = MutableLiveData<OperationState<LiveData<PagedList<StockItem>>>>()
     val operationState: LiveData<OperationState<LiveData<PagedList<StockItem>>>>
@@ -199,7 +198,7 @@ class ManageStockViewModel @Inject constructor(
     ) {
         val tableRowModels = mutableListOf<TableRowModel>()
 
-        _sizeTableData.value = stockItems!!.size
+        _hasData.value = stockItems!!.size > 0
 
         stockItems?.forEachIndexed { index, item ->
             val tableRowModel = TableRowModel(
