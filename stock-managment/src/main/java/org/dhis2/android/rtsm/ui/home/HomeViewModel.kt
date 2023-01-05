@@ -154,7 +154,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setDestination(destination: Option?) {
-        if (!settingsUiState.value.isDistribution()) {
+        if (settingsUiState.value.transactionType != TransactionType.DISTRIBUTION) {
             throw UnsupportedOperationException(
                 "Cannot set 'distributed to' for non-distribution transactions"
             )
@@ -223,7 +223,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun deliveryToLabel(to: String) {
-        if (settingsUiState.value.isDistribution()) {
+        if (settingsUiState.value.transactionType == TransactionType.DISTRIBUTION) {
             _deliveryTo.value = UIText.StringRes(R.string.subtitle, to)
         }
     }

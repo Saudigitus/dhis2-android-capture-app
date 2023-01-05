@@ -23,10 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -42,9 +39,7 @@ import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.TransactionType.*
 import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
-import org.dhis2.android.rtsm.ui.home.model.ButtonUiState
-import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState
-import org.dhis2.android.rtsm.ui.home.model.SettingsUiState
+import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState.*
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 
@@ -63,25 +58,23 @@ fun HomeScreen(
 ) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-    var enabled by remember { mutableStateOf(false) }
-
-    val settingsUiState by viewModel.settingsUiState.collectAsState()
-    val hasData by manageStockViewModel.hasData.collectAsState()
-
-    val buttonUiState = checkButtonState(settingsUiState, hasData)
+    val buttonUiState by manageStockViewModel.reviewButtonUiState.collectAsState()
 
     Scaffold(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = buttonUiState.isVisible(),
+                visible = buttonUiState.state != HIDDEN,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
                 CompositionLocalProvider(
                     LocalRippleTheme provides
-                        if (enabled) LocalRippleTheme.current
-                        else NoRippleTheme
+                        if (buttonUiState.state == ENABLED) {
+                            LocalRippleTheme.current
+                        } else {
+                            NoRippleTheme
+                        }
                 ) {
                     ExtendedFloatingActionButton(
                         modifier = Modifier
@@ -98,26 +91,23 @@ fun HomeScreen(
                             Icon(
                                 painter = painterResource(buttonUiState.icon),
                                 contentDescription = stringResource(buttonUiState.text),
-                                tint = if (enabled) themeColor
+                                tint = if (buttonUiState.state == ENABLED) themeColor
                                 else colorResource(id = R.color.proceed_text_color)
                             )
                         },
                         text = {
                             Text(
                                 stringResource(buttonUiState.text),
-                                color = if (enabled) themeColor
+                                color = if (buttonUiState.state == ENABLED) themeColor
                                 else colorResource(id = R.color.proceed_text_color)
                             )
                         },
                         onClick = {
-                            if (enabled) {
-                                enabled = !enabled
+                            if (buttonUiState.state == ENABLED) {
                                 proceedAction(scope, scaffoldState)
-                            } else {
-                                enabled = !enabled
                             }
                         },
-                        backgroundColor = if (enabled) Color.White
+                        backgroundColor = if (buttonUiState.state == ENABLED) Color.White
                         else colorResource(id = R.color.proceed_color),
                         shape = RoundedCornerShape(16.dp)
                     )
@@ -146,27 +136,6 @@ fun HomeScreen(
             syncAction(coroutineScope, scaffold)
         }
     }
-}
-
-fun checkButtonState(settingsUiState: SettingsUiState, hasData: Boolean): ButtonUiState {
-    val visibilityState = if (settingsUiState.transactionType != DISTRIBUTION) {
-        if (settingsUiState.hasFacilitySelected() && hasData) {
-            ButtonVisibilityState.DISABLED
-        } else {
-            ButtonVisibilityState.HIDDEN
-        }
-    } else {
-        if (settingsUiState.hasFacilitySelected() &&
-            settingsUiState.hasDestinationSelected() &&
-            hasData
-        ) {
-            ButtonVisibilityState.DISABLED
-        } else {
-            ButtonVisibilityState.HIDDEN
-        }
-    }
-
-    return ButtonUiState(state = visibilityState)
 }
 
 private object NoRippleTheme : RippleTheme {

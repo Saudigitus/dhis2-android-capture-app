@@ -9,12 +9,9 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.commons.Constants.QUANTITY_ENTRY_DEBOUNCE
@@ -34,6 +31,8 @@ import org.dhis2.android.rtsm.services.rules.RuleValidationHelper
 import org.dhis2.android.rtsm.services.scheduler.BaseSchedulerProvider
 import org.dhis2.android.rtsm.ui.base.ItemWatcher
 import org.dhis2.android.rtsm.ui.base.SpeechRecognitionAwareViewModel
+import org.dhis2.android.rtsm.ui.home.model.ButtonUiState
+import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState
 import org.dhis2.android.rtsm.utils.Utils.Companion.isValidStockOnHand
 import org.dhis2.commons.resources.ResourceManager
 import org.dhis2.composetable.TableScreenState
@@ -49,6 +48,10 @@ import org.dhis2.composetable.model.TextInputModel
 import org.hisp.dhis.rules.models.RuleActionAssign
 import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -94,12 +97,16 @@ class ManageStockViewModel @Inject constructor(
     private val _stockItems: MutableLiveData<PagedList<StockItem>> =
         MutableLiveData<PagedList<StockItem>>()
 
+    private val _reviewButtonUiState = MutableStateFlow(ButtonUiState())
+    val reviewButtonUiState: StateFlow<ButtonUiState> = _reviewButtonUiState
+
     fun setup(transaction: Transaction) {
         _transaction.value = transaction
 
         configureRelays()
         loadStockItems()
         refreshData()
+        updateReviewButton()
     }
 
     fun refreshData() {
@@ -356,8 +363,8 @@ class ManageStockViewModel @Inject constructor(
     ): List<TableRowModel> {
         return tableRowModels.map { tableRowModel ->
             if (tableRowModel.values.values.find { tableCell ->
-                tableCell.id == cell.id
-            } != null
+                    tableCell.id == cell.id
+                } != null
             ) {
                 tableRowModel.copy(
                     values = updateTableCells(tableRowModel.values, cell)
@@ -435,4 +442,26 @@ class ManageStockViewModel @Inject constructor(
     fun getData(): ReviewStockData = ReviewStockData(transaction.value!!, getPopulatedEntries())
 
     fun getItemCount(): Int = itemsCache.size
+    fun onEditingCell(isEditing: Boolean, onEditionStart: () -> Unit) {
+        updateReviewButton(isEditing)
+        if (isEditing) {
+            onEditionStart.invoke()
+        }
+    }
+
+    private fun updateReviewButton(isEditing: Boolean = false) {
+        val buttonState: ButtonVisibilityState = if(isEditing || !hasData.value) {
+            ButtonVisibilityState.HIDDEN
+        } else {
+            if (canReview())
+                ButtonVisibilityState.ENABLED
+            else {
+                ButtonVisibilityState.DISABLED
+            }
+        }
+
+        _reviewButtonUiState.update { currentUiState ->
+            currentUiState.copy(state = buttonState)
+        }
+    }
 }
