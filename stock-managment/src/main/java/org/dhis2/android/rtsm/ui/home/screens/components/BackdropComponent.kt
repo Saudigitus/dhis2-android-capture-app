@@ -42,7 +42,7 @@ fun Backdrop(
     val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
     var isFrontLayerDisabled by remember { mutableStateOf<Boolean?>(null) }
     val scope = rememberCoroutineScope()
-    val settingsUiState = viewModel.settingsUiState.collectAsState().value
+    val settingsUiState by viewModel.settingsUiState.collectAsState()
 
     BackdropScaffold(
         appBar = {

@@ -106,7 +106,6 @@ class ManageStockViewModel @Inject constructor(
         configureRelays()
         loadStockItems()
         refreshData()
-//        updateReviewButton()
     }
 
     fun refreshData() {
@@ -461,7 +460,7 @@ class ManageStockViewModel @Inject constructor(
         }
 
         _reviewButtonUiState.update { currentUiState ->
-            currentUiState.copy(state = buttonState)
+            currentUiState.copy(visibility = buttonState)
         }
     }
 }

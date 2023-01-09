@@ -61,13 +61,13 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = buttonUiState.state != ButtonVisibilityState.HIDDEN,
+                visible = buttonUiState.visibility != ButtonVisibilityState.HIDDEN,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
                 CompositionLocalProvider(
                     LocalRippleTheme provides
-                        if (buttonUiState.state == ButtonVisibilityState.ENABLED) {
+                        if (buttonUiState.visibility == ButtonVisibilityState.ENABLED) {
                             LocalRippleTheme.current
                         } else {
                             NoRippleTheme
@@ -88,7 +88,7 @@ fun HomeScreen(
                             Icon(
                                 painter = painterResource(buttonUiState.icon),
                                 contentDescription = stringResource(buttonUiState.text),
-                                tint = if (buttonUiState.state == ButtonVisibilityState.ENABLED) {
+                                tint = if (buttonUiState.visibility == ButtonVisibilityState.ENABLED) {
                                     themeColor
                                 } else {
                                     colorResource(id = R.color.proceed_text_color)
@@ -98,7 +98,7 @@ fun HomeScreen(
                         text = {
                             Text(
                                 stringResource(buttonUiState.text),
-                                color = if (buttonUiState.state == ButtonVisibilityState.ENABLED) {
+                                color = if (buttonUiState.visibility == ButtonVisibilityState.ENABLED) {
                                     themeColor
                                 } else {
                                     colorResource(id = R.color.proceed_text_color)
@@ -106,12 +106,12 @@ fun HomeScreen(
                             )
                         },
                         onClick = {
-                            if (buttonUiState.state == ButtonVisibilityState.ENABLED) {
+                            if (buttonUiState.visibility == ButtonVisibilityState.ENABLED) {
                                 proceedAction(scope, scaffoldState)
                             }
                         },
                         backgroundColor = if (
-                            buttonUiState.state == ButtonVisibilityState.ENABLED
+                            buttonUiState.visibility == ButtonVisibilityState.ENABLED
                         ) {
                             Color.White
                         } else {
