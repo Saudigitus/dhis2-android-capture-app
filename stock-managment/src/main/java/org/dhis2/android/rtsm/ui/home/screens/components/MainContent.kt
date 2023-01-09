@@ -209,8 +209,8 @@ fun MainContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = 0.dp)
         ) {
-            if (viewModel.toolbarTitle.collectAsState().value.name
-                == TransactionType.DISTRIBUTION.name
+            if (viewModel.settingsUiState.collectAsState().value.transactionType
+                == TransactionType.DISTRIBUTION
             ) {
                 if (hasFacilitySelected &&
                     hasDestinationSelected == true
@@ -220,8 +220,8 @@ fun MainContent(
                         scope.launch { backdropState.conceal() }
                     }
                 }
-            } else if (viewModel.toolbarTitle.collectAsState().value.name
-                == TransactionType.CORRECTION.name
+            } else if (viewModel.settingsUiState.collectAsState().value.transactionType
+                == TransactionType.CORRECTION
             ) {
                 if (hasFacilitySelected) {
                     updateTableState(manageStockViewModel, viewModel)
@@ -229,8 +229,8 @@ fun MainContent(
                         scope.launch { backdropState.conceal() }
                     }
                 }
-            } else if (viewModel.toolbarTitle.collectAsState().value.name
-                == TransactionType.DISCARD.name
+            } else if (viewModel.settingsUiState.collectAsState().value.transactionType
+                == TransactionType.DISCARD
             ) {
                 if (hasFacilitySelected) {
                     updateTableState(manageStockViewModel, viewModel)

@@ -43,7 +43,6 @@ fun filterList(
     val destinations = viewModel.destinationsList.collectAsState().value
     val showDestination =
         viewModel.settingsUiState.collectAsState().value.transactionType == DISTRIBUTION
-    val toolbarTitle = viewModel.toolbarTitle.collectAsState().value.name
 
     // get local density from composable
     val localDensity = LocalDensity.current

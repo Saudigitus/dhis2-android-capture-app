@@ -68,8 +68,6 @@ class HomeViewModel @Inject constructor(
         get() = _destinations
 
     // Toolbar section variables
-    private val _toolbarTitle = MutableStateFlow(TransactionType.DISTRIBUTION)
-    val toolbarTitle: StateFlow<TransactionType> get() = _toolbarTitle
 
     private val _fromFacility = MutableStateFlow(UIText.StringRes(R.string.from_facility))
     val fromFacility: StateFlow<UIText> get() = _fromFacility
@@ -202,10 +200,6 @@ class HomeViewModel @Inject constructor(
         _transactionDate.value = Instant.ofEpochMilli(epoch)
             .atZone(ZoneId.systemDefault())
             .toLocalDateTime()
-    }
-
-    fun setToolbarTitle(transactionType: TransactionType) {
-        _toolbarTitle.value = transactionType
     }
 
     fun fromFacilitiesLabel(from: String) {

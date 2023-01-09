@@ -106,7 +106,7 @@ class ManageStockViewModel @Inject constructor(
         configureRelays()
         loadStockItems()
         refreshData()
-        updateReviewButton()
+//        updateReviewButton()
     }
 
     fun refreshData() {

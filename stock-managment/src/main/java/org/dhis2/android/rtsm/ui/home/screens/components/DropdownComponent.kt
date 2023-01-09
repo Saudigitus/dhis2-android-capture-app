@@ -155,7 +155,6 @@ fun DropdownComponent(
                     DropdownMenuItem(
                         onClick = {
                             viewModel.selectTransaction(item.transactionType)
-                            viewModel.setToolbarTitle(item.transactionType)
                             selectedIndex = index
 
                             itemIcon = item.icon

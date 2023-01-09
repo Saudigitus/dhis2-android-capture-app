@@ -54,7 +54,7 @@ fun Backdrop(
     BackdropScaffold(
         appBar = {
             Toolbar(
-                viewModel.toolbarTitle.collectAsState().value.name,
+                viewModel.settingsUiState.collectAsState().value.transactionType.name,
                 viewModel.fromFacility.collectAsState().value.asString(),
                 viewModel.deliveryTo.collectAsState().value?.asString(),
                 themeColor,
@@ -67,7 +67,7 @@ fun Backdrop(
                 hasFacilitySelected,
                 hasDestinationSelected
             )
-            toolbarTitle = viewModel.toolbarTitle.collectAsState().value.name
+            toolbarTitle = viewModel.settingsUiState.collectAsState().value.transactionType.name
         },
         backLayerBackgroundColor = themeColor,
         backLayerContent = {
