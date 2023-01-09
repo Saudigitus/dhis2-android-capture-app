@@ -88,7 +88,9 @@ fun HomeScreen(
                             Icon(
                                 painter = painterResource(buttonUiState.icon),
                                 contentDescription = stringResource(buttonUiState.text),
-                                tint = if (buttonUiState.visibility == ButtonVisibilityState.ENABLED) {
+                                tint = if (
+                                    buttonUiState.visibility == ButtonVisibilityState.ENABLED
+                                ) {
                                     themeColor
                                 } else {
                                     colorResource(id = R.color.proceed_text_color)
@@ -98,7 +100,9 @@ fun HomeScreen(
                         text = {
                             Text(
                                 stringResource(buttonUiState.text),
-                                color = if (buttonUiState.visibility == ButtonVisibilityState.ENABLED) {
+                                color = if (
+                                    buttonUiState.visibility == ButtonVisibilityState.ENABLED
+                                ) {
                                     themeColor
                                 } else {
                                     colorResource(id = R.color.proceed_text_color)
