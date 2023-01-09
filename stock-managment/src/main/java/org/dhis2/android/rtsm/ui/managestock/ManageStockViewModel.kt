@@ -9,6 +9,10 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -48,10 +52,6 @@ import org.dhis2.composetable.model.TextInputModel
 import org.hisp.dhis.rules.models.RuleActionAssign
 import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -363,8 +363,8 @@ class ManageStockViewModel @Inject constructor(
     ): List<TableRowModel> {
         return tableRowModels.map { tableRowModel ->
             if (tableRowModel.values.values.find { tableCell ->
-                    tableCell.id == cell.id
-                } != null
+                tableCell.id == cell.id
+            } != null
             ) {
                 tableRowModel.copy(
                     values = updateTableCells(tableRowModel.values, cell)
@@ -450,12 +450,12 @@ class ManageStockViewModel @Inject constructor(
     }
 
     private fun updateReviewButton(isEditing: Boolean = false) {
-        val buttonState: ButtonVisibilityState = if(isEditing || !hasData.value) {
+        val buttonState: ButtonVisibilityState = if (isEditing || !hasData.value) {
             ButtonVisibilityState.HIDDEN
         } else {
-            if (canReview())
+            if (canReview()) {
                 ButtonVisibilityState.ENABLED
-            else {
+            } else {
                 ButtonVisibilityState.DISABLED
             }
         }

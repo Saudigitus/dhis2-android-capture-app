@@ -48,7 +48,6 @@ import androidx.compose.ui.zIndex
 import androidx.fragment.app.FragmentManager
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.models.TransactionItem
-import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.utils.Utils.Companion.capitalizeText
 import org.dhis2.commons.orgunitdialog.CommonOrgUnitDialog
@@ -197,9 +196,7 @@ fun DropdownComponentFacilities(
     viewModel: HomeViewModel,
     themeColor: Color = colorResource(R.color.colorPrimary),
     supportFragmentManager: FragmentManager,
-    homeContext: HomeActivity,
-    data: List<OrganisationUnit>,
-    isFacilitySelected: (value: String) -> Unit = { }
+    data: List<OrganisationUnit>
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -222,10 +219,8 @@ fun DropdownComponentFacilities(
 
     val interactionSource = remember { MutableInteractionSource() }
     if (interactionSource.collectIsPressedAsState().value) {
-        openOrgUnitTreeSelector(supportFragmentManager, homeContext, data, viewModel)
+        openOrgUnitTreeSelector(supportFragmentManager, data, viewModel)
     }
-
-    isFacilitySelected(viewModel.orgUnitName.collectAsState().value)
 
     Column(Modifier.padding(horizontal = 16.dp)) {
         OutlinedTextField(
@@ -261,7 +256,6 @@ fun DropdownComponentFacilities(
                     onClick = {
                         openOrgUnitTreeSelector(
                             supportFragmentManager,
-                            homeContext,
                             data,
                             viewModel
                         )
@@ -462,7 +456,6 @@ fun DropdownComponentDistributedTo(
 
 fun openOrgUnitTreeSelector(
     supportFragmentManager: FragmentManager,
-    homeContext: HomeActivity,
     data: List<OrganisationUnit>,
     viewModel: HomeViewModel
 ) {

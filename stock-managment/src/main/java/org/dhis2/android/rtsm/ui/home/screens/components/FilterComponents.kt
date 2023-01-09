@@ -25,7 +25,6 @@ import org.dhis2.android.rtsm.data.OperationState
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.data.TransactionType.DISTRIBUTION
 import org.dhis2.android.rtsm.data.models.TransactionItem
-import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
@@ -34,10 +33,7 @@ import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 fun filterList(
     viewModel: HomeViewModel,
     themeColor: Color,
-    supportFragmentManager: FragmentManager,
-    homeContext: HomeActivity,
-    isFacilitySelected: (value: Boolean) -> Unit = {},
-    isDestinationSelected: (value: Boolean) -> Unit = {}
+    supportFragmentManager: FragmentManager
 ): Dp {
     val facilities = viewModel.facilities.collectAsState().value
     val destinations = viewModel.destinationsList.collectAsState().value
@@ -80,11 +76,8 @@ fun filterList(
                 viewModel,
                 themeColor,
                 supportFragmentManager,
-                homeContext,
                 getFacilities(facilities)
-            ) { facility ->
-                isFacilitySelected(facility.isNotEmpty())
-            }
+            )
         }
 
         if (showDestination) {
@@ -95,9 +88,7 @@ fun filterList(
                         viewModel,
                         themeColor,
                         result
-                    ) { destination ->
-                        isDestinationSelected(destination.isNotEmpty())
-                    }
+                    )
                 }
             }
         }

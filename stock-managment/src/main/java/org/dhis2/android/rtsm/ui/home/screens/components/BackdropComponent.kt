@@ -23,7 +23,6 @@ import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.data.TransactionType
-import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 
@@ -36,25 +35,19 @@ fun Backdrop(
     manageStockViewModel: ManageStockViewModel,
     themeColor: Color,
     supportFragmentManager: FragmentManager,
-    homeContext: HomeActivity,
     barcodeLauncher: ActivityResultLauncher<ScanOptions>,
     scaffoldState: ScaffoldState,
     syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> }
 ) {
     val backdropState = rememberBackdropScaffoldState(BackdropValue.Concealed)
-
     var isFrontLayerDisabled by remember { mutableStateOf<Boolean?>(null) }
-    var hasFacilitySelected by remember { mutableStateOf(false) }
-    var hasDestinationSelected by remember { mutableStateOf<Boolean?>(null) }
-    var toolbarTitle by remember {
-        mutableStateOf(TransactionType.DISTRIBUTION.name)
-    }
     val scope = rememberCoroutineScope()
+    val settingsUiState = viewModel.settingsUiState.collectAsState().value
 
     BackdropScaffold(
         appBar = {
             Toolbar(
-                viewModel.settingsUiState.collectAsState().value.transactionType.name,
+                settingsUiState.transactionType.name,
                 viewModel.fromFacility.collectAsState().value.asString(),
                 viewModel.deliveryTo.collectAsState().value?.asString(),
                 themeColor,
@@ -64,22 +57,16 @@ fun Backdrop(
                 backdropState,
                 scaffoldState,
                 syncAction,
-                hasFacilitySelected,
-                hasDestinationSelected
+                settingsUiState.hasFacilitySelected(),
+                settingsUiState.hasDestinationSelected()
             )
-            toolbarTitle = viewModel.settingsUiState.collectAsState().value.transactionType.name
         },
         backLayerBackgroundColor = themeColor,
         backLayerContent = {
             val height = filterList(
                 viewModel,
                 themeColor,
-                supportFragmentManager,
-                homeContext,
-                { hasFacilitySelected = it },
-                {
-                    hasDestinationSelected = it
-                }
+                supportFragmentManager
             )
             if (height > 160.dp) {
                 scope.launch { backdropState.reveal() }
@@ -93,15 +80,17 @@ fun Backdrop(
                 themeColor,
                 viewModel,
                 manageStockViewModel,
-                hasFacilitySelected,
-                hasDestinationSelected,
+                settingsUiState.hasFacilitySelected(),
+                settingsUiState.hasDestinationSelected(),
                 barcodeLauncher
             )
         },
         scaffoldState = backdropState,
         gesturesEnabled = false,
-        frontLayerScrimColor = if (toolbarTitle == TransactionType.DISTRIBUTION.name) {
-            if (hasFacilitySelected && hasDestinationSelected == true) {
+        frontLayerScrimColor = if (
+            settingsUiState.transactionType == TransactionType.DISTRIBUTION
+        ) {
+            if (settingsUiState.hasFacilitySelected() && settingsUiState.hasDestinationSelected()) {
                 isFrontLayerDisabled = false
                 Color.Unspecified
             } else {
@@ -109,7 +98,7 @@ fun Backdrop(
                 MaterialTheme.colors.surface.copy(alpha = 0.60f)
             }
         } else {
-            if (!hasFacilitySelected) {
+            if (!settingsUiState.hasFacilitySelected()) {
                 isFrontLayerDisabled = true
                 MaterialTheme.colors.surface.copy(alpha = 0.60f)
             } else {

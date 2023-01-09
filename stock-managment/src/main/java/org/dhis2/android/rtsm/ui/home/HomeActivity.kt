@@ -78,7 +78,6 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
                         manageStockViewModel,
                         Color(colorResource(themeColor).toArgb()),
                         supportFragmentManager,
-                        this@HomeActivity,
                         barcodeLauncher,
                         ::navigateToReviewStock
                     ) { scope, scaffold ->

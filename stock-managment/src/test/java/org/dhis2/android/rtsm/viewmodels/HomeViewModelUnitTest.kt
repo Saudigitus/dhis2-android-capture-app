@@ -10,8 +10,6 @@ import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
-import java.time.LocalDateTime
-import java.time.ZoneId
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,6 +38,7 @@ import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
@@ -51,6 +50,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 @RunWith(MockitoJUnitRunner::class)
 class HomeViewModelUnitTest {
@@ -168,11 +169,6 @@ class HomeViewModelUnitTest {
     }
 
     @Test
-    fun init_shouldSetDefaultTransaction() {
-        assertNotNull(viewModel.transactionType.value)
-    }
-
-    @Test
     fun init_shouldSetTransactionDateToCurrentDate() {
         val today = LocalDateTime.now()
 
@@ -191,26 +187,32 @@ class HomeViewModelUnitTest {
 
         types.forEach {
             viewModel.selectTransaction(it)
-            assertEquals(viewModel.transactionType.value, it)
+            assertEquals(viewModel.settingsUiState.value.transactionType, it)
         }
     }
 
     @Test
     fun isDistributionIsPositive_whenDistributionIsSet() {
         viewModel.selectTransaction(TransactionType.DISTRIBUTION)
-        assertEquals(viewModel.isDistribution.value, true)
+        assertEquals(viewModel.settingsUiState.value.transactionType, TransactionType.DISTRIBUTION)
     }
 
     @Test
     fun isDistributionIsNegative_whenDiscardIsSet() {
         viewModel.selectTransaction(TransactionType.DISCARD)
-        assertEquals(viewModel.isDistribution.value, false)
+        assertNotEquals(
+            viewModel.settingsUiState.value.transactionType,
+            TransactionType.DISTRIBUTION
+        )
     }
 
     @Test
     fun isDistributionIsNegative_whenCorrectionIsSet() {
         viewModel.selectTransaction(TransactionType.CORRECTION)
-        assertEquals(viewModel.isDistribution.value, false)
+        assertNotEquals(
+            viewModel.settingsUiState.value.transactionType,
+            TransactionType.DISTRIBUTION
+        )
     }
 
     @Test
@@ -425,30 +427,6 @@ class HomeViewModelUnitTest {
             ParcelUtils.facilityToIdentifiableModelParcel(facility)
         )
         assertEquals(data.transactionDate, now.humanReadableDate())
-    }
-
-    @Test
-    fun shouldChangeToolbarTitle_forDistribution() {
-        viewModel.setToolbarTitle(TransactionType.DISTRIBUTION)
-
-        val title = viewModel.toolbarTitle.value.name
-        assertEquals(TransactionType.DISTRIBUTION.name, title)
-    }
-
-    @Test
-    fun shouldChangeToolbarTitle_forDiscard() {
-        viewModel.setToolbarTitle(TransactionType.DISCARD)
-
-        val title = viewModel.toolbarTitle.value.name
-        assertEquals(TransactionType.DISCARD.name, title)
-    }
-
-    @Test
-    fun shouldChangeToolbarTitle_forCorrection() {
-        viewModel.setToolbarTitle(TransactionType.CORRECTION)
-
-        val title = viewModel.toolbarTitle.value.name
-        assertEquals(TransactionType.CORRECTION.name, title)
     }
 
     @Test

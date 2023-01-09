@@ -36,10 +36,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
 import org.dhis2.android.rtsm.R
-import org.dhis2.android.rtsm.data.TransactionType.*
-import org.dhis2.android.rtsm.ui.home.HomeActivity
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
-import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState.*
+import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 
@@ -51,7 +49,6 @@ fun HomeScreen(
     manageStockViewModel: ManageStockViewModel = viewModel(),
     themeColor: Color,
     supportFragmentManager: FragmentManager,
-    homeContext: HomeActivity,
     barcodeLauncher: ActivityResultLauncher<ScanOptions>,
     proceedAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> },
     syncAction: (scope: CoroutineScope, scaffoldState: ScaffoldState) -> Unit = { _, _ -> }
@@ -64,13 +61,13 @@ fun HomeScreen(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = buttonUiState.state != HIDDEN,
+                visible = buttonUiState.state != ButtonVisibilityState.HIDDEN,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
                 CompositionLocalProvider(
                     LocalRippleTheme provides
-                        if (buttonUiState.state == ENABLED) {
+                        if (buttonUiState.state == ButtonVisibilityState.ENABLED) {
                             LocalRippleTheme.current
                         } else {
                             NoRippleTheme
@@ -91,24 +88,35 @@ fun HomeScreen(
                             Icon(
                                 painter = painterResource(buttonUiState.icon),
                                 contentDescription = stringResource(buttonUiState.text),
-                                tint = if (buttonUiState.state == ENABLED) themeColor
-                                else colorResource(id = R.color.proceed_text_color)
+                                tint = if (buttonUiState.state == ButtonVisibilityState.ENABLED) {
+                                    themeColor
+                                } else {
+                                    colorResource(id = R.color.proceed_text_color)
+                                }
                             )
                         },
                         text = {
                             Text(
                                 stringResource(buttonUiState.text),
-                                color = if (buttonUiState.state == ENABLED) themeColor
-                                else colorResource(id = R.color.proceed_text_color)
+                                color = if (buttonUiState.state == ButtonVisibilityState.ENABLED) {
+                                    themeColor
+                                } else {
+                                    colorResource(id = R.color.proceed_text_color)
+                                }
                             )
                         },
                         onClick = {
-                            if (buttonUiState.state == ENABLED) {
+                            if (buttonUiState.state == ButtonVisibilityState.ENABLED) {
                                 proceedAction(scope, scaffoldState)
                             }
                         },
-                        backgroundColor = if (buttonUiState.state == ENABLED) Color.White
-                        else colorResource(id = R.color.proceed_color),
+                        backgroundColor = if (
+                            buttonUiState.state == ButtonVisibilityState.ENABLED
+                        ) {
+                            Color.White
+                        } else {
+                            colorResource(id = R.color.proceed_color)
+                        },
                         shape = RoundedCornerShape(16.dp)
                     )
                 }
@@ -129,7 +137,6 @@ fun HomeScreen(
             manageStockViewModel,
             themeColor,
             supportFragmentManager,
-            homeContext,
             barcodeLauncher,
             scaffoldState
         ) { coroutineScope, scaffold ->

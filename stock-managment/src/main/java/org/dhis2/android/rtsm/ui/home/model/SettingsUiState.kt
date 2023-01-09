@@ -9,4 +9,7 @@ data class SettingsUiState(
     val transactionType: TransactionType = DISTRIBUTION,
     val facility: OrganisationUnit? = null,
     val destination: Option? = null
-)
+) {
+    fun hasFacilitySelected() = facility != null
+    fun hasDestinationSelected() = destination != null
+}
