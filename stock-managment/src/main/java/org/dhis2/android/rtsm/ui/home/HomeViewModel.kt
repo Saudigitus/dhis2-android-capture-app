@@ -114,7 +114,6 @@ class HomeViewModel @Inject constructor(
                         _orgUnitList.value = it
 
                         if (it.size == 1) {
-//                            _facility.value = (it[0])
                             _settingsUiSate.update { currentUiState ->
                                 currentUiState.copy(facility = it[0])
                             }
