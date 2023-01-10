@@ -5,10 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,6 +27,7 @@ import org.dhis2.android.rtsm.utils.UIText
 import org.dhis2.android.rtsm.utils.humanReadableDate
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
+import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -46,10 +43,6 @@ class HomeViewModel @Inject constructor(
 
     private val _scanText = MutableStateFlow("")
     val scanText = _scanText.asStateFlow()
-
-    private val _transactionDate = MutableStateFlow(LocalDateTime.now())
-    val transactionDate: StateFlow<LocalDateTime>
-        get() = _transactionDate
 
     // TODO("IS this duplicated: facilities and org units list")
     private val _facilities =
@@ -165,8 +158,6 @@ class HomeViewModel @Inject constructor(
     fun checkForFieldErrors(): Int? {
         return if (settingsUiState.value.facility == null) {
             R.string.mandatory_facility_selection
-        } else if (_transactionDate.value == null) {
-            R.string.mandatory_transaction_date_selection
         } else if (settingsUiState.value.transactionType == TransactionType.DISTRIBUTION &&
             settingsUiState.value.destination == null
         ) {
@@ -186,19 +177,13 @@ class HomeViewModel @Inject constructor(
         return Transaction(
             settingsUiState.value.transactionType,
             ParcelUtils.facilityToIdentifiableModelParcel(settingsUiState.value.facility!!),
-            transactionDate.value.humanReadableDate(),
+            settingsUiState.value.transactionDate.humanReadableDate(),
             settingsUiState.value.destination?.let {
                 ParcelUtils.distributedTo_ToIdentifiableModelParcel(
                     it
                 )
             }
         )
-    }
-
-    fun setTransactionDate(epoch: Long) {
-        _transactionDate.value = Instant.ofEpochMilli(epoch)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDateTime()
     }
 
     fun fromFacilitiesLabel(from: String) {

@@ -10,8 +10,6 @@ import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
-import java.time.LocalDateTime
-import java.time.ZoneId
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -52,6 +50,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.LocalDateTime
 
 @RunWith(MockitoJUnitRunner::class)
 class HomeViewModelUnitTest {
@@ -148,12 +147,6 @@ class HomeViewModelUnitTest {
         RxAndroidPlugins.reset()
     }
 
-    private fun getTime() =
-        LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-
-    private fun getTime(dateTime: LocalDateTime) =
-        dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-
     @Test
     fun init_shouldLoadFacilities() {
         verify(metadataManager).facilities(appConfig.program)
@@ -166,15 +159,6 @@ class HomeViewModelUnitTest {
         verify(metadataManager).destinations(appConfig.distributedTo)
 
         assertEquals(viewModel.destinationsList.value, OperationState.Success(destinations))
-    }
-
-    @Test
-    fun init_shouldSetTransactionDateToCurrentDate() {
-        val today = LocalDateTime.now()
-
-        assertEquals(viewModel.transactionDate.value.year, today.year)
-        assertEquals(viewModel.transactionDate.value.month, today.month)
-        assertEquals(viewModel.transactionDate.value.dayOfMonth, today.dayOfMonth)
     }
 
     @Test
@@ -231,9 +215,6 @@ class HomeViewModelUnitTest {
     @Test
     fun distributionTransaction_cannotManageStock_ifOnlyTransactionDateIsSet() {
         viewModel.selectTransaction(TransactionType.DISTRIBUTION)
-        viewModel.setTransactionDate(
-            LocalDateTime.now().atZone(ZoneId.systemDefault()).toEpochSecond()
-        )
         assertEquals(viewModel.checkForFieldErrors(), R.string.mandatory_facility_selection)
     }
 
@@ -248,7 +229,6 @@ class HomeViewModelUnitTest {
     fun distributionTransaction_cannotManageStock_ifOnlyFacilityAndTransactionDateIsSet() {
         viewModel.selectTransaction(TransactionType.DISTRIBUTION)
         viewModel.setFacility(facilities[0])
-        viewModel.setTransactionDate(getTime())
         assertEquals(viewModel.checkForFieldErrors(), R.string.mandatory_distributed_to_selection)
     }
 
@@ -256,7 +236,6 @@ class HomeViewModelUnitTest {
     fun distributionTransaction_cannotManageStock_ifOnlyDestinedToAndTransactionDateIsSet() {
         viewModel.selectTransaction(TransactionType.DISTRIBUTION)
         viewModel.setDestination(destinations[0])
-        viewModel.setTransactionDate(getTime())
         assertEquals(viewModel.checkForFieldErrors(), R.string.mandatory_facility_selection)
     }
 
@@ -273,7 +252,6 @@ class HomeViewModelUnitTest {
         viewModel.selectTransaction(TransactionType.DISTRIBUTION)
         viewModel.setFacility(facilities[0])
         viewModel.setDestination(destinations[0])
-        viewModel.setTransactionDate(getTime())
         assertEquals(viewModel.checkForFieldErrors(), null)
     }
 
@@ -293,7 +271,6 @@ class HomeViewModelUnitTest {
     @Test
     fun discardTransaction_cannotManageStock_ifOnlyTransactionDateIsSet() {
         viewModel.selectTransaction(TransactionType.DISCARD)
-        viewModel.setTransactionDate(getTime())
 
         assertEquals(viewModel.checkForFieldErrors(), R.string.mandatory_facility_selection)
     }
@@ -302,7 +279,6 @@ class HomeViewModelUnitTest {
     fun discardTransaction_canManageStock_ifAllFieldsAreSet() {
         viewModel.selectTransaction(TransactionType.DISCARD)
         viewModel.setFacility(facilities[0])
-        viewModel.setTransactionDate(getTime())
 
         assertEquals(viewModel.checkForFieldErrors(), null)
     }
@@ -329,7 +305,6 @@ class HomeViewModelUnitTest {
     @Test
     fun correctionTransaction_cannotManageStock_ifOnlyTransactionDateIsSet() {
         viewModel.selectTransaction(TransactionType.CORRECTION)
-        viewModel.setTransactionDate(getTime())
 
         assertEquals(viewModel.checkForFieldErrors(), R.string.mandatory_facility_selection)
     }
@@ -338,7 +313,6 @@ class HomeViewModelUnitTest {
     fun correctionTransaction_canManageStock_ifAllFieldsAreSet() {
         viewModel.selectTransaction(TransactionType.CORRECTION)
         viewModel.setFacility(facilities[0])
-        viewModel.setTransactionDate(getTime())
 
         assertEquals(viewModel.checkForFieldErrors(), null)
     }
@@ -352,7 +326,6 @@ class HomeViewModelUnitTest {
     @Test(expected = UserIntentParcelCreationException::class)
     fun distributionWithMissingFacility_cannotCreateUserIntent() {
         viewModel.selectTransaction(TransactionType.DISTRIBUTION)
-        viewModel.setTransactionDate(getTime())
 
         viewModel.getData()
     }
@@ -377,7 +350,6 @@ class HomeViewModelUnitTest {
         viewModel.selectTransaction(TransactionType.DISTRIBUTION)
         viewModel.setDestination(destination)
         viewModel.setFacility(facility)
-        viewModel.setTransactionDate(getTime(now))
 
         val data = viewModel.getData()
         assertEquals(data.transactionType, TransactionType.DISTRIBUTION)
@@ -400,7 +372,6 @@ class HomeViewModelUnitTest {
 
         viewModel.selectTransaction(TransactionType.DISCARD)
         viewModel.setFacility(facility)
-        viewModel.setTransactionDate(getTime(now))
 
         val data = viewModel.getData()
         assertEquals(data.transactionType, TransactionType.DISCARD)
@@ -418,7 +389,6 @@ class HomeViewModelUnitTest {
 
         viewModel.selectTransaction(TransactionType.CORRECTION)
         viewModel.setFacility(facility)
-        viewModel.setTransactionDate(getTime(now))
 
         val data = viewModel.getData()
         assertEquals(data.transactionType, TransactionType.CORRECTION)
@@ -433,12 +403,10 @@ class HomeViewModelUnitTest {
     fun shouldChangeToolbarSubtitle_forDistribution() {
         val destination = destinations[2]
         val facility = facilities[1]
-        val now = LocalDateTime.now()
 
         viewModel.selectTransaction(TransactionType.DISTRIBUTION)
         viewModel.setDestination(destination)
         viewModel.setFacility(facility)
-        viewModel.setTransactionDate(getTime(now))
 
         val facilityName = viewModel.getData().facility.name
         val distributedTo = viewModel.getData().distributedTo?.name
@@ -455,11 +423,9 @@ class HomeViewModelUnitTest {
     @Test
     fun shouldChangeToolbarSubtitle_forDiscard() {
         val facility = facilities[1]
-        val now = LocalDateTime.now()
 
         viewModel.selectTransaction(TransactionType.DISCARD)
         viewModel.setFacility(facility)
-        viewModel.setTransactionDate(getTime(now))
 
         val facilityName = viewModel.getData().facility.name
 
@@ -471,11 +437,9 @@ class HomeViewModelUnitTest {
     @Test
     fun shouldChangeToolbarSubtitle_forCorrection() {
         val facility = facilities[1]
-        val now = LocalDateTime.now()
 
         viewModel.selectTransaction(TransactionType.CORRECTION)
         viewModel.setFacility(facility)
-        viewModel.setTransactionDate(getTime(now))
 
         val facilityName = viewModel.getData().facility.name
 
