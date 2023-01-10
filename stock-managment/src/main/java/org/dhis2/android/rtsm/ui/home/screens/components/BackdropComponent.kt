@@ -80,8 +80,6 @@ fun Backdrop(
                 themeColor,
                 viewModel,
                 manageStockViewModel,
-                settingsUiState.hasFacilitySelected(),
-                settingsUiState.hasDestinationSelected(),
                 barcodeLauncher
             )
         },

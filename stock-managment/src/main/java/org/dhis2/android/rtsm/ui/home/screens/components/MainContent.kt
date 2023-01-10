@@ -48,6 +48,7 @@ import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.TransactionType
+import org.dhis2.android.rtsm.data.models.Transaction
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.android.rtsm.ui.managestock.components.ManageStockTable
@@ -61,8 +62,6 @@ fun MainContent(
     themeColor: Color,
     viewModel: HomeViewModel,
     manageStockViewModel: ManageStockViewModel,
-    hasFacilitySelected: Boolean,
-    hasDestinationSelected: Boolean?,
     barcodeLauncher: ActivityResultLauncher<ScanOptions>
 ) {
     val scope = rememberCoroutineScope()
@@ -75,7 +74,8 @@ fun MainContent(
     val weightValueArrow = if (backdropState.isRevealed) 0.10f else 0.05f
     val weightValueArrowStatus = backdropState.isRevealed
     val focusManager = LocalFocusManager.current
-    val search = viewModel.scanText.collectAsState().value
+    val search by viewModel.scanText.collectAsState()
+    val settingsUiState by viewModel.settingsUiState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -209,31 +209,25 @@ fun MainContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = 0.dp)
         ) {
-            if (viewModel.settingsUiState.collectAsState().value.transactionType
-                == TransactionType.DISTRIBUTION
-            ) {
-                if (hasFacilitySelected &&
-                    hasDestinationSelected == true
+            if (settingsUiState.transactionType == TransactionType.DISTRIBUTION) {
+                if (settingsUiState.hasFacilitySelected() &&
+                    settingsUiState.hasDestinationSelected()
                 ) {
-                    updateTableState(manageStockViewModel, viewModel)
+                    updateTableState(manageStockViewModel, viewModel.getData())
                     ManageStockTable(manageStockViewModel) {
                         scope.launch { backdropState.conceal() }
                     }
                 }
-            } else if (viewModel.settingsUiState.collectAsState().value.transactionType
-                == TransactionType.CORRECTION
-            ) {
-                if (hasFacilitySelected) {
-                    updateTableState(manageStockViewModel, viewModel)
+            } else if (settingsUiState.transactionType == TransactionType.CORRECTION) {
+                if (settingsUiState.hasFacilitySelected()) {
+                    updateTableState(manageStockViewModel, viewModel.getData())
                     ManageStockTable(manageStockViewModel) {
                         scope.launch { backdropState.conceal() }
                     }
                 }
-            } else if (viewModel.settingsUiState.collectAsState().value.transactionType
-                == TransactionType.DISCARD
-            ) {
-                if (hasFacilitySelected) {
-                    updateTableState(manageStockViewModel, viewModel)
+            } else if (settingsUiState.transactionType == TransactionType.DISCARD) {
+                if (settingsUiState.hasFacilitySelected()) {
+                    updateTableState(manageStockViewModel, viewModel.getData())
                     ManageStockTable(manageStockViewModel) {
                         scope.launch { backdropState.conceal() }
                     }
@@ -243,11 +237,8 @@ fun MainContent(
     }
 }
 
-private fun updateTableState(
-    manageStockViewModel: ManageStockViewModel,
-    viewModel: HomeViewModel
-) {
-    manageStockViewModel.setup(viewModel.getData())
+private fun updateTableState(manageStockViewModel: ManageStockViewModel, transaction: Transaction) {
+    manageStockViewModel.setup(transaction)
 }
 
 private fun scanBarcode(launcher: ActivityResultLauncher<ScanOptions>) {
