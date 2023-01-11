@@ -49,6 +49,7 @@ import androidx.fragment.app.FragmentManager
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.models.TransactionItem
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
+import org.dhis2.android.rtsm.ui.home.model.SettingsUiState
 import org.dhis2.android.rtsm.utils.Utils.Companion.capitalizeText
 import org.dhis2.commons.orgunitdialog.CommonOrgUnitDialog
 import org.hisp.dhis.android.core.option.Option
@@ -217,14 +218,16 @@ fun DropdownComponentFacilities(
         painterResource(id = R.drawable.ic_arrow_drop_down)
     }
 
+    val settingsUiState by viewModel.settingsUiState.collectAsState()
+
     val interactionSource = remember { MutableInteractionSource() }
     if (interactionSource.collectIsPressedAsState().value) {
-        openOrgUnitTreeSelector(supportFragmentManager, data, viewModel)
+        openOrgUnitTreeSelector(supportFragmentManager, data, viewModel, settingsUiState)
     }
 
     Column(Modifier.padding(horizontal = 16.dp)) {
         OutlinedTextField(
-            value = viewModel.orgUnitName.collectAsState().value,
+            value = settingsUiState.facilityName(),
             onValueChange = { selectedText = it },
             modifier = Modifier
                 .fillMaxWidth()
@@ -257,7 +260,8 @@ fun DropdownComponentFacilities(
                         openOrgUnitTreeSelector(
                             supportFragmentManager,
                             data,
-                            viewModel
+                            viewModel,
+                            settingsUiState
                         )
                     }
                 ) {
@@ -455,7 +459,8 @@ fun DropdownComponentDistributedTo(
 fun openOrgUnitTreeSelector(
     supportFragmentManager: FragmentManager,
     data: List<OrganisationUnit>,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    settingsUiState: SettingsUiState
 ) {
     val programUid = "F5ijs28K4s8"
     val orgUnitDialog = CommonOrgUnitDialog()
@@ -468,7 +473,6 @@ fun openOrgUnitTreeSelector(
         .setPossitiveListener {
             if (orgUnitDialog.selectedOrgUnitModel != null) {
                 viewModel.setFacility(orgUnitDialog.selectedOrgUnitModel)
-                viewModel.setSelectedText(orgUnitDialog.selectedOrgUnitName)
                 orgUnitData = orgUnitDialog.selectedOrgUnitModel
             }
             orgUnitDialog.dismiss()
@@ -480,7 +484,7 @@ fun openOrgUnitTreeSelector(
     orgUnitData?.let {
         orgUnitDialog.setOrgUnit(orgUnitData)
     }
-    orgUnitName = viewModel.orgUnitName.value
+    orgUnitName = settingsUiState.facilityName()
     orgUnitDialog.setOrgUnitName(orgUnitName)
 
     if (!orgUnitDialog.isAdded) {

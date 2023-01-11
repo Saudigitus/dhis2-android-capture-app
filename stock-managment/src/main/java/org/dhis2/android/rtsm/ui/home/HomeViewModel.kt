@@ -59,10 +59,6 @@ class HomeViewModel @Inject constructor(
     val destinationsList: StateFlow<OperationState<List<Option>>>
         get() = _destinations
 
-    // Toolbar section variables
-    private val _orgUnitName = MutableStateFlow("")
-    val orgUnitName: StateFlow<String> get() = _orgUnitName
-
     private val _settingsUiSate = MutableStateFlow(SettingsUiState())
     val settingsUiState: StateFlow<SettingsUiState> = _settingsUiSate
 
@@ -173,10 +169,6 @@ class HomeViewModel @Inject constructor(
                 )
             }
         )
-    }
-
-    fun setSelectedText(text: String) {
-        _orgUnitName.value = text
     }
 
     fun setScannedText(text: String) {

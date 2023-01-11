@@ -198,7 +198,6 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
 
     override fun onSelectionFinished(selectedOrgUnits: List<OrganisationUnit>) {
         viewModel.setFacility(selectedOrgUnits[0])
-        viewModel.setSelectedText(selectedOrgUnits[0].displayName().toString())
         setOrgUnitFilters(selectedOrgUnits)
     }
 

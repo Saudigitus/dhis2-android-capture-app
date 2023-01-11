@@ -39,4 +39,8 @@ data class SettingsUiState(
         } ?: UIText.StringRes(R.string.to_facility)
         else -> null
     }
+
+    fun facilityName() = facility?.let {
+        it.displayName().toString()
+    } ?: ""
 }

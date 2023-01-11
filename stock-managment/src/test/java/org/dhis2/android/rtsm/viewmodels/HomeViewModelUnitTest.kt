@@ -408,16 +408,8 @@ class HomeViewModelUnitTest {
         viewModel.setDestination(destination)
         viewModel.setFacility(facility)
 
-        val facilityName = viewModel.getData().facility.name
-        val distributedTo = viewModel.getData().distributedTo?.name
-
-        if (distributedTo != null) {
-            viewModel.fromFacilitiesLabel(facilityName)
-            viewModel.deliveryToLabel(distributedTo)
-        }
-
-        assertNotNull(viewModel.fromFacility.value)
-        assertNotNull(viewModel.deliveryTo.value)
+        assertNotNull(viewModel.settingsUiState.value.fromFacilitiesLabel())
+        assertNotNull(viewModel.settingsUiState.value.deliverToLabel())
     }
 
     @Test
@@ -427,11 +419,7 @@ class HomeViewModelUnitTest {
         viewModel.selectTransaction(TransactionType.DISCARD)
         viewModel.setFacility(facility)
 
-        val facilityName = viewModel.getData().facility.name
-
-        viewModel.fromFacilitiesLabel(facilityName)
-
-        assertNotNull(viewModel.fromFacility.value)
+        assertNotNull(viewModel.settingsUiState.value.fromFacilitiesLabel())
     }
 
     @Test
@@ -441,10 +429,6 @@ class HomeViewModelUnitTest {
         viewModel.selectTransaction(TransactionType.CORRECTION)
         viewModel.setFacility(facility)
 
-        val facilityName = viewModel.getData().facility.name
-
-        viewModel.fromFacilitiesLabel(facilityName)
-
-        assertNotNull(viewModel.fromFacility.value)
+        assertNotNull(viewModel.settingsUiState.value.fromFacilitiesLabel())
     }
 }
