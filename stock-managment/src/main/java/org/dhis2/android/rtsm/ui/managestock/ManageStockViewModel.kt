@@ -422,7 +422,7 @@ class ManageStockViewModel @Inject constructor(
 
     fun addItem(item: StockItem, qty: String?, stockOnHand: String?, hasError: Boolean) {
         // Remove from cache any item whose quantity has been cleared
-        if (qty == null) {
+        if (qty.isNullOrEmpty()) {
             itemsCache.remove(item.id)
             return
         }
@@ -434,7 +434,7 @@ class ManageStockViewModel @Inject constructor(
 
     fun hasError(item: StockItem) = itemsCache[item.id]?.hasError ?: false
 
-    fun canReview(): Boolean = itemsCache.size > 0 && itemsCache.none { it.value.hasError }
+    private fun canReview(): Boolean = itemsCache.size > 0 && itemsCache.none { it.value.hasError }
 
     private fun getPopulatedEntries() = Collections.synchronizedList(itemsCache.values.toList())
 
