@@ -19,7 +19,7 @@ fun ManageStockTable(
     viewModel: ManageStockViewModel,
     concealBackdropState: () -> Unit
 ) {
-    val screenState by viewModel.screenState.observeAsState()
+    val screenState by viewModel.screenState.collectAsState()
 
     MdcTheme {
         if (viewModel.hasData.collectAsState().value) {

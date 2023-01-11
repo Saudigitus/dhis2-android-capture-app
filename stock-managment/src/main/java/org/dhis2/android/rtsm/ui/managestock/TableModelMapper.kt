@@ -1,6 +1,8 @@
 package org.dhis2.android.rtsm.ui.managestock
 
+import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.models.StockEntry
+import org.dhis2.commons.resources.ResourceManager
 import org.dhis2.composetable.model.RowHeader
 import org.dhis2.composetable.model.TableCell
 import org.dhis2.composetable.model.TableHeader
@@ -10,7 +12,9 @@ import org.dhis2.composetable.model.TableModel
 import org.dhis2.composetable.model.TableRowModel
 import javax.inject.Inject
 
-class TableModelMapper @Inject constructor() {
+class TableModelMapper @Inject constructor(
+    private val resources: ResourceManager
+) {
     fun map(
         entries: List<StockEntry>,
         stockLabel: String,
@@ -34,7 +38,7 @@ class TableModelMapper @Inject constructor() {
                             row = index,
                             column = 0,
                             editable = false,
-                            value = item.stockOnHand
+                            value = entry.stockOnHand ?: item.stockOnHand
                         )
                     ),
                     Pair(
@@ -44,7 +48,12 @@ class TableModelMapper @Inject constructor() {
                             row = index,
                             column = 1,
                             value = entry.qty,
-                            editable = true
+                            editable = true,
+                            error = if (entry.hasError) {
+                                resources.getString(R.string.stock_on_hand_exceeded_message)
+                            } else {
+                                null
+                            }
                         )
                     )
                 ),
