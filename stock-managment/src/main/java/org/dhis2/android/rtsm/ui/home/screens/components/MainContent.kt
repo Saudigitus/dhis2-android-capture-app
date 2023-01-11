@@ -48,7 +48,6 @@ import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.TransactionType
-import org.dhis2.android.rtsm.data.models.Transaction
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.android.rtsm.ui.managestock.components.ManageStockTable
@@ -213,21 +212,21 @@ fun MainContent(
                 if (settingsUiState.hasFacilitySelected() &&
                     settingsUiState.hasDestinationSelected()
                 ) {
-                    updateTableState(manageStockViewModel, viewModel.getData())
+                    manageStockViewModel.setup(viewModel.getData())
                     ManageStockTable(manageStockViewModel) {
                         scope.launch { backdropState.conceal() }
                     }
                 }
             } else if (settingsUiState.transactionType == TransactionType.CORRECTION) {
                 if (settingsUiState.hasFacilitySelected()) {
-                    updateTableState(manageStockViewModel, viewModel.getData())
+                    manageStockViewModel.setup(viewModel.getData())
                     ManageStockTable(manageStockViewModel) {
                         scope.launch { backdropState.conceal() }
                     }
                 }
             } else if (settingsUiState.transactionType == TransactionType.DISCARD) {
                 if (settingsUiState.hasFacilitySelected()) {
-                    updateTableState(manageStockViewModel, viewModel.getData())
+                    manageStockViewModel.setup(viewModel.getData())
                     ManageStockTable(manageStockViewModel) {
                         scope.launch { backdropState.conceal() }
                     }
@@ -235,10 +234,6 @@ fun MainContent(
             }
         }
     }
-}
-
-private fun updateTableState(manageStockViewModel: ManageStockViewModel, transaction: Transaction) {
-    manageStockViewModel.setup(transaction)
 }
 
 private fun scanBarcode(launcher: ActivityResultLauncher<ScanOptions>) {

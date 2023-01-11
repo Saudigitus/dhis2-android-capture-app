@@ -287,9 +287,11 @@ class ManageStockViewModel @Inject constructor(
             }
         } ?: emptyList()
 
+        _allTableState.value = updatedData
+
         _screenState.postValue(
             TableScreenState(
-                tables = updatedData,
+                tables = allTableState.value,
                 selectNext = false
             )
         )
