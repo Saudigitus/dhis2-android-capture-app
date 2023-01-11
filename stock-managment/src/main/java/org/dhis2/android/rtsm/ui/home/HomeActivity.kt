@@ -84,7 +84,7 @@ class HomeActivity : AppCompatActivity(), OnOrgUnitSelectionFinished {
                         synchronizeData(
                             scope,
                             scaffold,
-                            viewModel.config.program
+                            settingsUiState.programUid
                         )
                     }
                 }

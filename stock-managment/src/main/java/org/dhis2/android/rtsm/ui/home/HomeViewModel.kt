@@ -37,7 +37,7 @@ class HomeViewModel @Inject constructor(
     savedState: SavedStateHandle
 ) : BaseViewModel(preferenceProvider, schedulerProvider) {
 
-    val config: AppConfig = savedState.get<AppConfig>(INTENT_EXTRA_APP_CONFIG)
+    private val config: AppConfig = savedState.get<AppConfig>(INTENT_EXTRA_APP_CONFIG)
         ?: throw InitializationException("Some configuration parameters are missing")
 
     private val _scanText = MutableStateFlow("")
@@ -59,7 +59,7 @@ class HomeViewModel @Inject constructor(
     val destinationsList: StateFlow<OperationState<List<Option>>>
         get() = _destinations
 
-    private val _settingsUiSate = MutableStateFlow(SettingsUiState())
+    private val _settingsUiSate = MutableStateFlow(SettingsUiState(programUid = config.program))
     val settingsUiState: StateFlow<SettingsUiState> = _settingsUiSate
 
     init {

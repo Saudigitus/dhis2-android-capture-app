@@ -462,14 +462,13 @@ fun openOrgUnitTreeSelector(
     viewModel: HomeViewModel,
     settingsUiState: SettingsUiState
 ) {
-    val programUid = "F5ijs28K4s8"
     val orgUnitDialog = CommonOrgUnitDialog()
 
     orgUnitDialog
         .setTitle("Facilities")
         .setMultiSelection(false)
         .setOrgUnits(data)
-        .setProgram(programUid)
+        .setProgram(settingsUiState.programUid)
         .setPossitiveListener {
             if (orgUnitDialog.selectedOrgUnitModel != null) {
                 viewModel.setFacility(orgUnitDialog.selectedOrgUnitModel)

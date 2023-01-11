@@ -11,6 +11,7 @@ import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
 data class SettingsUiState(
+    val programUid: String,
     val transactionType: TransactionType = DISTRIBUTION,
     val facility: OrganisationUnit? = null,
     val destination: Option? = null,
