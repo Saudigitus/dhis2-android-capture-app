@@ -292,7 +292,6 @@ fun DropdownComponentFacilities(
                             selectedIndex = index
 
                             viewModel.setFacility(item)
-                            viewModel.fromFacilitiesLabel(selectedText)
                         }
                     ) {
                         Row(
@@ -424,7 +423,6 @@ fun DropdownComponentDistributedTo(
                             selectedIndex = index
 
                             viewModel.setDestination(item)
-                            viewModel.deliveryToLabel(selectedText)
                         }
                     ) {
                         Row(
@@ -470,7 +468,6 @@ fun openOrgUnitTreeSelector(
         .setPossitiveListener {
             if (orgUnitDialog.selectedOrgUnitModel != null) {
                 viewModel.setFacility(orgUnitDialog.selectedOrgUnitModel)
-                viewModel.fromFacilitiesLabel(orgUnitDialog.selectedOrgUnitName)
                 viewModel.setSelectedText(orgUnitDialog.selectedOrgUnitName)
                 orgUnitData = orgUnitDialog.selectedOrgUnitModel
             }

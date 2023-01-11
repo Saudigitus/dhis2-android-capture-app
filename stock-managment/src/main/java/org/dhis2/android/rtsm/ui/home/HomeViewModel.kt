@@ -24,7 +24,6 @@ import org.dhis2.android.rtsm.services.scheduler.BaseSchedulerProvider
 import org.dhis2.android.rtsm.ui.base.BaseViewModel
 import org.dhis2.android.rtsm.ui.home.model.SettingsUiState
 import org.dhis2.android.rtsm.utils.ParcelUtils
-import org.dhis2.android.rtsm.utils.UIText
 import org.dhis2.android.rtsm.utils.humanReadableDate
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
@@ -61,13 +60,6 @@ class HomeViewModel @Inject constructor(
         get() = _destinations
 
     // Toolbar section variables
-
-    private val _fromFacility = MutableStateFlow(UIText.StringRes(R.string.from_facility))
-    val fromFacility: StateFlow<UIText> get() = _fromFacility
-
-    private val _deliveryTo = MutableStateFlow<UIText?>(UIText.StringRes(R.string.to_facility))
-    val deliveryTo: StateFlow<UIText?> get() = _deliveryTo
-
     private val _orgUnitName = MutableStateFlow("")
     val orgUnitName: StateFlow<String> get() = _orgUnitName
 
@@ -131,9 +123,6 @@ class HomeViewModel @Inject constructor(
             _settingsUiSate.update { currentUiState ->
                 currentUiState.copy(destination = null)
             }
-            _deliveryTo.value = null
-        } else {
-            _deliveryTo.value = UIText.StringRes(R.string.to_facility)
         }
     }
 
@@ -184,26 +173,6 @@ class HomeViewModel @Inject constructor(
                 )
             }
         )
-    }
-
-    fun fromFacilitiesLabel(from: String) {
-        when (settingsUiState.value.transactionType) {
-            TransactionType.DISTRIBUTION -> {
-                _fromFacility.value = UIText.StringRes(R.string.subtitle, from)
-            }
-            TransactionType.DISCARD -> {
-                _fromFacility.value = UIText.StringRes(R.string.subtitle, from)
-            }
-            TransactionType.CORRECTION -> {
-                _fromFacility.value = UIText.StringRes(R.string.subtitle, from)
-            }
-        }
-    }
-
-    fun deliveryToLabel(to: String) {
-        if (settingsUiState.value.transactionType == TransactionType.DISTRIBUTION) {
-            _deliveryTo.value = UIText.StringRes(R.string.subtitle, to)
-        }
     }
 
     fun setSelectedText(text: String) {

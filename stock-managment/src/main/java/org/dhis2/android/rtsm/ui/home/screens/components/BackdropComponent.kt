@@ -48,8 +48,8 @@ fun Backdrop(
         appBar = {
             Toolbar(
                 settingsUiState.transactionType.name,
-                viewModel.fromFacility.collectAsState().value.asString(),
-                viewModel.deliveryTo.collectAsState().value?.asString(),
+                settingsUiState.fromFacilitiesLabel().asString(),
+                settingsUiState.deliverToLabel()?.asString(),
                 themeColor,
                 navigationAction = {
                     activity.finish()
