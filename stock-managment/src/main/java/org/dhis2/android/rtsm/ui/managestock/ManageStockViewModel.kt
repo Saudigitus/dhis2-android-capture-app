@@ -436,7 +436,7 @@ class ManageStockViewModel @Inject constructor(
 
     fun hasError(item: StockItem) = itemsCache[item.id]?.hasError ?: false
 
-    private fun canReview(): Boolean = itemsCache.size > 0 && itemsCache.none { it.value.hasError }
+    fun canReview(): Boolean = itemsCache.size > 0 && itemsCache.none { it.value.hasError }
 
     private fun getPopulatedEntries() = Collections.synchronizedList(itemsCache.values.toList())
 
