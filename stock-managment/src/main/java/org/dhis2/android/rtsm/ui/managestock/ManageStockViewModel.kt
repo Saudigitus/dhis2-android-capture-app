@@ -364,10 +364,10 @@ class ManageStockViewModel @Inject constructor(
                 populateTable()
             }
             DataEntryStep.REVIEWING -> {
-                //TODO("Should go to complete")
+                // TODO("Should go to complete")
             }
             else -> {
-                //Nothing will happen given that the button is hidden
+                // Nothing will happen given that the button is hidden
             }
         }
         updateReviewButton()
