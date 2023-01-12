@@ -62,8 +62,6 @@ fun MainContent(
     themeColor: Color,
     viewModel: HomeViewModel,
     manageStockViewModel: ManageStockViewModel,
-    hasFacilitySelected: Boolean,
-    hasDestinationSelected: Boolean?,
     barcodeLauncher: ActivityResultLauncher<ScanOptions>
 ) {
     val scope = rememberCoroutineScope()
@@ -76,9 +74,8 @@ fun MainContent(
     val weightValueArrow = if (backdropState.isRevealed) 0.10f else 0.05f
     val weightValueArrowStatus = backdropState.isRevealed
     val focusManager = LocalFocusManager.current
-    val search = viewModel.scanText.collectAsState().value
-    val localDensity = LocalDensity.current
-    var heightIs by remember { mutableStateOf(0.dp) }
+    val search by viewModel.scanText.collectAsState()
+    val settingsUiState by viewModel.settingsUiState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -209,52 +206,35 @@ fun MainContent(
         }
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(vertical = 0.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(vertical = 0.dp)
-            ) {
-                if (viewModel.toolbarTitle.collectAsState().value.name
-                    == TransactionType.DISTRIBUTION.name
+            if (settingsUiState.transactionType == TransactionType.DISTRIBUTION) {
+                if (settingsUiState.hasFacilitySelected() &&
+                    settingsUiState.hasDestinationSelected()
                 ) {
-                    if (viewModel.hasFacilitySelected.collectAsState().value &&
-                        hasDestinationSelected == true
-                    ) {
-                        updateTableState(manageStockViewModel, viewModel)
-                        ManageStockTable(manageStockViewModel) {
-                            scope.launch { backdropState.conceal() }
-                        }
+                    manageStockViewModel.setup(viewModel.getData())
+                    ManageStockTable(manageStockViewModel) {
+                        scope.launch { backdropState.conceal() }
                     }
-                } else if (viewModel.toolbarTitle.collectAsState().value.name
-                    == TransactionType.CORRECTION.name
-                ) {
-                    if (viewModel.hasFacilitySelected.collectAsState().value) {
-                        updateTableState(manageStockViewModel, viewModel)
-                        ManageStockTable(manageStockViewModel) {
-                            scope.launch { backdropState.conceal() }
-                        }
+                }
+            } else if (settingsUiState.transactionType == TransactionType.CORRECTION) {
+                if (settingsUiState.hasFacilitySelected()) {
+                    manageStockViewModel.setup(viewModel.getData())
+                    ManageStockTable(manageStockViewModel) {
+                        scope.launch { backdropState.conceal() }
                     }
-                } else if (viewModel.toolbarTitle.collectAsState().value.name
-                    == TransactionType.DISCARD.name
-                ) {
-                    if (viewModel.hasFacilitySelected.collectAsState().value) {
-                        updateTableState(manageStockViewModel, viewModel)
-                        ManageStockTable(manageStockViewModel) {
-                            scope.launch { backdropState.conceal() }
-                        }
+                }
+            } else if (settingsUiState.transactionType == TransactionType.DISCARD) {
+                if (settingsUiState.hasFacilitySelected()) {
+                    manageStockViewModel.setup(viewModel.getData())
+                    ManageStockTable(manageStockViewModel) {
+                        scope.launch { backdropState.conceal() }
                     }
                 }
             }
         }
     }
-}
-
-private fun updateTableState(
-    manageStockViewModel: ManageStockViewModel,
-    viewModel: HomeViewModel
-) {
-    manageStockViewModel.setup(viewModel.getData())
 }
 
 private fun scanBarcode(launcher: ActivityResultLauncher<ScanOptions>) {
