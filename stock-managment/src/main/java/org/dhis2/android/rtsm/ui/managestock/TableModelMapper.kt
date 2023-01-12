@@ -1,5 +1,6 @@
 package org.dhis2.android.rtsm.ui.managestock
 
+import javax.inject.Inject
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.models.StockEntry
 import org.dhis2.commons.resources.ResourceManager
@@ -10,7 +11,6 @@ import org.dhis2.composetable.model.TableHeaderCell
 import org.dhis2.composetable.model.TableHeaderRow
 import org.dhis2.composetable.model.TableModel
 import org.dhis2.composetable.model.TableRowModel
-import javax.inject.Inject
 
 class TableModelMapper @Inject constructor(
     private val resources: ResourceManager
@@ -76,7 +76,7 @@ class TableModelMapper @Inject constructor(
                         )
                     )
                 ),
-                tableRows = tableRowModels,
+                tableRows = tableRowModels
             )
         )
     }

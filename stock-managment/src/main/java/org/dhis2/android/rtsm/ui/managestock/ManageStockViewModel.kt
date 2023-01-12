@@ -9,6 +9,10 @@ import androidx.paging.PagedList
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -33,6 +37,8 @@ import org.dhis2.android.rtsm.ui.base.ItemWatcher
 import org.dhis2.android.rtsm.ui.base.SpeechRecognitionAwareViewModel
 import org.dhis2.android.rtsm.ui.home.model.ButtonUiState
 import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState
+import org.dhis2.android.rtsm.ui.home.model.DataEntryStep
+import org.dhis2.android.rtsm.ui.home.model.DataEntryUiState
 import org.dhis2.android.rtsm.utils.Utils.Companion.isValidStockOnHand
 import org.dhis2.commons.resources.ResourceManager
 import org.dhis2.composetable.TableScreenState
@@ -42,10 +48,6 @@ import org.dhis2.composetable.model.TextInputModel
 import org.hisp.dhis.rules.models.RuleActionAssign
 import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -89,8 +91,8 @@ class ManageStockViewModel @Inject constructor(
     private val _stockItems: MutableLiveData<List<StockItem>> =
         MutableLiveData<List<StockItem>>()
 
-    private val _reviewButtonUiState = MutableStateFlow(ButtonUiState())
-    val reviewButtonUiState: StateFlow<ButtonUiState> = _reviewButtonUiState
+    private val _dataEntryUiState = MutableStateFlow(DataEntryUiState())
+    val dataEntryUiState: StateFlow<DataEntryUiState> = _dataEntryUiState
 
     fun setup(transaction: Transaction) {
         _transaction.value = transaction
@@ -310,30 +312,59 @@ class ManageStockViewModel @Inject constructor(
 
     fun getItemCount(): Int = itemsCache.size
     fun onEditingCell(isEditing: Boolean, onEditionStart: () -> Unit) {
-        updateReviewButton(isEditing)
+        val step = if (isEditing) DataEntryStep.EDITING else DataEntryStep.LISTING
+        _dataEntryUiState.update { currentUiState ->
+            currentUiState.copy(step = step)
+        }
+        updateReviewButton()
         if (isEditing) {
             onEditionStart.invoke()
         }
     }
 
-    private fun updateReviewButton(isEditing: Boolean = false) {
-        val buttonState: ButtonVisibilityState = if (isEditing || !hasData.value) {
-            ButtonVisibilityState.HIDDEN
-        } else {
-            if (canReview()) {
-                ButtonVisibilityState.ENABLED
-            } else {
-                ButtonVisibilityState.DISABLED
+    private fun updateReviewButton() {
+        val button: ButtonUiState = when (dataEntryUiState.value.step) {
+            DataEntryStep.LISTING -> {
+                val buttonVisibility = if (!hasData.value) {
+                    ButtonVisibilityState.HIDDEN
+                } else if (canReview()) {
+                    ButtonVisibilityState.ENABLED
+                } else {
+                    ButtonVisibilityState.DISABLED
+                }
+                ButtonUiState(visibility = buttonVisibility)
             }
+            DataEntryStep.EDITING -> {
+                ButtonUiState(visibility = ButtonVisibilityState.HIDDEN)
+            }
+            DataEntryStep.REVIEWING -> {
+                ButtonUiState(
+                    text = R.string.confirm_transaction_label,
+                    icon = R.drawable.search,
+                    visibility = ButtonVisibilityState.ENABLED
+                )
+            }
+            DataEntryStep.COMPLETED -> TODO()
         }
 
-        _reviewButtonUiState.update { currentUiState ->
-            currentUiState.copy(visibility = buttonState)
+        _dataEntryUiState.update { currentUiState ->
+            currentUiState.copy(button = button)
         }
     }
 
-    fun onReviewStock() {
-        _stockItems.value = _stockItems.value?.filter { itemsCache[it.id] != null }
-        populateTable()
+    fun onButtonClick() {
+        when (dataEntryUiState.value.step) {
+            DataEntryStep.LISTING -> {
+                _dataEntryUiState.update { currentUiState ->
+                    currentUiState.copy(step = DataEntryStep.REVIEWING)
+                }
+                _stockItems.value = _stockItems.value?.filter { itemsCache[it.id] != null }
+                populateTable()
+            }
+            DataEntryStep.EDITING -> {} // should not do anything because is hidden
+            DataEntryStep.REVIEWING -> TODO() // Should go to complete
+            DataEntryStep.COMPLETED -> {} // should not do anything because is hidden
+        }
+        updateReviewButton()
     }
 }
