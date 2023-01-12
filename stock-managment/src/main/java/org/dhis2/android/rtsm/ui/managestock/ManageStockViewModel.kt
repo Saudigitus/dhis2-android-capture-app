@@ -344,7 +344,9 @@ class ManageStockViewModel @Inject constructor(
                     visibility = ButtonVisibilityState.ENABLED
                 )
             }
-            DataEntryStep.COMPLETED -> TODO()
+            DataEntryStep.COMPLETED -> {
+                ButtonUiState(visibility = ButtonVisibilityState.HIDDEN)
+            }
         }
 
         _dataEntryUiState.update { currentUiState ->
@@ -361,9 +363,12 @@ class ManageStockViewModel @Inject constructor(
                 _stockItems.value = _stockItems.value?.filter { itemsCache[it.id] != null }
                 populateTable()
             }
-            DataEntryStep.EDITING -> {} // should not do anything because is hidden
-            DataEntryStep.REVIEWING -> TODO() // Should go to complete
-            DataEntryStep.COMPLETED -> {} // should not do anything because is hidden
+            DataEntryStep.REVIEWING -> {
+                //TODO("Should go to complete")
+            }
+            else -> {
+                //Nothing will happen given that the button is hidden
+            }
         }
         updateReviewButton()
     }
