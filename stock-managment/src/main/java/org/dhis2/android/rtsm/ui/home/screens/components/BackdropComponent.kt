@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
+import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialog
 import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialogUiModel
@@ -48,6 +49,7 @@ fun Backdrop(
     var isFrontLayerDisabled by remember { mutableStateOf<Boolean?>(null) }
     val scope = rememberCoroutineScope()
     val settingsUiState by viewModel.settingsUiState.collectAsState()
+    val dataEntryUiState by manageStockViewModel.dataEntryUiState.collectAsState()
 
     BackdropScaffold(
         appBar = {
@@ -57,7 +59,7 @@ fun Backdrop(
                 settingsUiState.deliverToLabel()?.asString(),
                 themeColor,
                 launchBottomSheet = {
-                    if (manageStockViewModel.canReview()) {
+                    if (manageStockViewModel.dataEntryUiState.value.hasUnsavedData) {
                         launchBottomSheet(
                             activity.getString(R.string.not_saved),
                             activity.getString(R.string.transaction_not_confirmed),
