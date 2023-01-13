@@ -323,6 +323,7 @@ class ManageStockViewModel @Inject constructor(
     }
 
     private fun updateReviewButton() {
+        var hasUnsavedData = dataEntryUiState.value.hasUnsavedData
         val button: ButtonUiState = when (dataEntryUiState.value.step) {
             DataEntryStep.LISTING -> {
                 val buttonVisibility = if (!hasData.value) {
@@ -335,6 +336,7 @@ class ManageStockViewModel @Inject constructor(
                 ButtonUiState(visibility = buttonVisibility)
             }
             DataEntryStep.EDITING -> {
+                hasUnsavedData = true
                 ButtonUiState(visibility = ButtonVisibilityState.HIDDEN)
             }
             DataEntryStep.REVIEWING -> {
@@ -350,7 +352,7 @@ class ManageStockViewModel @Inject constructor(
         }
 
         _dataEntryUiState.update { currentUiState ->
-            currentUiState.copy(button = button)
+            currentUiState.copy(button = button, hasUnsavedData =  hasUnsavedData)
         }
     }
 
