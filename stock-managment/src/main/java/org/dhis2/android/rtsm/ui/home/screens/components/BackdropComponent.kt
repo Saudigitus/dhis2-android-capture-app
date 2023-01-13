@@ -58,7 +58,7 @@ fun Backdrop(
                 settingsUiState.deliverToLabel()?.asString(),
                 themeColor,
                 launchBottomSheet = {
-                    if (manageStockViewModel.dataEntryUiState.value.hasUnsavedData) {
+                    if (dataEntryUiState.hasUnsavedData) {
                         launchBottomSheet(
                             activity.getString(R.string.not_saved),
                             activity.getString(R.string.transaction_not_confirmed),

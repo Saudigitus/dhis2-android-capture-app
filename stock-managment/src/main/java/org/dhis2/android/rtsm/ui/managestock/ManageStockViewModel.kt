@@ -347,6 +347,7 @@ class ManageStockViewModel @Inject constructor(
                 )
             }
             DataEntryStep.COMPLETED -> {
+                hasUnsavedData = false
                 ButtonUiState(visibility = ButtonVisibilityState.HIDDEN)
             }
         }
