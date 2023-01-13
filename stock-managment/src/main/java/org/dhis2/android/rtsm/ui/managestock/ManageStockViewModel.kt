@@ -352,7 +352,7 @@ class ManageStockViewModel @Inject constructor(
         }
 
         _dataEntryUiState.update { currentUiState ->
-            currentUiState.copy(button = button, hasUnsavedData =  hasUnsavedData)
+            currentUiState.copy(button = button, hasUnsavedData = hasUnsavedData)
         }
     }
 

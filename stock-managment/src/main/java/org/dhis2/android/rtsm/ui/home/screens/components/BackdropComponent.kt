@@ -26,7 +26,6 @@ import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
-import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialog
 import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialogUiModel
