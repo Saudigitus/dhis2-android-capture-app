@@ -61,7 +61,7 @@ fun Backdrop(
                     if (dataEntryUiState.hasUnsavedData) {
                         launchBottomSheet(
                             activity.getString(R.string.not_saved),
-                            dataEntryUiState.dialogMsg,
+                            activity.getString(R.string.transaction_not_confirmed),
                             supportFragmentManager
                         ) {
                             activity.finish()
@@ -89,7 +89,9 @@ fun Backdrop(
                     activity.getString(R.string.not_saved),
                     activity.getString(it),
                     supportFragmentManager
-                )
+                ) {
+                    manageStockViewModel.cleanItemsFromCache()
+                }
             }
             if (height > 160.dp) {
                 scope.launch { backdropState.reveal() }

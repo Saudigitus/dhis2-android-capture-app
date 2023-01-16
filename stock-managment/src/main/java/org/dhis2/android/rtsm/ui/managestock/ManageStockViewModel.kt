@@ -116,12 +116,6 @@ class ManageStockViewModel @Inject constructor(
         _config.value = config
     }
 
-    fun setDialogMsg(@StringRes msg: Int = R.string.transaction_not_confirmed) {
-        _dataEntryUiState.update { currentUiState ->
-            currentUiState.copy(dialogMsg = resources.getString(msg))
-        }
-    }
-
     private fun loadStockItems() {
         search.value = transaction.value?.facility?.uid?.let {
             SearchParametersModel(
@@ -291,7 +285,6 @@ class ManageStockViewModel @Inject constructor(
     }
 
     fun getItemQuantity(item: StockItem): String? {
-        println(itemsCache)
         return itemsCache[item.id]?.qty
     }
 
@@ -301,19 +294,25 @@ class ManageStockViewModel @Inject constructor(
         // Remove from cache any item whose quantity has been cleared
         if (qty.isNullOrEmpty()) {
             itemsCache.remove(item.id)
-            _dataEntryUiState.update { currentUiState ->
-                currentUiState.copy(hasUnsavedData = false)
-            }
+            hasUnsavedData(false)
             return
         }
         itemsCache[item.id] = StockEntry(item, qty, stockOnHand, hasError)
-        setDialogMsg()
-        _dataEntryUiState.update { currentUiState ->
-            currentUiState.copy(hasUnsavedData = true)
-        }
+        hasUnsavedData(true)
     }
 
     fun removeItemFromCache(item: StockItem) = itemsCache.remove(item.id) != null
+
+    fun cleanItemsFromCache() {
+        hasUnsavedData(false)
+        itemsCache.clear()
+    }
+
+    private fun hasUnsavedData(value: Boolean) {
+        _dataEntryUiState.update { currentUiState ->
+            currentUiState.copy(hasUnsavedData = value)
+        }
+    }
 
     fun hasError(item: StockItem) = itemsCache[item.id]?.hasError ?: false
 
