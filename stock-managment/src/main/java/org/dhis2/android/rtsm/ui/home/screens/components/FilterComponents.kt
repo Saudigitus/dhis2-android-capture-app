@@ -26,14 +26,17 @@ import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.data.TransactionType.DISTRIBUTION
 import org.dhis2.android.rtsm.data.models.TransactionItem
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
+import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
 @Composable
 fun filterList(
     viewModel: HomeViewModel,
+    manageStockViewModel: ManageStockViewModel,
     themeColor: Color,
-    supportFragmentManager: FragmentManager
+    supportFragmentManager: FragmentManager,
+    launchDialog: (msg: Int) -> Unit = {}
 ): Dp {
     val facilities = viewModel.facilities.collectAsState().value
     val destinations = viewModel.destinationsList.collectAsState().value
@@ -66,18 +69,24 @@ fun filterList(
         item {
             DropdownComponent(
                 viewModel,
+                manageStockViewModel,
                 themeColor,
                 mapTransaction()
-            )
+            ) {
+                launchDialog(it)
+            }
         }
 
         item {
             DropdownComponentFacilities(
                 viewModel,
+                manageStockViewModel,
                 themeColor,
                 supportFragmentManager,
                 getFacilities(facilities)
-            )
+            ) {
+                launchDialog(it)
+            }
         }
 
         if (showDestination) {
@@ -86,8 +95,10 @@ fun filterList(
                 item {
                     DropdownComponentDistributedTo(
                         viewModel,
+                        manageStockViewModel,
                         themeColor,
-                        result
+                        result,
+                        launchDialog = { launchDialog(it) }
                     )
                 }
             }

@@ -32,7 +32,7 @@ import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialogUiModel
 import org.dhis2.commons.dialogs.bottomsheet.DialogButtonStyle
 
 @SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(ExperimentalMaterialApi::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun Backdrop(
     activity: Activity,
@@ -61,7 +61,7 @@ fun Backdrop(
                     if (dataEntryUiState.hasUnsavedData) {
                         launchBottomSheet(
                             activity.getString(R.string.not_saved),
-                            activity.getString(R.string.transaction_not_confirmed),
+                            dataEntryUiState.dialogMsg,
                             supportFragmentManager
                         ) {
                             activity.finish()
@@ -81,9 +81,16 @@ fun Backdrop(
         backLayerContent = {
             val height = filterList(
                 viewModel,
+                manageStockViewModel,
                 themeColor,
                 supportFragmentManager
-            )
+            ) {
+                launchBottomSheet(
+                    activity.getString(R.string.not_saved),
+                    activity.getString(it),
+                    supportFragmentManager
+                )
+            }
             if (height > 160.dp) {
                 scope.launch { backdropState.reveal() }
             }
@@ -127,7 +134,7 @@ private fun launchBottomSheet(
     title: String,
     subtitle: String,
     supportFragmentManager: FragmentManager,
-    navigationAction: () -> Unit
+    navigationAction: () -> Unit = {}
 ) {
     BottomSheetDialog(
         bottomSheetDialogUiModel = BottomSheetDialogUiModel(

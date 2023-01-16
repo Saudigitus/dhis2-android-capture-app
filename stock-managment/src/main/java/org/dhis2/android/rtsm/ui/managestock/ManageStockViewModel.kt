@@ -1,5 +1,6 @@
 package org.dhis2.android.rtsm.ui.managestock
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -113,6 +114,12 @@ class ManageStockViewModel @Inject constructor(
 
     fun setConfig(config: AppConfig) {
         _config.value = config
+    }
+
+    fun setDialogMsg(@StringRes msg: Int = R.string.transaction_not_confirmed) {
+        _dataEntryUiState.update { currentUiState ->
+            currentUiState.copy(dialogMsg = resources.getString(msg))
+        }
     }
 
     private fun loadStockItems() {
@@ -294,10 +301,16 @@ class ManageStockViewModel @Inject constructor(
         // Remove from cache any item whose quantity has been cleared
         if (qty.isNullOrEmpty()) {
             itemsCache.remove(item.id)
+            _dataEntryUiState.update { currentUiState ->
+                currentUiState.copy(hasUnsavedData = false)
+            }
             return
         }
-
         itemsCache[item.id] = StockEntry(item, qty, stockOnHand, hasError)
+        setDialogMsg()
+        _dataEntryUiState.update { currentUiState ->
+            currentUiState.copy(hasUnsavedData = true)
+        }
     }
 
     fun removeItemFromCache(item: StockItem) = itemsCache.remove(item.id) != null
@@ -323,7 +336,6 @@ class ManageStockViewModel @Inject constructor(
     }
 
     private fun updateReviewButton() {
-        var hasUnsavedData = dataEntryUiState.value.hasUnsavedData
         val button: ButtonUiState = when (dataEntryUiState.value.step) {
             DataEntryStep.LISTING -> {
                 val buttonVisibility = if (!hasData.value) {
@@ -336,7 +348,6 @@ class ManageStockViewModel @Inject constructor(
                 ButtonUiState(visibility = buttonVisibility)
             }
             DataEntryStep.EDITING -> {
-                hasUnsavedData = true
                 ButtonUiState(visibility = ButtonVisibilityState.HIDDEN)
             }
             DataEntryStep.REVIEWING -> {
@@ -347,13 +358,12 @@ class ManageStockViewModel @Inject constructor(
                 )
             }
             DataEntryStep.COMPLETED -> {
-                hasUnsavedData = false
                 ButtonUiState(visibility = ButtonVisibilityState.HIDDEN)
             }
         }
 
         _dataEntryUiState.update { currentUiState ->
-            currentUiState.copy(button = button, hasUnsavedData = hasUnsavedData)
+            currentUiState.copy(button = button)
         }
     }
 

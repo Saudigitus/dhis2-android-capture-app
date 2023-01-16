@@ -2,6 +2,7 @@
 
 package org.dhis2.android.rtsm.ui.home.screens.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -50,6 +51,7 @@ import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.models.TransactionItem
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.model.SettingsUiState
+import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.android.rtsm.utils.Utils.Companion.capitalizeText
 import org.dhis2.commons.orgunitdialog.CommonOrgUnitDialog
 import org.hisp.dhis.android.core.option.Option
@@ -62,10 +64,13 @@ var orgUnitName: String? = null
 @Composable
 fun DropdownComponent(
     viewModel: HomeViewModel,
+    manageStockViewModel: ManageStockViewModel,
     themeColor: Color = colorResource(R.color.colorPrimary),
-    data: MutableList<TransactionItem>
+    data: MutableList<TransactionItem>,
+    launchDialog: (msg: Int) -> Unit = {}
 ) {
     var isExpanded by remember { mutableStateOf(false) }
+    val dataEntryUiState by manageStockViewModel.dataEntryUiState.collectAsState()
 
     var itemIcon by remember { mutableStateOf(data.first().icon) }
     var selectedText by remember {
@@ -125,6 +130,9 @@ fun DropdownComponent(
                 IconButton(
                     onClick = {
                         isExpanded = !isExpanded
+                        if(dataEntryUiState.hasUnsavedData){
+                            launchDialog.invoke(R.string.transaction_discarted)
+                        }
                     }
                 ) {
                     Icon(icon, contentDescription = null, tint = themeColor)
@@ -195,11 +203,14 @@ fun DropdownComponent(
 @Composable
 fun DropdownComponentFacilities(
     viewModel: HomeViewModel,
+    manageStockViewModel: ManageStockViewModel,
     themeColor: Color = colorResource(R.color.colorPrimary),
     supportFragmentManager: FragmentManager,
-    data: List<OrganisationUnit>
+    data: List<OrganisationUnit>,
+    launchDialog: (msg: Int) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
+    val dataEntryUiState by manageStockViewModel.dataEntryUiState.collectAsState()
 
     var selectedText by remember { mutableStateOf("") }
 
@@ -263,6 +274,10 @@ fun DropdownComponentFacilities(
                             viewModel,
                             settingsUiState
                         )
+
+                        if(dataEntryUiState.hasUnsavedData){
+                            launchDialog.invoke(R.string.transaction_discarted)
+                        }
                     }
                 ) {
                     Icon(icon, contentDescription = null, tint = themeColor)
@@ -328,11 +343,14 @@ fun DropdownComponentFacilities(
 @Composable
 fun DropdownComponentDistributedTo(
     viewModel: HomeViewModel,
+    manageStockViewModel: ManageStockViewModel,
     themeColor: Color = colorResource(R.color.colorPrimary),
     data: List<Option>,
-    isDestinationSelected: (value: String) -> Unit = { }
+    isDestinationSelected: (value: String) -> Unit = { },
+    launchDialog: (msg: Int) -> Unit
 ) {
     var isExpanded by remember { mutableStateOf(false) }
+    val dataEntryUiState by manageStockViewModel.dataEntryUiState.collectAsState()
 
     var selectedText by remember { mutableStateOf("") }
 
@@ -392,6 +410,9 @@ fun DropdownComponentDistributedTo(
                 IconButton(
                     onClick = {
                         isExpanded = !isExpanded
+                        if(dataEntryUiState.hasUnsavedData){
+                            launchDialog.invoke(R.string.transaction_discarted)
+                        }
                     }
                 ) {
                     Icon(icon, contentDescription = null, tint = themeColor)
