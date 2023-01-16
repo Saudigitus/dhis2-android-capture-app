@@ -3,7 +3,6 @@ package org.dhis2.android.rtsm.ui.home.screens.components
 import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi

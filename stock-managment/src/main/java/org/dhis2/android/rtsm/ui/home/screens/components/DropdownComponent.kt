@@ -2,7 +2,6 @@
 
 package org.dhis2.android.rtsm.ui.home.screens.components
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -130,7 +129,7 @@ fun DropdownComponent(
                 IconButton(
                     onClick = {
                         isExpanded = !isExpanded
-                        if(dataEntryUiState.hasUnsavedData){
+                        if (dataEntryUiState.hasUnsavedData) {
                             launchDialog.invoke(R.string.transaction_discarted)
                         }
                     }
@@ -275,7 +274,7 @@ fun DropdownComponentFacilities(
                             settingsUiState
                         )
 
-                        if(dataEntryUiState.hasUnsavedData){
+                        if (dataEntryUiState.hasUnsavedData) {
                             launchDialog.invoke(R.string.transaction_discarted)
                         }
                     }
@@ -410,7 +409,7 @@ fun DropdownComponentDistributedTo(
                 IconButton(
                     onClick = {
                         isExpanded = !isExpanded
-                        if(dataEntryUiState.hasUnsavedData){
+                        if (dataEntryUiState.hasUnsavedData) {
                             launchDialog.invoke(R.string.transaction_discarted)
                         }
                     }

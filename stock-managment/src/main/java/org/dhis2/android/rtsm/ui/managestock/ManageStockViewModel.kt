@@ -1,6 +1,5 @@
 package org.dhis2.android.rtsm.ui.managestock
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
