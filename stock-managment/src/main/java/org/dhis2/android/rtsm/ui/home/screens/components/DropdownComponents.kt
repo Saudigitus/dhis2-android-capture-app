@@ -160,15 +160,15 @@ fun DropdownComponentTransactions(
                                 launchDialog.invoke(R.string.transaction_discarted) { result ->
                                     when (result) {
                                         EditionDialogResult.DISCARD -> {
-                                            // Discard change, leave it as it was
-                                            isExpanded = false
-                                        }
-                                        EditionDialogResult.PROCEED -> {
-                                            // Perform the transaction change
+                                            // Perform the transaction change and clear data
                                             onTransitionSelected.invoke(item.transactionType)
                                             selectedIndex = index
                                             itemIcon = item.icon
                                             selectedText = capitalizeText(item.transactionType.name)
+                                            isExpanded = false
+                                        }
+                                        EditionDialogResult.KEEP -> {
+                                            // Leave it as it was
                                             isExpanded = false
                                         }
                                     }
@@ -403,16 +403,16 @@ fun DropdownComponentDistributedTo(
                                 launchDialog.invoke(R.string.transaction_discarted) { result ->
                                     when (result) {
                                         EditionDialogResult.DISCARD -> {
-                                            // Discard change, leave it as it was
-                                            isExpanded = false
-                                        }
-                                        EditionDialogResult.PROCEED -> {
-                                            // Perform the transaction change
+                                            // Perform the transaction change and clear data
                                             selectedText =
                                                 capitalizeText(item.displayName().toString())
                                             isExpanded = false
                                             selectedIndex = index
                                             onDestinationSelected.invoke(item)
+                                        }
+                                        EditionDialogResult.KEEP -> {
+                                            // Leave it as it was
+                                            isExpanded = false
                                         }
                                     }
                                 }
@@ -472,11 +472,13 @@ fun openOrgUnitTreeSelector(
                     launchDialog.invoke(R.string.transaction_discarted) { result ->
                         when (result) {
                             EditionDialogResult.DISCARD -> {
-                                orgUnitDialog.dismiss()
-                            }
-                            EditionDialogResult.PROCEED -> {
+                                // Perform the transaction change and clear data
                                 onFacilitySelected.invoke(orgUnitDialog.selectedOrgUnitModel)
                                 orgUnitData = orgUnitDialog.selectedOrgUnitModel
+                                orgUnitDialog.dismiss()
+                            }
+                            EditionDialogResult.KEEP -> {
+                                // Leave it as it was
                                 orgUnitDialog.dismiss()
                             }
                         }

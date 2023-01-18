@@ -96,10 +96,10 @@ fun Backdrop(
                         activity.getString(msg),
                         supportFragmentManager,
                         onKeepEdition = {
-                            manageStockViewModel.cleanItemsFromCache()
-                            result.invoke(EditionDialogResult.PROCEED)
+                            result.invoke(EditionDialogResult.KEEP)
                         },
                         onDiscard = {
+                            manageStockViewModel.cleanItemsFromCache()
                             result.invoke(EditionDialogResult.DISCARD)
                         }
                     )
@@ -181,8 +181,8 @@ private fun launchBottomSheet(
     title: String,
     subtitle: String,
     supportFragmentManager: FragmentManager,
-    onDiscard: () -> Unit, // Discard changes: leave it as it was
-    onKeepEdition: () -> Unit // Keep editing: perform the transaction change
+    onDiscard: () -> Unit, // Perform the transaction change and clear data
+    onKeepEdition: () -> Unit // Leave it as it was
 ) {
     BottomSheetDialog(
         bottomSheetDialogUiModel = BottomSheetDialogUiModel(
