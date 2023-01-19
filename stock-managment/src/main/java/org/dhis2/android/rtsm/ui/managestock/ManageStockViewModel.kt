@@ -1,5 +1,6 @@
 package org.dhis2.android.rtsm.ui.managestock
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -94,6 +95,9 @@ class ManageStockViewModel @Inject constructor(
     private val _dataEntryUiState = MutableStateFlow(DataEntryUiState())
     val dataEntryUiState: StateFlow<DataEntryUiState> = _dataEntryUiState
 
+    private val _themeColor = MutableStateFlow(Color.White)
+    val themeColor: StateFlow<Color> = _themeColor
+
     fun setup(transaction: Transaction) {
         _transaction.value = transaction
 
@@ -113,6 +117,10 @@ class ManageStockViewModel @Inject constructor(
 
     fun setConfig(config: AppConfig) {
         _config.value = config
+    }
+
+    fun setThemeColor(themeColor: Color) {
+        _themeColor.value = themeColor
     }
 
     private fun loadStockItems() {
@@ -340,12 +348,15 @@ class ManageStockViewModel @Inject constructor(
             DataEntryStep.REVIEWING -> {
                 ButtonUiState(
                     text = R.string.confirm_transaction_label,
-                    icon = R.drawable.search,
+                    icon = R.drawable.confirm_review,
                     visibility = ButtonVisibilityState.ENABLED
                 )
             }
             DataEntryStep.COMPLETED -> {
-                ButtonUiState(visibility = ButtonVisibilityState.HIDDEN)
+                ButtonUiState(
+                    color = Color.White,
+                    visibility = ButtonVisibilityState.HIDDEN
+                )
             }
         }
 
