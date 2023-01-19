@@ -74,8 +74,6 @@ fun HomeScreen(
                     }
                 ) {
                     if (dataEntryUiState.button.visibility == ENABLED) {
-                        manageStockViewModel.setThemeColor(Color.White)
-                        btnContainerColor = themeColor
                         proceedAction(scope, scaffoldState)
                     }
                 }
