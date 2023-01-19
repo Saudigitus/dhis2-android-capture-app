@@ -293,7 +293,7 @@ class ManageStockViewModel @Inject constructor(
         searchRelay.accept(query)
     }
 
-    private fun setQuantity(
+    fun setQuantity(
         item: @NotNull StockItem,
         position: @NotNull Int,
         qty: @NotNull String,
@@ -302,7 +302,11 @@ class ManageStockViewModel @Inject constructor(
         entryRelay.accept(RowAction(StockEntry(item, qty), position, callback))
     }
 
-    private fun addItem(item: StockItem, qty: String?, stockOnHand: String?, hasError: Boolean) {
+    fun getItemQuantity(item: StockItem): String? {
+        return itemsCache[item.id]?.qty
+    }
+
+    fun addItem(item: StockItem, qty: String?, stockOnHand: String?, hasError: Boolean) {
         // Remove from cache any item whose quantity has been cleared
         if (qty.isNullOrEmpty()) {
             itemsCache.remove(item.id)
@@ -331,8 +335,12 @@ class ManageStockViewModel @Inject constructor(
     fun getData(): ReviewStockData = ReviewStockData(transaction.value!!, getPopulatedEntries())
 
     fun onEditingCell(isEditing: Boolean, onEditionStart: () -> Unit) {
-        val step = if (isEditing) DataEntryStep.EDITING else DataEntryStep.LISTING
-        updateStep(step)
+        val step = when (dataEntryUiState.value.step) {
+            DataEntryStep.LISTING -> if (isEditing) DataEntryStep.EDITING else null
+            DataEntryStep.EDITING -> if (!isEditing) DataEntryStep.LISTING else null
+            else -> null
+        }
+        step?.let { updateStep(it) }
         if (isEditing) {
             onEditionStart.invoke()
         }
