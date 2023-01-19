@@ -47,7 +47,6 @@ fun HomeScreen(
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val dataEntryUiState by manageStockViewModel.dataEntryUiState.collectAsState()
-    // btnContentColor by remember { mutableStateOf(manageStockViewModel.themeColor.value) }
     var btnContainerColor by remember {
         mutableStateOf(dataEntryUiState.button.color)
     }
@@ -74,6 +73,8 @@ fun HomeScreen(
                     }
                 ) {
                     if (dataEntryUiState.button.visibility == ENABLED) {
+                        manageStockViewModel.setThemeColor(Color.White)
+                        btnContainerColor = themeColor
                         proceedAction(scope, scaffoldState)
                     }
                 }
