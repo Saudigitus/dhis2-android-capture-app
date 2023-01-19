@@ -90,7 +90,6 @@ class ManageStockViewModel @Inject constructor(
     val dataEntryUiState: StateFlow<DataEntryUiState> = _dataEntryUiState
 
     private val _themeColor = MutableStateFlow(Color.White)
-    val themeColor: StateFlow<Color> = _themeColor
 
     init {
         configureRelays()
