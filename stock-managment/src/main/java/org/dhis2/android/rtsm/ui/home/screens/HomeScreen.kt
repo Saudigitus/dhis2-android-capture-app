@@ -14,10 +14,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -28,7 +25,6 @@ import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
-import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState.ENABLED
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.ui.buttons.FAButton
@@ -47,36 +43,29 @@ fun HomeScreen(
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
     val dataEntryUiState by manageStockViewModel.dataEntryUiState.collectAsState()
-    var btnContainerColor by remember {
-        mutableStateOf(dataEntryUiState.button.color)
-    }
 
     Scaffold(
         scaffoldState = scaffoldState,
         floatingActionButton = {
             AnimatedVisibility(
-                visible = dataEntryUiState.button.visibility == ENABLED,
+                visible = dataEntryUiState.button.visible,
                 enter = fadeIn(),
                 exit = fadeOut()
             ) {
                 FAButton(
                     text = dataEntryUiState.button.text,
-                    contentColor = manageStockViewModel.themeColor.collectAsState().value,
-                    containerColor = btnContainerColor,
-                    enabled = dataEntryUiState.button.visibility == ENABLED,
+                    contentColor = dataEntryUiState.button.contentColor,
+                    containerColor = dataEntryUiState.button.containerColor,
+                    enabled = dataEntryUiState.button.visible,
                     icon = {
                         Icon(
                             painter = painterResource(id = dataEntryUiState.button.icon),
                             contentDescription = stringResource(dataEntryUiState.button.text),
-                            tint = manageStockViewModel.themeColor.collectAsState().value
+                            tint = dataEntryUiState.button.contentColor
                         )
                     }
                 ) {
-                    if (dataEntryUiState.button.visibility == ENABLED) {
-                        manageStockViewModel.setThemeColor(Color.White)
-                        btnContainerColor = themeColor
-                        proceedAction(scope, scaffoldState)
-                    }
+                    proceedAction(scope, scaffoldState)
                 }
             }
         },

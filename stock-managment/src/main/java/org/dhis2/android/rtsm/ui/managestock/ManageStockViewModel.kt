@@ -37,7 +37,6 @@ import org.dhis2.android.rtsm.services.scheduler.BaseSchedulerProvider
 import org.dhis2.android.rtsm.ui.base.ItemWatcher
 import org.dhis2.android.rtsm.ui.base.SpeechRecognitionAwareViewModel
 import org.dhis2.android.rtsm.ui.home.model.ButtonUiState
-import org.dhis2.android.rtsm.ui.home.model.ButtonVisibilityState
 import org.dhis2.android.rtsm.ui.home.model.DataEntryStep
 import org.dhis2.android.rtsm.ui.home.model.DataEntryUiState
 import org.dhis2.android.rtsm.utils.Utils.Companion.isValidStockOnHand
@@ -352,30 +351,29 @@ class ManageStockViewModel @Inject constructor(
     private fun updateReviewButton() {
         val button: ButtonUiState = when (dataEntryUiState.value.step) {
             DataEntryStep.LISTING -> {
-                val buttonVisibility = if (!hasData.value) {
-                    ButtonVisibilityState.HIDDEN
-                } else if (canReview()) {
-                    ButtonVisibilityState.ENABLED
-                } else {
-                    ButtonVisibilityState.DISABLED
-                }
-                ButtonUiState(visibility = buttonVisibility)
+                val buttonVisibility = hasData.value && canReview()
+                ButtonUiState(
+                    text = R.string.review,
+                    icon = R.drawable.proceed_icon,
+                    contentColor = _themeColor.value,
+                    containerColor = Color.White,
+                    visible = buttonVisibility
+                )
             }
             DataEntryStep.EDITING -> {
-                ButtonUiState(visibility = ButtonVisibilityState.HIDDEN)
+                dataEntryUiState.value.button.copy(visible = false)
             }
             DataEntryStep.REVIEWING -> {
                 ButtonUiState(
                     text = R.string.confirm_transaction_label,
                     icon = R.drawable.confirm_review,
-                    visibility = ButtonVisibilityState.ENABLED
+                    contentColor = Color.White,
+                    containerColor = _themeColor.value,
+                    visible = true
                 )
             }
             DataEntryStep.COMPLETED -> {
-                ButtonUiState(
-                    color = Color.White,
-                    visibility = ButtonVisibilityState.HIDDEN
-                )
+                dataEntryUiState.value.button.copy(visible = false)
             }
         }
 
