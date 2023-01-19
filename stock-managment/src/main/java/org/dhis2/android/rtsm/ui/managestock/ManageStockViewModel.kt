@@ -275,8 +275,8 @@ class ManageStockViewModel @Inject constructor(
                                         val stockOnHand = if (isValid) data else it.stockOnHand
                                         addItem(it, cell.value, stockOnHand, !isValid)
                                     }
-                                    populateTable()
                                 }
+                                populateTable()
                             }
                         }
                     )
@@ -312,7 +312,6 @@ class ManageStockViewModel @Inject constructor(
             hasUnsavedData(false)
             return
         }
-
         itemsCache[item.id] = StockEntry(item, qty, stockOnHand, hasError)
         hasUnsavedData(true)
     }
