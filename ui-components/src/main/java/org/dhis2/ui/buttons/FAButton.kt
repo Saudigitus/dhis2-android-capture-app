@@ -20,7 +20,8 @@ fun FAButton(
     containerColor: Color,
     expanded: Boolean = true,
     enabled: Boolean = true,
-    icon: @Composable () -> Unit,
+    icon: @Composable
+    () -> Unit,
     onClick: () -> Unit
 ) {
     ExtendedFloatingActionButton(
