@@ -112,6 +112,7 @@ dependencies {
 
     implementation project(":commons")
     implementation project(":compose-table")
+    implementation project(":ui-components")
 
     implementation "androidx.activity:activity-compose:$libraries.compose"
 
