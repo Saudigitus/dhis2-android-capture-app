@@ -20,7 +20,7 @@ fun ManageStockTable(
     viewModel: ManageStockViewModel,
     concealBackdropState: () -> Unit
 ) {
-    val screenState by viewModel.screenState.observeAsState(
+    val screenState by viewModel.screenState.collectAsState(
         initial = TableScreenState(emptyList(), false)
     )
 
