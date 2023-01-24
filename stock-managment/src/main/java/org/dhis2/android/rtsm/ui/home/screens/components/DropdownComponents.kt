@@ -24,6 +24,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,8 +49,10 @@ import androidx.fragment.app.FragmentManager
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.data.models.TransactionItem
+import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.model.EditionDialogResult
 import org.dhis2.android.rtsm.ui.home.model.SettingsUiState
+import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.android.rtsm.utils.Utils.Companion.capitalizeText
 import org.dhis2.commons.orgunitdialog.CommonOrgUnitDialog
 import org.hisp.dhis.android.core.option.Option
@@ -308,7 +311,8 @@ fun DropdownComponentDistributedTo(
     themeColor: Color = colorResource(R.color.colorPrimary),
     data: List<Option>,
     isDestinationSelected: (value: String) -> Unit = { },
-    launchDialog: (msg: Int, (result: EditionDialogResult) -> Unit) -> Unit
+    launchDialog: (msg: Int, (result: EditionDialogResult) -> Unit) -> Unit,
+    viewModel: ManageStockViewModel
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -321,6 +325,11 @@ fun DropdownComponentDistributedTo(
         4.dp
     } else {
         0.dp
+    }
+
+    if (viewModel.commitStatus.collectAsState().value) {
+        selectedText = ""
+        selectedIndex = -1
     }
 
     val icon = if (isExpanded) {

@@ -122,7 +122,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun setFacility(facility: OrganisationUnit) {
+    fun setFacility(facility: OrganisationUnit?) {
         _settingsUiSate.update { currentUiState ->
             currentUiState.copy(facility = facility)
         }
@@ -154,11 +154,10 @@ class HomeViewModel @Inject constructor(
 
     fun getData(): Transaction {
         if (settingsUiState.value.facility == null) {
-            throw UserIntentParcelCreationException(
-                "Unable to create parcel with empty facility"
-            )
+//            throw UserIntentParcelCreationException(
+//                "Unable to create parcel with empty facility"
+//            )
         }
-
         return Transaction(
             settingsUiState.value.transactionType,
             ParcelUtils.facilityToIdentifiableModelParcel(settingsUiState.value.facility!!),
@@ -173,5 +172,14 @@ class HomeViewModel @Inject constructor(
 
     fun setScannedText(text: String) {
         _scanText.value = text
+    }
+
+    fun resetSettings() {
+        _settingsUiSate.update {
+            SettingsUiState(
+                programUid = config.program
+            )
+        }
+
     }
 }
