@@ -67,19 +67,12 @@ fun Backdrop(
                 settingsUiState.deliverToLabel()?.asString(),
                 themeColor,
                 launchBottomSheet = {
-                    if (dataEntryUiState.hasUnsavedData) {
-                        launchBottomSheet(
-                            activity.getString(R.string.not_saved),
-                            activity.getString(R.string.transaction_not_confirmed),
-                            supportFragmentManager,
-                            onKeepEdition = { },
-                            onDiscard = {
-                                activity.finish()
-                            }
-                        )
-                    } else {
-                        activity.finish()
-                    }
+                    handleBackNavigation(
+                        activity,
+                        dataEntryUiState,
+                        supportFragmentManager,
+                        manageStockViewModel
+                    )
                 },
                 backdropState,
                 scaffoldState,
@@ -177,9 +170,23 @@ fun handleBackNavigation(
                 activity.finish()
             }
         }
-        DataEntryStep.REVIEWING -> viewModel.onHandleBackNavigation()
+        DataEntryStep.REVIEWING -> {
+            if (dataEntryUiState.hasUnsavedData) {
+                launchBottomSheet(
+                    activity.getString(R.string.not_saved),
+                    activity.getString(R.string.transaction_not_confirmed),
+                    supportFragmentManager,
+                    onKeepEdition = { },
+                    onDiscard = {
+                        viewModel.onHandleBackNavigation()
+                    }
+                )
+            } else {
+                viewModel.onHandleBackNavigation()
+            }
+        }
         else -> {
-            // TODO Implement next steps back behaviour
+            viewModel.onHandleBackNavigation()
         }
     }
 }
