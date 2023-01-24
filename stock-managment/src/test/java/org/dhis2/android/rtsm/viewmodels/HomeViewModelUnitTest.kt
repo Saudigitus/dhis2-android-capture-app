@@ -26,15 +26,12 @@ import org.dhis2.android.rtsm.data.OperationState
 import org.dhis2.android.rtsm.data.TransactionType
 import org.dhis2.android.rtsm.exceptions.UserIntentParcelCreationException
 import org.dhis2.android.rtsm.services.MetadataManager
-import org.dhis2.android.rtsm.services.UserManager
-import org.dhis2.android.rtsm.services.UserManagerImpl
 import org.dhis2.android.rtsm.services.preferences.PreferenceProvider
 import org.dhis2.android.rtsm.services.scheduler.BaseSchedulerProvider
 import org.dhis2.android.rtsm.services.scheduler.TrampolineSchedulerProvider
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.utils.ParcelUtils
 import org.dhis2.android.rtsm.utils.humanReadableDate
-import org.hisp.dhis.android.core.D2
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 import org.junit.After
@@ -64,7 +61,6 @@ class HomeViewModelUnitTest {
     private lateinit var metadataManager: MetadataManager
 
     private lateinit var viewModel: HomeViewModel
-    private lateinit var userManager: UserManager
     private lateinit var schedulerProvider: BaseSchedulerProvider
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -75,9 +71,6 @@ class HomeViewModelUnitTest {
     private lateinit var appConfig: AppConfig
 
     private val disposable = CompositeDisposable()
-
-    @Mock
-    private lateinit var d2: D2
 
     @Mock
     private lateinit var facilitiesObserver: Observer<OperationState<List<OrganisationUnit>>>
@@ -120,7 +113,6 @@ class HomeViewModelUnitTest {
         `when`(metadataManager.destinations(appConfig.distributedTo))
             .thenReturn(Single.just(destinations))
 
-        userManager = UserManagerImpl(d2)
         viewModel = HomeViewModel(
             disposable,
             schedulerProvider,
