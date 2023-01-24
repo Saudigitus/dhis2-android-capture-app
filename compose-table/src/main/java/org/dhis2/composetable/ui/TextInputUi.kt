@@ -268,14 +268,14 @@ private fun TextInputContentActionIcon(
             tint = LocalTableColors.current.primary,
             contentDescription = ""
         )
-        if (textInputModel.currentValue?.isNotEmpty() == true) {
+        if (textInputModel.currentValue?.isNotEmpty() == true && hasFocus) {
             Icon(
                 modifier = Modifier
                     .clickable(role = Role.Button) {
                         onTextChanged(textInputModel.copy(currentValue = ""))
                     },
                 painter = painterResource(id = R.drawable.ic_clear),
-                tint = Color(0X61000000),
+                tint = Color(0x61000000),
                 contentDescription = ""
             )
         }
