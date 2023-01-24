@@ -170,6 +170,9 @@ fun handleBackNavigation(
                 activity.finish()
             }
         }
+        DataEntryStep.EDITING -> {
+            activity.onBackPressed()
+        }
         DataEntryStep.REVIEWING -> {
             if (dataEntryUiState.hasUnsavedData) {
                 launchBottomSheet(
@@ -185,7 +188,7 @@ fun handleBackNavigation(
                 viewModel.onHandleBackNavigation()
             }
         }
-        else -> {
+        DataEntryStep.COMPLETED -> {
             viewModel.onHandleBackNavigation()
         }
     }
