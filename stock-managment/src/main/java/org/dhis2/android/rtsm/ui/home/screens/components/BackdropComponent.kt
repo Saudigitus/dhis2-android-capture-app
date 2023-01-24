@@ -99,6 +99,7 @@ fun Backdrop(
                         onDiscard = {
                             manageStockViewModel.cleanItemsFromCache()
                             result.invoke(EditionDialogResult.DISCARD)
+                            manageStockViewModel.onHandleBackNavigation()
                         }
                     )
                 },
