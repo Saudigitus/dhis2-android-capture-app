@@ -4,6 +4,7 @@ import android.graphics.Rect
 import android.view.ViewTreeObserver
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -223,7 +224,9 @@ private fun TextInputContent(
                             focusRequester.requestFocus()
                         }
                     },
-                hasFocus = hasFocus
+                hasFocus = hasFocus,
+                textInputModel,
+                onTextChanged
             )
         }
         if (textInputModel.error != null) {
@@ -242,7 +245,9 @@ private fun TextInputContent(
 @Composable
 private fun TextInputContentActionIcon(
     modifier: Modifier = Modifier,
-    hasFocus: Boolean
+    hasFocus: Boolean,
+    textInputModel: TextInputModel,
+    onTextChanged: (TextInputModel) -> Unit
 ) {
     val icon = if (hasFocus) {
         R.drawable.ic_finish_edit_input
@@ -250,15 +255,31 @@ private fun TextInputContentActionIcon(
         R.drawable.ic_edit_input
     }
 
-    Icon(
-        modifier = modifier
-            .semantics {
-                drawableId = icon
-            },
-        painter = painterResource(id = icon),
-        tint = LocalTableColors.current.primary,
-        contentDescription = ""
-    )
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            modifier = modifier
+                .semantics {
+                    drawableId = icon
+                },
+            painter = painterResource(id = icon),
+            tint = LocalTableColors.current.primary,
+            contentDescription = ""
+        )
+        if (textInputModel.currentValue?.isNotEmpty() == true) {
+            Icon(
+                modifier = Modifier
+                    .clickable(role = Role.Button) {
+                        onTextChanged(textInputModel.copy(currentValue = ""))
+                    },
+                painter = painterResource(id = R.drawable.ic_clear),
+                tint = Color(0X61000000),
+                contentDescription = ""
+            )
+        }
+    }
 }
 
 @Composable
