@@ -376,12 +376,13 @@ class ManageStockViewModel @Inject constructor(
                 dataEntryUiState.value.button.copy(visible = false)
             }
             DataEntryStep.REVIEWING -> {
+                val buttonVisibility = hasData.value && canReview()
                 ButtonUiState(
                     text = R.string.confirm_transaction_label,
                     icon = R.drawable.confirm_review,
                     contentColor = Color.White,
                     containerColor = _themeColor.value,
-                    visible = true
+                    visible = buttonVisibility
                 )
             }
             DataEntryStep.COMPLETED -> {
