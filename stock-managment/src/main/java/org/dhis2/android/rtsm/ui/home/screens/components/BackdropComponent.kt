@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,14 +23,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlinx.coroutines.launch
 import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.data.TransactionType
@@ -44,7 +41,6 @@ import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialog
 import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialogUiModel
 import org.dhis2.commons.dialogs.bottomsheet.DialogButtonStyle
-import timber.log.Timber
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterialApi::class)
@@ -107,7 +103,6 @@ fun Backdrop(
         backLayerContent = {
             FilterList(
                 viewModel,
-                manageStockViewModel,
                 dataEntryUiState.hasUnsavedData,
                 themeColor,
                 supportFragmentManager,
@@ -173,21 +168,11 @@ fun Backdrop(
     if (dataEntryUiState.step == DataEntryStep.COMPLETED) {
         Toast.makeText(activity.applicationContext, "Transacção feita com sucesso!", Toast.LENGTH_SHORT).show()
 
-//        val showSnackbar = remember { mutableStateOf(true) }
-//
 //        ShowSnackbar(show = showSnackbar.value, dismiss = {
 //            showSnackbar.value = false
 //        });
-//        viewModel.selectTransaction(TransactionType.DISTRIBUTION)
-//        viewModel.setFacility(null)
-//        viewModel.setDestination(null)
 
         viewModel.resetSettings()
-
-        manageStockViewModel.hasUnsavedData(false)
-        manageStockViewModel.cancelCommitStatus()
-        manageStockViewModel.cleanItemsFromCache()
-        manageStockViewModel.clearTransaction()
 
         scope.launch { backdropState.reveal() }
         manageStockViewModel.updateStep(DataEntryStep.START)

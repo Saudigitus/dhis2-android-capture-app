@@ -20,14 +20,12 @@ import org.dhis2.android.rtsm.data.TransactionType.DISTRIBUTION
 import org.dhis2.android.rtsm.data.models.TransactionItem
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.model.EditionDialogResult
-import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 
 @Composable
 fun FilterList(
     viewModel: HomeViewModel,
-    manageStockViewModel: ManageStockViewModel,
     hasUnsavedData: Boolean,
     themeColor: Color,
     supportFragmentManager: FragmentManager,
@@ -83,8 +81,7 @@ fun FilterList(
                         hasUnsavedData,
                         themeColor,
                         result,
-                        launchDialog = launchDialog,
-                        viewModel = manageStockViewModel
+                        launchDialog = launchDialog
                     )
                 }
             }
