@@ -103,7 +103,7 @@ fun Backdrop(
         backLayerContent = {
             FilterList(
                 viewModel,
-                dataEntryUiState.hasUnsavedData,
+                dataEntryUiState,
                 themeColor,
                 supportFragmentManager,
                 launchDialog = { msg, result ->
@@ -125,11 +125,10 @@ fun Backdrop(
                 },
                 onFacilitySelected = {
                     viewModel.setFacility(it)
-                },
-                onDestinationSelected = {
-                    viewModel.setDestination(it)
                 }
-            )
+            ) {
+                viewModel.setDestination(it)
+            }
         },
         frontLayerElevation = 5.dp,
         frontLayerContent = {
