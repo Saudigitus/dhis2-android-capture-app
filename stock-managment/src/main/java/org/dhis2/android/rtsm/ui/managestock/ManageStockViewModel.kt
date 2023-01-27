@@ -9,12 +9,16 @@ import androidx.lifecycle.viewModelScope
 import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
+import java.util.Collections
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -48,10 +52,6 @@ import org.hisp.dhis.rules.models.RuleActionAssign
 import org.hisp.dhis.rules.models.RuleEffect
 import org.jetbrains.annotations.NotNull
 import timber.log.Timber
-import java.util.Collections
-import java.util.Date
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 @HiltViewModel
 class ManageStockViewModel @Inject constructor(
@@ -97,7 +97,6 @@ class ManageStockViewModel @Inject constructor(
 
     private val _transactionStatus = MutableSharedFlow<Boolean>()
     val transactionStatus = _transactionStatus.asSharedFlow()
-
 
     private val _scanText = MutableStateFlow("")
     val scanText = _scanText.asStateFlow()
@@ -248,17 +247,20 @@ class ManageStockViewModel @Inject constructor(
             )
                 .subscribeOn(schedulerProvider.io())
                 .observeOn(schedulerProvider.ui())
-                .subscribe({
-                    updateStep(DataEntryStep.COMPLETED)
-                    cleanItemsFromCache()
-                    clearTransaction()
-                    viewModelScope.launch {
-                        Timber.tag("SNACK__VM").d("${it}")
-                        _transactionStatus.emit(true)
+                .subscribe(
+                    {
+                        updateStep(DataEntryStep.COMPLETED)
+                        cleanItemsFromCache()
+                        clearTransaction()
+                        viewModelScope.launch {
+                            Timber.tag("SNACK__VM").d("$it")
+                            _transactionStatus.emit(true)
+                        }
+                    },
+                    {
+                        it.printStackTrace()
                     }
-                }, {
-                    it.printStackTrace()
-                })
+                )
         )
     }
 
@@ -376,9 +378,8 @@ class ManageStockViewModel @Inject constructor(
     fun getData(): ReviewStockData = ReviewStockData(transaction.value!!, getPopulatedEntries())
 
     fun onEditingCell(isEditing: Boolean, onEditionStart: () -> Unit) {
-
         val step = when (dataEntryUiState.value.step) {
-            DataEntryStep.START -> if (isEditing) DataEntryStep.LISTING else null //TODO Check
+            DataEntryStep.START -> if (isEditing) DataEntryStep.LISTING else null // TODO Check
             DataEntryStep.LISTING -> if (isEditing) DataEntryStep.EDITING else null
             DataEntryStep.EDITING -> if (!isEditing) DataEntryStep.LISTING else null
             else -> null
@@ -444,7 +445,6 @@ class ManageStockViewModel @Inject constructor(
             }
             DataEntryStep.REVIEWING -> {
                 commitTransaction()
-
             }
             else -> {
                 // Nothing will happen given that the button is hidden

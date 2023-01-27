@@ -3,23 +3,14 @@ package org.dhis2.android.rtsm.ui.home.screens.components
 import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Snackbar
 import androidx.compose.material.SnackbarDuration
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
-import androidx.compose.material.Text
 import androidx.compose.material.rememberBackdropScaffoldState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,11 +19,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +37,6 @@ import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialog
 import org.dhis2.commons.dialogs.bottomsheet.BottomSheetDialogUiModel
 import org.dhis2.commons.dialogs.bottomsheet.DialogButtonStyle
-import timber.log.Timber
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterialApi::class)
@@ -176,7 +163,6 @@ fun Backdrop(
     }
 }
 
-
 fun handleBackNavigation(
     activity: HomeActivity,
     dataEntryUiState: DataEntryUiState,
@@ -251,14 +237,10 @@ private fun launchBottomSheet(
 
 @Composable
 fun DisplaySnackBar(manageStockViewModel: ManageStockViewModel, scaffoldState: ScaffoldState) {
-
-
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         manageStockViewModel.transactionStatus.collectLatest {
-
-
             if (it) {
                 coroutineScope.launch {
                     val result = scaffoldState.snackbarHostState.showSnackbar(
@@ -275,7 +257,6 @@ fun DisplaySnackBar(manageStockViewModel: ManageStockViewModel, scaffoldState: S
                         }
                     }
                 }
-
             }
         }
     }

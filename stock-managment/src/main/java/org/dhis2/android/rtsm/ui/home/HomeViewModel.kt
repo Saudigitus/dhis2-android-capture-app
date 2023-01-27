@@ -180,6 +180,5 @@ class HomeViewModel @Inject constructor(
                 programUid = config.program
             )
         }
-
     }
 }

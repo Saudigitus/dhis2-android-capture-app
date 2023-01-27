@@ -342,7 +342,7 @@ fun DropdownComponentDistributedTo(
     when (dataEntryUiState.step) {
         DataEntryStep.COMPLETED -> {
             selectedText = ""
-            selectedIndex = -1;
+            selectedIndex = -1
         }
         else -> {}
     }

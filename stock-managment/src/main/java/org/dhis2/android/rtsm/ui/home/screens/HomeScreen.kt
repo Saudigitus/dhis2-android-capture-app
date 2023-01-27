@@ -111,8 +111,8 @@ fun HomeScreen(
                                     text = "The transaction was successfully completed!"
                                 )
                             }
-
-                        }, modifier = Modifier
+                        },
+                        modifier = Modifier
                             .padding(horizontal = 16.dp)
                             .height(56.dp)
                             .background(
@@ -123,8 +123,10 @@ fun HomeScreen(
                                 bottom.linkTo(parent.bottom, margin = 16.dp)
                                 start.linkTo(parent.start, margin = 16.dp)
                                 end.linkTo(parent.end, margin = 16.dp)
-                            }, action = {
-                        })
+                            },
+                        action = {
+                        }
+                    )
                 }
             }
         }

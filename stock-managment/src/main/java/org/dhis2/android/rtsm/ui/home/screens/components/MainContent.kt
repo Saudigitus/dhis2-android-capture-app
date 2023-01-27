@@ -208,10 +208,12 @@ fun MainContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(vertical = 0.dp)
         ) {
-            if (manageStockViewModel.dataEntryUiState.collectAsState().value.step != DataEntryStep.COMPLETED
-                || manageStockViewModel.dataEntryUiState.collectAsState().value.step != DataEntryStep.START) {
+            if (manageStockViewModel.dataEntryUiState.collectAsState().value.step
+                != DataEntryStep.COMPLETED ||
+                manageStockViewModel.dataEntryUiState.collectAsState().value.step
+                != DataEntryStep.START
+            ) {
                 if (settingsUiState.transactionType == TransactionType.DISTRIBUTION) {
-
                     if (settingsUiState.hasFacilitySelected() &&
                         settingsUiState.hasDestinationSelected()
                     ) {
@@ -235,7 +237,6 @@ fun MainContent(
                         }
                     }
                 }
-
             }
         }
     }
