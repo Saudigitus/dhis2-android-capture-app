@@ -10,8 +10,10 @@ import com.jakewharton.rxrelay2.PublishRelay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -91,6 +93,10 @@ class ManageStockViewModel @Inject constructor(
     val dataEntryUiState: StateFlow<DataEntryUiState> = _dataEntryUiState
 
     private val _themeColor = MutableStateFlow(Color.White)
+
+    private val _transactionStatus = MutableSharedFlow<Boolean>()
+    val transactionStatus = _transactionStatus.asSharedFlow()
+
 
     init {
         configureRelays()
@@ -242,6 +248,10 @@ class ManageStockViewModel @Inject constructor(
                     updateStep(DataEntryStep.COMPLETED)
                     cleanItemsFromCache()
                     clearTransaction()
+                    viewModelScope.launch {
+                        Timber.tag("SNACK__VM").d("${it}")
+                        _transactionStatus.emit(true)
+                    }
                 }, {
                     it.printStackTrace()
                 })
@@ -374,7 +384,7 @@ class ManageStockViewModel @Inject constructor(
         }
     }
 
-     fun updateStep(step: DataEntryStep) {
+    fun updateStep(step: DataEntryStep) {
         _dataEntryUiState.update { currentUiState ->
             currentUiState.copy(step = step)
         }
