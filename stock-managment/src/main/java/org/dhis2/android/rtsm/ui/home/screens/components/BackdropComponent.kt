@@ -220,6 +220,7 @@ fun handleBackNavigation(
         DataEntryStep.COMPLETED -> {
             viewModel.onHandleBackNavigation()
         }
+        else -> {}
     }
 }
 
@@ -259,9 +260,7 @@ fun DisplaySnackBar(manageStockViewModel: ManageStockViewModel, scaffoldState: S
 
 
             if (it) {
-
                 coroutineScope.launch {
-
                     val result = scaffoldState.snackbarHostState.showSnackbar(
                         message = "Snackbar # ",
                         actionLabel = "Action on ",
