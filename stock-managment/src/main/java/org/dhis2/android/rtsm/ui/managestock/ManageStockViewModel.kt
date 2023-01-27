@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -97,6 +98,9 @@ class ManageStockViewModel @Inject constructor(
     private val _transactionStatus = MutableSharedFlow<Boolean>()
     val transactionStatus = _transactionStatus.asSharedFlow()
 
+
+    private val _scanText = MutableStateFlow("")
+    val scanText = _scanText.asStateFlow()
 
     init {
         configureRelays()
@@ -325,6 +329,7 @@ class ManageStockViewModel @Inject constructor(
     }
 
     fun onSearchQueryChanged(query: String) {
+        _scanText.value = query
         searchRelay.accept(query)
     }
 
@@ -355,6 +360,7 @@ class ManageStockViewModel @Inject constructor(
     fun cleanItemsFromCache() {
         hasUnsavedData(false)
         itemsCache.clear()
+        updateReviewButton()
     }
 
     private fun hasUnsavedData(value: Boolean) {
@@ -388,12 +394,12 @@ class ManageStockViewModel @Inject constructor(
         _dataEntryUiState.update { currentUiState ->
             currentUiState.copy(step = step)
         }
-        updateReviewButton(step)
+        updateReviewButton()
         populateTable()
     }
 
-    private fun updateReviewButton(step: DataEntryStep) {
-        val button: ButtonUiState = when (step) {
+    private fun updateReviewButton() {
+        val button: ButtonUiState = when (dataEntryUiState.value.step) {
             DataEntryStep.LISTING -> {
                 val buttonVisibility = hasData.value && canReview()
                 ButtonUiState(
@@ -408,12 +414,13 @@ class ManageStockViewModel @Inject constructor(
                 dataEntryUiState.value.button.copy(visible = false)
             }
             DataEntryStep.REVIEWING -> {
+                val buttonVisibility = hasData.value && canReview()
                 ButtonUiState(
                     text = R.string.confirm_transaction_label,
                     icon = R.drawable.confirm_review,
                     contentColor = Color.White,
                     containerColor = _themeColor.value,
-                    visible = true
+                    visible = buttonVisibility
                 )
             }
             DataEntryStep.COMPLETED -> {
@@ -432,6 +439,7 @@ class ManageStockViewModel @Inject constructor(
     fun onButtonClick() {
         when (dataEntryUiState.value.step) {
             DataEntryStep.LISTING -> {
+                onSearchQueryChanged("")
                 updateStep(DataEntryStep.REVIEWING)
             }
             DataEntryStep.REVIEWING -> {
