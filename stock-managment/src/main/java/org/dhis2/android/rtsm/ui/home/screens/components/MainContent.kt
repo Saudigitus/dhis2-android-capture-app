@@ -239,59 +239,6 @@ fun MainContent(
                 }
 
             }
-
-//            manageStockViewModel.getData().let {
-//                if (settingsUiState.transactionType == TransactionType.DISTRIBUTION) {
-//                    if (settingsUiState.hasFacilitySelected() &&
-//                        settingsUiState.hasDestinationSelected()
-//                    ) {
-//                        manageStockViewModel.setup(viewModel.getData())
-//                        ManageStockTable(manageStockViewModel) {
-//                            scope.launch { backdropState.conceal() }
-//                        }
-//                    }
-//                } else if (settingsUiState.transactionType == TransactionType.CORRECTION) {
-//                    if (settingsUiState.hasFacilitySelected()) {
-//                        manageStockViewModel.setup(viewModel.getData())
-//                        ManageStockTable(manageStockViewModel) {
-//                            scope.launch { backdropState.conceal() }
-//                        }
-//                    }
-//                } else if (settingsUiState.transactionType == TransactionType.DISCARD) {
-//                    if (settingsUiState.hasFacilitySelected()) {
-//                        manageStockViewModel.setup(viewModel.getData())
-//                        ManageStockTable(manageStockViewModel) {
-//                            scope.launch { backdropState.conceal() }
-//                        }
-//                    }
-//                }
-//            }
-
-
-//            if (settingsUiState.transactionType == TransactionType.DISTRIBUTION) {
-//                if (settingsUiState.hasFacilitySelected() &&
-//                    settingsUiState.hasDestinationSelected()
-//                ) {
-//                    manageStockViewModel.setup(viewModel.getData())
-//                    ManageStockTable(manageStockViewModel) {
-//                        scope.launch { backdropState.conceal() }
-//                    }
-//                }
-//            } else if (settingsUiState.transactionType == TransactionType.CORRECTION) {
-//                if (settingsUiState.hasFacilitySelected()) {
-//                    manageStockViewModel.setup(viewModel.getData())
-//                    ManageStockTable(manageStockViewModel) {
-//                        scope.launch { backdropState.conceal() }
-//                    }
-//                }
-//            } else if (settingsUiState.transactionType == TransactionType.DISCARD) {
-//                if (settingsUiState.hasFacilitySelected()) {
-//                    manageStockViewModel.setup(viewModel.getData())
-//                    ManageStockTable(manageStockViewModel) {
-//                        scope.launch { backdropState.conceal() }
-//                    }
-//                }
-//            }
         }
     }
 }
