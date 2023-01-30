@@ -42,6 +42,7 @@ import org.dhis2.android.rtsm.ui.base.SpeechRecognitionAwareViewModel
 import org.dhis2.android.rtsm.ui.home.model.ButtonUiState
 import org.dhis2.android.rtsm.ui.home.model.DataEntryStep
 import org.dhis2.android.rtsm.ui.home.model.DataEntryUiState
+import org.dhis2.android.rtsm.ui.home.model.SnackBarUiState
 import org.dhis2.android.rtsm.utils.Utils.Companion.isValidStockOnHand
 import org.dhis2.commons.resources.ResourceManager
 import org.dhis2.composetable.TableScreenState
@@ -253,8 +254,16 @@ class ManageStockViewModel @Inject constructor(
                         cleanItemsFromCache()
                         clearTransaction()
                         viewModelScope.launch {
-                            Timber.tag("SNACK__VM").d("$it")
                             _transactionStatus.emit(true)
+                        }
+                        _dataEntryUiState.update { currentUiState ->
+                            currentUiState.copy(
+                                snackBarUiState = SnackBarUiState(
+                                    message = R.string.transaction_completed,
+                                    color = R.color.success_color,
+                                    icon = R.drawable.success_icon
+                                )
+                            )
                         }
                     },
                     {

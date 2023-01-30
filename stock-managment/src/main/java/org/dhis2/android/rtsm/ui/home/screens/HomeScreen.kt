@@ -1,6 +1,7 @@
 package org.dhis2.android.rtsm.ui.home.screens
 
 import android.app.Activity
+import android.graphics.Color.parseColor
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -29,6 +30,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -41,6 +44,7 @@ import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
+import org.dhis2.commons.resources.ColorUtils
 import org.dhis2.ui.buttons.FAButton
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -85,16 +89,16 @@ fun HomeScreen(
             }
         },
         snackbarHost = {
-            SnackbarHost(hostState = it) { data ->
+            SnackbarHost(hostState = it) {
                 ConstraintLayout(
                     modifier = Modifier
                         .height(56.dp)
                         .fillMaxSize()
                 ) {
                     val (snackbar) = createRefs()
-                    val painterResource = painterResource(id = R.drawable.success_icon)
+                    val painterResource = painterResource(id = dataEntryUiState.snackBarUiState.icon)
                     Snackbar(
-                        backgroundColor = Color(0xFF4CAF50),
+                        backgroundColor = Color(colorResource(id = dataEntryUiState.snackBarUiState.color).toArgb()),
                         content = {
                             Row(
                                 modifier = Modifier
@@ -108,7 +112,7 @@ fun HomeScreen(
                                     modifier = Modifier.padding(end = (11.23).dp)
                                 )
                                 Text(
-                                    text = "The transaction was successfully completed!"
+                                    text = stringResource(id = dataEntryUiState.snackBarUiState.message)
                                 )
                             }
                         },
