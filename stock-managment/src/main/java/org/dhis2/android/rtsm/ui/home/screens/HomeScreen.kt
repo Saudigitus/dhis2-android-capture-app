@@ -1,7 +1,6 @@
 package org.dhis2.android.rtsm.ui.home.screens
 
 import android.app.Activity
-import android.graphics.Color.parseColor
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -40,11 +39,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.journeyapps.barcodescanner.ScanOptions
 import kotlinx.coroutines.CoroutineScope
-import org.dhis2.android.rtsm.R
 import org.dhis2.android.rtsm.ui.home.HomeViewModel
 import org.dhis2.android.rtsm.ui.home.screens.components.Backdrop
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
-import org.dhis2.commons.resources.ColorUtils
 import org.dhis2.ui.buttons.FAButton
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -96,9 +93,15 @@ fun HomeScreen(
                         .fillMaxSize()
                 ) {
                     val (snackbar) = createRefs()
-                    val painterResource = painterResource(id = dataEntryUiState.snackBarUiState.icon)
+                    val painterResource = painterResource(
+                        id = dataEntryUiState.snackBarUiState.icon
+                    )
                     Snackbar(
-                        backgroundColor = Color(colorResource(id = dataEntryUiState.snackBarUiState.color).toArgb()),
+                        backgroundColor = Color(
+                            colorResource(
+                                id = dataEntryUiState.snackBarUiState.color
+                            ).toArgb()
+                        ),
                         content = {
                             Row(
                                 modifier = Modifier
@@ -112,7 +115,9 @@ fun HomeScreen(
                                     modifier = Modifier.padding(end = (11.23).dp)
                                 )
                                 Text(
-                                    text = stringResource(id = dataEntryUiState.snackBarUiState.message)
+                                    text = stringResource(
+                                        id = dataEntryUiState.snackBarUiState.message
+                                    )
                                 )
                             }
                         },
