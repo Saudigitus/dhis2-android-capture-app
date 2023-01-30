@@ -14,10 +14,8 @@ import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -99,9 +97,6 @@ class ManageStockViewModel @Inject constructor(
     val dataEntryUiState: StateFlow<DataEntryUiState> = _dataEntryUiState
 
     private val _themeColor = MutableStateFlow(Color.White)
-
-    private val _transactionStatus = MutableSharedFlow<Boolean>()
-    val transactionStatus = _transactionStatus.asSharedFlow()
 
     private val _scanText = MutableStateFlow("")
     val scanText = _scanText.asStateFlow()
@@ -258,12 +253,6 @@ class ManageStockViewModel @Inject constructor(
                 .observeOn(schedulerProvider.ui())
                 .subscribe(
                     {
-                        updateStep(DataEntryStep.COMPLETED)
-                        cleanItemsFromCache()
-                        clearTransaction()
-                        viewModelScope.launch {
-                            _transactionStatus.emit(true)
-                        }
                         _dataEntryUiState.update { currentUiState ->
                             currentUiState.copy(
                                 snackBarUiState = SnackBarUiState(
@@ -273,6 +262,9 @@ class ManageStockViewModel @Inject constructor(
                                 )
                             )
                         }
+                        updateStep(DataEntryStep.COMPLETED)
+                        cleanItemsFromCache()
+                        clearTransaction()
                     },
                     {
                         it.printStackTrace()
@@ -396,7 +388,6 @@ class ManageStockViewModel @Inject constructor(
 
     fun onEditingCell(isEditing: Boolean, onEditionStart: () -> Unit) {
         val step = when (dataEntryUiState.value.step) {
-            DataEntryStep.START -> if (isEditing) DataEntryStep.LISTING else null // TODO Check
             DataEntryStep.LISTING -> if (isEditing) DataEntryStep.EDITING else null
             DataEntryStep.EDITING -> if (!isEditing) DataEntryStep.LISTING else null
             else -> null
@@ -428,9 +419,6 @@ class ManageStockViewModel @Inject constructor(
                     visible = buttonVisibility
                 )
             }
-            DataEntryStep.EDITING -> {
-                dataEntryUiState.value.button.copy(visible = false)
-            }
             DataEntryStep.REVIEWING -> {
                 val buttonVisibility = hasData.value && canReview()
                 ButtonUiState(
@@ -440,9 +428,6 @@ class ManageStockViewModel @Inject constructor(
                     containerColor = _themeColor.value,
                     visible = buttonVisibility
                 )
-            }
-            DataEntryStep.COMPLETED -> {
-                dataEntryUiState.value.button.copy(visible = false)
             }
             else -> {
                 dataEntryUiState.value.button.copy(visible = false)

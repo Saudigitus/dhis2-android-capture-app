@@ -38,7 +38,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,7 +59,6 @@ import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
 var orgUnitData: OrganisationUnit? = null
 var orgUnitName: String? = null
 
-@Preview
 @Composable
 fun DropdownComponentTransactions(
     onTransitionSelected: (transition: TransactionType) -> Unit,

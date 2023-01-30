@@ -242,8 +242,8 @@ fun DisplaySnackBar(manageStockViewModel: ManageStockViewModel, scaffoldState: S
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        manageStockViewModel.transactionStatus.collectLatest {
-            if (it) {
+        manageStockViewModel.dataEntryUiState.collectLatest {
+            if (it.step == DataEntryStep.COMPLETED) {
                 coroutineScope.launch {
                     val result = scaffoldState.snackbarHostState.showSnackbar(
                         message = "Snackbar # ",
