@@ -44,8 +44,7 @@ fun DataSetTableScreen(
     onCellClick: (tableId: String, TableCell) -> TextInputModel?,
     onEdition: (editing: Boolean) -> Unit,
     onCellValueChange: (TableCell) -> Unit,
-    onSaveValue: (TableCell, selectNext: Boolean) -> Unit,
-    hideInputText: Boolean = false
+    onSaveValue: (TableCell, selectNext: Boolean) -> Unit
 ) {
     val bottomSheetState = rememberBottomSheetScaffoldState(
         bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
@@ -139,7 +138,8 @@ fun DataSetTableScreen(
     }
 
     BackHandler(
-        bottomSheetState.bottomSheetState.isExpanded &&
+        !tableScreenState.textInputCollapsedMode ||
+            bottomSheetState.bottomSheetState.isExpanded &&
             !bottomSheetState.bottomSheetState.isAnimationRunning
     ) {
         collapseBottomSheet(finish = true)
@@ -182,7 +182,7 @@ fun DataSetTableScreen(
                         onSaveValue(it, false)
                     }
                     saveClicked = true
-                    if (hideInputText) {
+                    if (!tableScreenState.textInputCollapsedMode) {
                         collapseBottomSheet(true)
                     }
                 },
