@@ -145,7 +145,8 @@ fun DataSetTableScreen(
     }
 
     BackHandler(
-        bottomSheetState.bottomSheetState.isExpanded &&
+        !tableScreenState.textInputCollapsedMode ||
+            bottomSheetState.bottomSheetState.isExpanded &&
             !bottomSheetState.bottomSheetState.isAnimationRunning
     ) {
         collapseBottomSheet(finish = true)
@@ -188,6 +189,9 @@ fun DataSetTableScreen(
                         onSaveValue(it, false)
                     }
                     saveClicked = true
+                    if (!tableScreenState.textInputCollapsedMode) {
+                        collapseBottomSheet(true)
+                    }
                 },
                 onNextSelected = {
                     currentCell?.let { tableCell ->
