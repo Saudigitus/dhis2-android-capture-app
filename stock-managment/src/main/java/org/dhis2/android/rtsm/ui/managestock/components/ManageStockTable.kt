@@ -39,7 +39,8 @@ fun ManageStockTable(
                         viewModel.onEditingCell(isEditing, concealBackdropState)
                     },
                     onCellValueChange = viewModel::onCellValueChanged,
-                    onSaveValue = viewModel::onSaveValueChange
+                    onSaveValue = viewModel::onSaveValueChange,
+                    hideInputText = true
                 )
             }
         } else {
