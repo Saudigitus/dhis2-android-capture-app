@@ -170,6 +170,9 @@ fun handleBackNavigation(
     viewModel: ManageStockViewModel
 ) {
     when (dataEntryUiState.step) {
+        DataEntryStep.START -> {
+            activity.finish()
+        }
         DataEntryStep.LISTING -> {
             if (dataEntryUiState.hasUnsavedData) {
                 launchBottomSheet(
@@ -206,7 +209,6 @@ fun handleBackNavigation(
         DataEntryStep.COMPLETED -> {
             viewModel.onHandleBackNavigation()
         }
-        else -> {}
     }
 }
 
