@@ -14,12 +14,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -62,13 +62,13 @@ fun BottomSheetDialogContent(
             )
             Text(
                 text = bottomSheetDialogUiModel.title,
-                style = MaterialTheme.typography.h5,
+                style = MaterialTheme.typography.headlineSmall,
                 color = textPrimary,
                 modifier = Modifier.padding(16.dp)
             )
             Text(
                 text = bottomSheetDialogUiModel.subtitle,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.bodyMedium,
                 color = textSecondary,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.fillMaxWidth()
@@ -100,15 +100,15 @@ fun BottomSheetDialogContent(
                     RoundedCornerShape(0.dp)
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.White,
-                    disabledBackgroundColor = Color.White
+                    containerColor = Color.White,
+                    disabledContainerColor = Color.White
                 ),
                 elevation = if (
                     bottomSheetDialogUiModel.secondaryButton is DialogButtonStyle.NeutralButton
                 ) {
-                    ButtonDefaults.elevation(2.dp)
+                    ButtonDefaults.buttonElevation(2.dp)
                 } else {
-                    ButtonDefaults.elevation(0.dp)
+                    ButtonDefaults.buttonElevation(0.dp)
                 },
                 onClick = { onSecondaryButtonClicked() },
                 content = provideButtonContent(bottomSheetDialogUiModel.secondaryButton),
@@ -118,7 +118,7 @@ fun BottomSheetDialogContent(
                 modifier = Modifier.testTag(MAIN_BUTTON_TAG),
                 shape = RoundedCornerShape(24.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = bottomSheetDialogUiModel.mainButton.backgroundColor
+                    containerColor = bottomSheetDialogUiModel.mainButton.backgroundColor
                         ?: colorPrimary,
                     contentColor = Color.White
                 ),
