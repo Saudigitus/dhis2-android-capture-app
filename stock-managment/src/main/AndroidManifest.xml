@@ -32,10 +32,6 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ui.reviewstock.ReviewStockActivity"
-            android:exported="false"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
-        <activity
             android:name=".ui.scanner.ScannerActivity"
             android:exported="false"
             android:screenOrientation="fullSensor"

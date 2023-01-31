@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-        <import type="android.view.View" />
-        <variable
-            name="viewModel"
-            type="org.dhis2.android.rtsm.ui.reviewstock.ReviewStockViewModel" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -50,7 +43,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/facility_icon_padding"
-                    android:text="@{viewModel.transaction.facility.displayName}"
                     app:drawableStartCompat="@drawable/home"
                     app:layout_constraintEnd_toStartOf="@+id/transaction_date_text_view"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -63,7 +55,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/trans_date_icon_padding"
-                    android:text="@{viewModel.transaction.transactionDate}"
                     app:drawableStartCompat="@drawable/calendar"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -78,7 +69,6 @@
                     android:layout_marginTop="@dimen/dp_16"
                     android:drawablePadding="@dimen/distribution_icon_padding"
                     android:gravity="center"
-                    app:distributedTo="@{viewModel.transaction.distributedTo.displayName}"
                     app:drawableStartCompat="@drawable/destination"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -122,7 +112,6 @@
                 app:layout_constraintTop_toBottomOf="@id/qty_guide"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/available_count_top_margin"
-                app:totalCount="@{viewModel.getReviewedItemsCount()}"
                 android:textAppearance="@android:style/TextAppearance.Material.Caption"
                 tools:text="17 items available" />
 
