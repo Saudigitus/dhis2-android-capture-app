@@ -55,7 +55,6 @@ import org.dhis2.android.rtsm.utils.Utils.Companion.capitalizeText
 import org.dhis2.commons.orgunitdialog.CommonOrgUnitDialog
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
-import timber.log.Timber
 
 var orgUnitData: OrganisationUnit? = null
 var orgUnitName: String? = null
@@ -231,7 +230,7 @@ fun DropdownComponentFacilities(
         onFacilitySelected.invoke(data.get(0))
         orgUnitData = data.get(0)
     }
-    
+
     val interactionSource = remember { MutableInteractionSource() }
     if (interactionSource.collectIsPressedAsState().value) {
         openOrgUnitTreeSelector(
