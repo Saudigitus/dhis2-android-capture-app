@@ -23,6 +23,7 @@ import org.dhis2.android.rtsm.ui.home.model.DataEntryUiState
 import org.dhis2.android.rtsm.ui.home.model.EditionDialogResult
 import org.hisp.dhis.android.core.option.Option
 import org.hisp.dhis.android.core.organisationunit.OrganisationUnit
+import timber.log.Timber
 
 @Composable
 fun FilterList(
@@ -39,7 +40,7 @@ fun FilterList(
     val destinations = viewModel.destinationsList.collectAsState().value
     val settingsUiState by viewModel.settingsUiState.collectAsState()
     val showDestination = settingsUiState.transactionType == DISTRIBUTION
-
+//    Timber.tag("ORGUNIT").d("${facilities.size}")
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(vertical = 16.dp),
