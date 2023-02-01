@@ -61,6 +61,7 @@ var orgUnitName: String? = null
 
 @Composable
 fun DropdownComponentTransactions(
+    settingsUiState: SettingsUiState,
     onTransitionSelected: (transition: TransactionType) -> Unit,
     hasUnsavedData: Boolean,
     themeColor: Color = colorResource(R.color.colorPrimary),
@@ -73,6 +74,7 @@ fun DropdownComponentTransactions(
     var selectedText by remember {
         mutableStateOf(capitalizeText(data.first().transactionType.name))
     }
+    selectedText = capitalizeText(settingsUiState.transactionType.name)
 
     var selectedIndex by remember { mutableStateOf(0) }
     val paddingValue = if (selectedIndex >= 0) {

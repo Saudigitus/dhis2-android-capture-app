@@ -160,6 +160,7 @@ fun Backdrop(
         }
         manageStockViewModel.updateStep(DataEntryStep.START)
         viewModel.resetSettings()
+        viewModel.selectTransaction(TransactionType.DISTRIBUTION)
     }
 }
 
