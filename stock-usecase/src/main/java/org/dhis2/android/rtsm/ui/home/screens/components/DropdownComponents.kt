@@ -71,10 +71,6 @@ fun DropdownComponentTransactions(
     var isExpanded by remember { mutableStateOf(false) }
 
     var itemIcon by remember { mutableStateOf(data.first().icon) }
-    var selectedText by remember {
-        mutableStateOf(capitalizeText(data.first().transactionType.name))
-    }
-    selectedText = capitalizeText(settingsUiState.transactionType.name)
 
     var selectedIndex by remember { mutableStateOf(0) }
     val paddingValue = if (selectedIndex >= 0) {
@@ -98,8 +94,8 @@ fun DropdownComponentTransactions(
 
     Column(Modifier.padding(horizontal = 16.dp)) {
         OutlinedTextField(
-            value = selectedText,
-            onValueChange = { selectedText = it },
+            value = capitalizeText(settingsUiState.transactionType.name),
+            onValueChange = { },
             modifier = Modifier
                 .fillMaxWidth()
                 .onGloballyPositioned { coordinates ->
@@ -166,7 +162,6 @@ fun DropdownComponentTransactions(
                                             onTransitionSelected.invoke(item.transactionType)
                                             selectedIndex = index
                                             itemIcon = item.icon
-                                            selectedText = capitalizeText(item.transactionType.name)
                                             isExpanded = false
                                         }
                                         EditionDialogResult.KEEP -> {
@@ -179,7 +174,6 @@ fun DropdownComponentTransactions(
                                 onTransitionSelected.invoke(item.transactionType)
                                 selectedIndex = index
                                 itemIcon = item.icon
-                                selectedText = capitalizeText(item.transactionType.name)
                                 isExpanded = false
                             }
                         }
