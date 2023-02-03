@@ -169,14 +169,6 @@ abstract class BaseActivity : AppCompatActivity() {
      */
     open fun getToolBar(): Toolbar? = null
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (showMoreOptions()) {
-            menuInflater.inflate(R.menu.more_options, menu)
-            return true
-        }
-        return true
-    }
-
     /**
      * Indicates if the more options menu should be shown
      */
