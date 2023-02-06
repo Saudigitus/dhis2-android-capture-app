@@ -54,14 +54,7 @@ fun ManageStockTable(
                         viewModel.onEditingCell(isEditing, concealBackdropState)
                     },
                     onCellValueChange = viewModel::onCellValueChanged,
-                    onSaveValue = viewModel::onSaveValueChange,
-                    bottomContent = {
-                        if (viewModel.dataEntryUiState
-                                .collectAsState().value.step
-                            == DataEntryStep.REVIEWING) {
-                            Text(text = "Review")
-                        }
-                    }
+                    onSaveValue = viewModel::onSaveValueChange
                 )
             }
         } else {
