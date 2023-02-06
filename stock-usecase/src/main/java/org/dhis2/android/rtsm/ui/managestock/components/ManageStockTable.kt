@@ -1,6 +1,5 @@
 package org.dhis2.android.rtsm.ui.managestock.components
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +18,6 @@ import org.dhis2.composetable.TableScreenState
 import org.dhis2.composetable.ui.DataSetTableScreen
 import org.dhis2.composetable.ui.TableDimensions
 import org.dhis2.composetable.ui.TableTheme
-import timber.log.Timber
 
 @Composable
 fun ManageStockTable(
@@ -58,7 +56,9 @@ fun ManageStockTable(
                     onCellValueChange = viewModel::onCellValueChanged,
                     onSaveValue = viewModel::onSaveValueChange,
                     bottomContent = {
-                        if (viewModel.dataEntryUiState.collectAsState().value.step == DataEntryStep.REVIEWING) {
+                        if (viewModel.dataEntryUiState
+                                .collectAsState().value.step
+                            == DataEntryStep.REVIEWING) {
                             Text(text = "Review")
                         }
                     }
