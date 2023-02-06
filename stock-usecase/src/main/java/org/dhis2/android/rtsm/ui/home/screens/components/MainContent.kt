@@ -99,7 +99,7 @@ fun MainContent(
                 modifier = Modifier
                     .background(Color.White, shape = CircleShape)
                     .shadow(
-                        elevation = 4.dp,
+                        elevation = 3.dp,
                         shape = RoundedCornerShape(30.dp),
                         clip = false
                     )
