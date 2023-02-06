@@ -1,5 +1,6 @@
 package org.dhis2.android.rtsm.ui.managestock.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -12,11 +13,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.android.material.composethemeadapter.MdcTheme
 import org.dhis2.android.rtsm.R
+import org.dhis2.android.rtsm.ui.home.model.DataEntryStep
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.composetable.TableScreenState
 import org.dhis2.composetable.ui.DataSetTableScreen
 import org.dhis2.composetable.ui.TableDimensions
 import org.dhis2.composetable.ui.TableTheme
+import timber.log.Timber
 
 @Composable
 fun ManageStockTable(
@@ -37,7 +40,8 @@ fun ManageStockTable(
             TableTheme(
                 tableColors = null,
                 tableDimensions = TableDimensions(
-                    defaultRowHeaderWidth = with(LocalDensity.current) { 200.dp.toPx() }.toInt()
+                    defaultRowHeaderWidth = with(LocalDensity.current) { 200.dp.toPx() }.toInt(),
+                    tableBottomPadding = 16.dp
                 )
             ) {
                 DataSetTableScreen(
@@ -52,7 +56,12 @@ fun ManageStockTable(
                         viewModel.onEditingCell(isEditing, concealBackdropState)
                     },
                     onCellValueChange = viewModel::onCellValueChanged,
-                    onSaveValue = viewModel::onSaveValueChange
+                    onSaveValue = viewModel::onSaveValueChange,
+                    bottomContent = {
+                        if (viewModel.dataEntryUiState.collectAsState().value.step == DataEntryStep.REVIEWING) {
+                            Text(text = "Review")
+                        }
+                    }
                 )
             }
         } else {
