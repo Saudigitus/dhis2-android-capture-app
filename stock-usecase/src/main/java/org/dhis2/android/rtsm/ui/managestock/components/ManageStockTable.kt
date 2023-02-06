@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.android.material.composethemeadapter.MdcTheme
 import org.dhis2.android.rtsm.R
-import org.dhis2.android.rtsm.ui.home.model.DataEntryStep
 import org.dhis2.android.rtsm.ui.managestock.ManageStockViewModel
 import org.dhis2.composetable.TableScreenState
 import org.dhis2.composetable.ui.DataSetTableScreen
@@ -54,13 +53,7 @@ fun ManageStockTable(
                         viewModel.onEditingCell(isEditing, concealBackdropState)
                     },
                     onCellValueChange = viewModel::onCellValueChanged,
-                    onSaveValue = viewModel::onSaveValueChange,
-                    bottomContent = {
-                        if (viewModel.dataEntryUiState.collectAsState().value.step
-                            == DataEntryStep.REVIEWING) {
-                            Text(text = "Review")
-                        }
-                    }
+                    onSaveValue = viewModel::onSaveValueChange
                 )
             }
         } else {
