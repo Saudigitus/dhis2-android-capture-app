@@ -58,7 +58,6 @@ fun ManageStockTable(
                     bottomContent = {
                         if (viewModel.dataEntryUiState.collectAsState().value.step
                             == DataEntryStep.REVIEWING) {
-
                             Text(text = "Review")
                         }
                     }
